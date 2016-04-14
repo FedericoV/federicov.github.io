@@ -36,8 +36,6 @@ and paranoia.
 [![img](http://www.smbc-comics.com/comics/20120324.gif)](www.smbc.com)
 
 
-Why Peer Review Sucks:
----------------------
 I know this first hand: with collaborators, we currently have two papers under review in
 fairly selective journals, and we spent months worth of work in trying
  to parry possible comments from reviewers/editors.  For example, we had
@@ -66,11 +64,11 @@ eLife editorial team (I had an excellent experience publishing a paper there
 previously, and they have a strong commitment to improving publishing) about
 doing a serious statistical analysis of their peer review process.  Their team
 (Mark Peterson, Peter Rodgers, and especially Andy Collins) was incredibly
-receptive and pleasant to work with, and we had several very productive Skype
-meetings to discuss possible analysis.  Unfortunately, we were unable to
-actually do randomized controlled experiments the way NIPS did.  eLife is
-growing very quickly (data in the paper!) and splitting up papers with dual
-review tracks would have been too taxing for their resources at this point.
+pleasant to work with, and really cared about improving scientific publishing.
+Unfortunately, we were unable to actually do randomized controlled experiments
+the way NIPS did.  eLife is growing very quickly (data in the paper!) and
+splitting up papers with dual review tracks would have been too taxing for
+their resources at this point.
 
 
 What we ended up doing instead was looking at what factors influence how quickly
