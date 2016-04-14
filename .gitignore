@@ -1,0 +1,7 @@
+_*
+cache/
+output/
+wpimport/
+pelicanconf_*.py
+pelican-plugins
+cv.pdf
