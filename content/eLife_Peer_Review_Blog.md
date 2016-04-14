@@ -1,7 +1,7 @@
 Title: The peer review process of eLife
-Date: 2016-05-14
+Date: 2016-04-14
 Category: Science
-Tags: scientific publishing, incentives
+Tags: scientific publishing, open science
 Slug: peer-review-at-eLife
 
 
