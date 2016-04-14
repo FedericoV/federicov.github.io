@@ -23,7 +23,6 @@ tend to be a fairly rational bunch &lt;sup&gt;[citation_needed]&lt;/sup&gt; but 
 comes to getting papers published and grants accepted, they fall back on superstition
 and paranoia.&lt;/p&gt;
 &lt;p&gt;&lt;a href="www.smbc.com"&gt;&lt;img alt="img" src="http://www.smbc-comics.com/comics/20120324.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;Why Peer Review Sucks:&lt;/h2&gt;
 &lt;p&gt;I know this first hand: with collaborators, we currently have two papers under review in
 fairly selective journals, and we spent months worth of work in trying
  to parry possible comments from reviewers/editors.  For example, we had
@@ -48,11 +47,11 @@ eLife editorial team (I had an excellent experience publishing a paper there
 previously, and they have a strong commitment to improving publishing) about
 doing a serious statistical analysis of their peer review process.  Their team
 (Mark Peterson, Peter Rodgers, and especially Andy Collins) was incredibly
-receptive and pleasant to work with, and we had several very productive Skype
-meetings to discuss possible analysis.  Unfortunately, we were unable to
-actually do randomized controlled experiments the way NIPS did.  eLife is
-growing very quickly (data in the paper!) and splitting up papers with dual
-review tracks would have been too taxing for their resources at this point.&lt;/p&gt;
+pleasant to work with, and really cared about improving scientific publishing.
+Unfortunately, we were unable to actually do randomized controlled experiments
+the way NIPS did.  eLife is growing very quickly (data in the paper!) and
+splitting up papers with dual review tracks would have been too taxing for
+their resources at this point.&lt;/p&gt;
 &lt;p&gt;What we ended up doing instead was looking at what factors influence how quickly
 a paper gets published, and what influences how often a paper gets cited.  More
 importantly, we make a &lt;a href="https://github.com/FedericoV/eLife_Editorial_Process/tree/master/data"&gt;very interesting dataset&lt;/a&gt;
