@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Federico's Blog - SciPy</title>
+        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
+        <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="http://federicov.github.io/">Federico's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
+                    <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
+                    <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="http://federicov.github.io/EuroSciPy2014.html">EuroSciPy 2014 Thoughts</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-09-05T00:00:00+02:00">
+                Published: Fri 05 September 2014
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
+        </address>
+<p>In <a href="http://federicov.github.io/category/misc.html">misc</a>.</p>
+<p>tags: <a href="http://federicov.github.io/tag/scipy.html">SciPy</a> <a href="http://federicov.github.io/tag/python.html">Python</a> <a href="http://federicov.github.io/tag/open-source.html">open source</a> </p>
+</footer><!-- /.post-info --><p>I just got back from Cambridge, where last week I attended <a href="https://www.euroscipy.org/">EuroSciPy</a>.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other organizers try to imitate what works.</p>
+<h2>Best Conference Practices:</h2>
+<ul>
+<li>
+<p><strong>The organizers didn't attempt to pack too many talks every day.</strong>  Most days, talks finished around 5:30 PM, leaving lots of time for people to hang out and get to know each other.  Conferences that last until 7PM, with evening sessions after dinner result in massive burnout by the end of the conference.</p>
+</li>
+<li>
+<p><strong>The conference was very cheap.</strong>  Due to generosity of the sponsors and the excellent organization, the academic price for the full registration (including tutorials) was 100 pounds for a 4 day conference.  Cambridge was also an excellent location - flying to Stanstead is easy, and the various colleges around town offered cheap accomodation during the off-school period.</p>
+</li>
+<li>
+<p><strong>A very good mix of talks</strong>.  There was a lot of spotlight for packages used by almost everyone in the scientific community (iPython, scikit-learn, etc) as well as some great talks on some incredibly impressive packages that I'd never heard about before (more on that later).</p>
+</li>
+<li>
+<p><strong>Everyone was so damn nice</strong>.  Seriously - even though the community was quite small, as a relative outsider, it didn't feel cliqueish at all, and at the sprints and the social events everyone was very welcoming.</p>
+</li>
+</ul>
+<p>Here are a few of the packages that caught my eye.</p>
+<h2>New Packages:</h2>
+<ul>
+<li>
+<p><a href="https://github.com/SciTools/biggus/">Biguss</a>.  This is a generalization of numpy to handle data which is too big to fit into memory using delayed evaluation.  It's very similar in spirit to Blaze by Continuum, but it's less ambitious and more mature.</p>
+</li>
+<li>
+<p>The optimization tools, and the HPC tools presented by Mike McKerns (https://github.com/uqfoundation).  Mystic looks very interesting (although the documentation is still a bit incomplete) but Dill (a better pickle that handles lots of objects that pickle cannot) and Pathos (a better multiprocessing) I will definitely incorporate into my workflow.  Mike did an excellent work of building tools that work very well together, but are worth using individually, which is a very difficult task that requires a lot of thought about API design and interoperability.</p>
+</li>
+<li>
+<p><a href="https://github.com/firedrakeproject/firedrake">Firedrake</a>.  This is an incredible tool for largescale PDE systems.  The talk by Florian Rathgeber showing off the Firedrake architecture, and how the tool was built on several layers to allow people from different backgrounds to contribute was great.  One issue with the technology that was presented is the team made a lot of effort into separating all the various layers, but they are interlocking enough that it's difficult to use them individually.</p>
+</li>
+<li>
+<p><a href="http://julialang.org/">Julia</a>.  The keynote by Steven Johnson was very impressive, and some of the things he implemented in there using metaprogramming to achieve greater than Fortran speed by inlining large polynomials seemed almost like black magic.  One of the biggest barriers that new languages face is the lack of a stable ecosystem, but <a href="https://github.com/stevengj/PyCall.jl">PyCall</a> (also by Steven Johnson) makes calling Python packages from Julia a breeze - and it does so without message passing across a Python interpreter (like RPy2 or matlab-bridge do), but through some really clever c-api hacks.  I blogged about this earlier (http://federicov.github.io/Blog/Julia-and-Scientific-Python.html):</p>
+</li>
+<li>
+<p><a href="https://pythonhosted.org/Sumatra/">Sumatra</a>.  If you've ever written code to do numerical simulations which is rapidly in flux, you've probably used an unearthly combination of log files, subdirectories, and commit logs to keep track of which simulation was done with what parameters and what version of the code.  Sumatra wraps this all up in a very nice interface, and it takes very little modification to get it to work with an existing codebase.  I had already heard it mentioned on twitter, but the lightning talk showed how quick and easy to use it is, which definitely sold me on it.</p>
+</li>
+<li>
+<p><a href="https://github.com/sklearn-theano/sklearn-theano">Scikit-theano</a>.  This is a nice package by Kyle Kastner to expose some complex estimators that are currently outside of the scope of the main scikit-learn project using a sklearn-like api, while using Theano under the hood for speed.  Anyone who is familiar with the sklearn API should be able to use it.</p>
+</li>
+</ul>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

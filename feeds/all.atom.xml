@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog</title><link href="http://federicov.github.io/" rel="alternate"></link><link href="http://federicov.github.io/feeds/all.atom.xml" rel="self"></link><id>http://federicov.github.io/</id><updated>2016-05-14T00:00:00+02:00</updated><entry><title>The peer review process of eLife</title><link href="http://federicov.github.io/peer-review-at-eLife.html" rel="alternate"></link><published>2016-05-14T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-05-14:peer-review-at-eLife.html</id><summary type="html">&lt;p&gt;Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
+we just published an analysis of the peer review process of eLife on
+F1000 &lt;a href="http://f1000research.com/articles/5-683/v1"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It was an interesting experience, and it was my first time leading a project from
+the start all the way to publication (and now, post publication peer review, as
+it should be).&lt;/p&gt;
+&lt;p&gt;The idea to critically analyze peer review came after NIPS (one of the most
+prestigious machine learning conferences) decided to do a very brave experiment
+and publicly examine their own peer review process.  Briefly: for a subset of papers, NIPS
+assigned two completely independent teams of reviewers to review.  After, they
+examined the overlap in the agreement between the two sets of reviewers, and
+the results were pretty bleak.  For a longer summary, there's an excellent
+write up &lt;a href="http://blog.mrtz.org/2014/12/15/the-nips-experiment.html"&gt;here&lt;/a&gt;.  The
+key message is this: &lt;strong&gt;"about 57% of the papers accepted by the
+first committee were rejected by the second one and vice versa. In other words,
+most papers at NIPS would be rejected if one reran the conference review
+process (with a 95% confidence interval of 40-75%)."&lt;/strong&gt;  Publishing a paper at NIPS
+can completely change the arc of your career - so the idea that someone's future
+career is at the whims of chance is fairly discouraging.&lt;/p&gt;
+&lt;p&gt;Although the results were bleak, they were not surprising.  Scientists
+tend to be a fairly rational bunch &lt;sup&gt;[citation_needed]&lt;/sup&gt; but when it
+comes to getting papers published and grants accepted, they fall back on superstition
+and paranoia.&lt;/p&gt;
+&lt;p&gt;&lt;a href="www.smbc.com"&gt;&lt;img alt="img" src="http://www.smbc-comics.com/comics/20120324.gif" /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Why Peer Review Sucks:&lt;/h2&gt;
+&lt;p&gt;I know this first hand: with collaborators, we currently have two papers under review in
+fairly selective journals, and we spent months worth of work in trying
+ to parry possible comments from reviewers/editors.  For example, we had
+ conversations like: "If we get X to review our paper, we need to make sure
+ that Y is done because that's their theory and they will instantly reject
+the paper if we don't discuss it".  Or "If our reviewer is a person who doesn't
+like mathematical modeling then we need to show the simpler simulations
+in the main text and the more complex ones in the supplementary."  A truly
+embarrassing amount of work is done not because the authors think it makes the
+paper stronger, but because scientists are utterly paranoid about what will
+happen during the peer review process.&lt;/p&gt;
+&lt;p&gt;There are two main reasons for this paranoia.  The first one is the
+disproportionate influence played by grants obtained/impact factor when evaluating
+scientists.  The current system really sucks, but this is an area where only
+people with actual power to change the incentive structure (professors on tenure
+committees, leaders of funding bodies, etc) can make a difference.  The second
+reason is that &lt;strong&gt;the peer review process is remarkably un-transparent and in the
+absence of real information people fall back on anecdotes and superstition&lt;/strong&gt;.  I
+thought that this was an area where I could actually give a small contribution.&lt;/p&gt;
+&lt;p&gt;With that in mind, after NIPS published their experiments, I reached out to the
+eLife editorial team (I had an excellent experience publishing a paper there
+previously, and they have a strong commitment to improving publishing) about
+doing a serious statistical analysis of their peer review process.  Their team
+(Mark Peterson, Peter Rodgers, and especially Andy Collins) was incredibly
+receptive and pleasant to work with, and we had several very productive Skype
+meetings to discuss possible analysis.  Unfortunately, we were unable to
+actually do randomized controlled experiments the way NIPS did.  eLife is
+growing very quickly (data in the paper!) and splitting up papers with dual
+review tracks would have been too taxing for their resources at this point.&lt;/p&gt;
+&lt;p&gt;What we ended up doing instead was looking at what factors influence how quickly
+a paper gets published, and what influences how often a paper gets cited.  More
+importantly, we make a &lt;a href="https://github.com/FedericoV/eLife_Editorial_Process/tree/master/data"&gt;very interesting dataset&lt;/a&gt;
+available for everyone to analyze however they want, and we have the
+&lt;a href="https://github.com/FedericoV/eLife_Editorial_Process"&gt;code&lt;/a&gt; to reproduce almost
+every step of our analysis.&lt;/p&gt;
+&lt;h2&gt;Further Steps:&lt;/h2&gt;
+&lt;p&gt;The data I published is a snapshot of the situation of eLife as of early 2016.
+Since all the scripts I used are online, it will be interesting to monitor the
+situation and see how things change in the future.  Further, F1000 makes it very
+easy to add new versions of a paper, so I am planning on trying to extend the
+work and examine other effects, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;http://www.nature.com/news/papers-with-shorter-titles-get-more-citations-1.18246&lt;/li&gt;
+&lt;li&gt;http://www.nature.com/news/rejection-improves-eventual-impact-of-manuscripts-1.11583&lt;/li&gt;
+&lt;li&gt;http://link.springer.com/article/10.1007/s11192-016-1936-z&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category></entry><entry><title>Yet Another Instance of a Broken Publishing System at Work</title><link href="http://federicov.github.io/killing-animals-for-nothing.html" rel="alternate"></link><published>2015-10-15T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2015-10-15:killing-animals-for-nothing.html</id><summary type="html">&lt;h2&gt;Reproducibility in the Spotlight:&lt;/h2&gt;
+&lt;p&gt;Psychology is still reeling from the results of a &lt;a href="https://www.sciencemag.org/content/349/6251/aac4716.abstract"&gt;massive study of
+reproducibility&lt;/a&gt;
+which found that less than half of statistically significant findings recently
+published in the top psychology journals remain significant when independently
+reproduced.  If this is new to you, Jesse Singal wrote a great summary about it &lt;a href="http://nymag.com/scienceofus/2015/08/many-psychology-research-findings-may-be-false.html"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Biology is not exactly doing that much better.  Ioannidis first highlighted
+shoddy research practices in biology with his aptly named paper
+&lt;a href="http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020124"&gt;Why Most Published Research Findings Are False&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The latest entry in this saga is discussed in &lt;a href="http://www.nature.com/news/poorly-designed-animal-experiments-in-the-spotlight-1.18559"&gt;this&lt;/a&gt;
+excellent article from Nature.  In papers that rely on animal models, the
+results are too fragile and unreliable to be used as a basis for further
+research because the statistical design of the experiments is often
+critically flawed.  This is unfortunately not a huge surprise: scientists
+at Bayer had already warned that published data had become &lt;a href="http://www.nature.com/nrd/journal/v10/n9/full/nrd3439-c1.html"&gt;progressively less reliable&lt;/a&gt; as
+basis for drug research.&lt;/p&gt;
+&lt;p&gt;In &lt;a href="http://www.nature.com/news/2011/110928/full/477511a.html"&gt;a previous editorial&lt;/a&gt;,
+Malcolm Macleod points out that:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The most reliable animal studies are those that: use randomization to eliminate
+systematic differences between treatment groups; induce the condition under
+investigation without knowledge of whether or not the animal will get the drug of
+interest; and assess the outcome in a blinded fashion. Studies that do not
+report these measures are much more likely to overstate the efficacy of
+interventions.  &lt;strong&gt;Unfortunately, at best one in three publications follows
+these basic protections against bias&lt;/strong&gt;. This suggests that authors,
+reviewers and editors accord them little importance.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For those that aren't familiar with experimental design - these aren't hyper
+advanced techniques.  Those are all things which are taught in a 1st year graduate
+experimental design course and that every senior scientist should be very
+familiar with.&lt;/p&gt;
+&lt;h2&gt;Animal Models In Science:&lt;/h2&gt;
+&lt;p&gt;What makes this particularly frustrating is that in this case, the scientists
+aren't just wasting public money, but they are killing loads of animals for
+absolutely no public good.  Until computational models massively improve,
+research with animal models is absolutely necessary, especially in the later
+stages, when we wish to validate promising drug targets or test drug safety.&lt;/p&gt;
+&lt;p&gt;In theory, the use of animal models in research in the US is
+&lt;a href="https://grants.nih.gov/grants/olaw/references/phspol.htm"&gt;strictly regulated&lt;/a&gt;
+by the NIH.  In practice, while charges of animal cruelty are taken seriously,
+poor protocol design leading to a waste of model animals is very rarely
+sanctioned.&lt;/p&gt;
+&lt;h2&gt;You Always Get What You Measure:&lt;/h2&gt;
+&lt;p&gt;Why do really smart scientists make such stupid mistakes?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Arrogance&lt;/em&gt;: &lt;a href="http://retractionwatch.com/2014/05/30/braggadacio-information-control-and-fear-life-inside-a-brigham-stem-cell-lab-under-investigation/"&gt;Some oldschool PIs&lt;/a&gt; are so confident in their own theories that they see
+statistics not as a critical way to evaluate their data, but as a simple
+threshold (p &amp;lt; 0.05) they gotta cross to be able to publish.  This is thankfully
+not very common, but if you go to any bioinformatics conference and talk over drinks
+to some of the junior people there, you'll hear all sorts of horror stories about
+being the only bioinformatician in a group and having to somehow come up with a
+statistical test that gives p&amp;lt;0.05.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Misaligned Incentives&lt;/em&gt;: This is unfortunately very common.  The currency of
+scientific careers are publications in high impact journals, and the easiest way
+to publish in those journals is to produce splashy results.  Unfortunately,
+results are the one thing that scientists have no actual control over - if you
+execute a well designed experiment to test a reasonable hypothesis, the
+actual outcome is up to the Universe.  By dis-proportionally rewarding splashy
+results, we punish the scientists that actually do research properly, since they
+will have a much lower fraction of positive results.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The irony that Nature, one of the most prestigious scientific journals in the world,
+acknowledges that scientists push splashy but unreliable findings (like say,
+&lt;a href="http://www.nature.com/nature/journal/v505/n7485/full/nature12968.html"&gt;these&lt;/a&gt;)
+instead of solid but boring ones is not lost on me.  It reminds me of the time
+a Facebook executive complained &lt;a href="https://www.facebook.com/mhudack/posts/10152148792566194"&gt;that the Internet was drowning in shitty click-baity articles&lt;/a&gt;, when the
+product he was responsible for was the main driver of that behaviour.&lt;/p&gt;
+&lt;p&gt;It's important to add that the quest for high impact publications is not
+just motivated by a selfish desire for success.  Postdocs are facing a very
+difficult job market and are desperate to have a high impact paper before
+applying for tenure track positions.  PIs are under an &lt;a href="http://www.dcscience.net/2014/12/01/publish-and-perish-at-imperial-college-london-the-death-of-stefan-grimm/"&gt;immense amount of
+pressure&lt;/a&gt;
+by their institutions to obtain grants, and it's getting harder and harder.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://nexus.od.nih.gov/all/wp-content/uploads/2014/03/FundingAwardSuccessRate_RPG.jpg " alt="NIH_Funding" style="width: 700px;"/&gt;&lt;/p&gt;
+&lt;p&gt;Further, missing grants doesn't just hurt the career of the PI.  Very few people
+in science have the luxury of fixed positions - even lab technicians and staff
+scientists are often funded by grants, and not getting a grant renewed can mean
+having to fire people people you've worked with for many years.&lt;/p&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category><category term="research"></category></entry><entry><title>Why Scientists Don't Share Data and How to Fix it</title><link href="http://federicov.github.io/novelty-is-overrated.html" rel="alternate"></link><published>2014-10-29T00:00:00+01:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-10-29:novelty-is-overrated.html</id><summary type="html">&lt;h2&gt;Towards a Better Science&lt;/h2&gt;
+&lt;p&gt;Recently, there's been a highly encouraging push towards a more open science with a greater emphasis on &lt;a href="http://www.nature.com/nature/focus/reproducibility/"&gt;reproducibility&lt;/a&gt;, spurred by a few &lt;a href="http://retractionwatch.com/2014/09/11/potentially-groundbreaking-highly-provocative-nature-stap-cell-peer-reviews-published/"&gt;high profile retractions&lt;/a&gt; and a growing awareness of the &lt;a href="http://www.economist.com/news/briefing/21588057-scientists-think-science-self-correcting-alarming-degree-it-not-trouble"&gt;slippery nature&lt;/a&gt; of several scientific findings.&lt;/p&gt;
+&lt;p&gt;This slow shift has important implications.  While in theory journals encourage or require the sharing of published data to anyone who requests it, often this is very difficult or even unpleasant, requiring multiple requests to journal editors to compel the authors to share the raw data.  Why is this data sharing so controversial and complex?&lt;/p&gt;
+&lt;h2&gt;Incentives and Data Sharing&lt;/h2&gt;
+&lt;p&gt;Andrew Gellman wrote about this from the point of view of political science and statistics both on his blog&lt;a href="http://andrewgelman.com/2012/08/07/whats-stoppin-people-from-sharin-data-and-code/"&gt;1&lt;/a&gt; &lt;a href="http://themonkeycage.org/2012/08/03/things-that-arent-prisoners-dilemmas-part-2/"&gt;2&lt;/a&gt; and &lt;a href="http://www.stat.columbia.edu/~gelman/research/published/ChanceEthics1.pdf"&gt;here&lt;/a&gt;.  As he discusses - part of the problem is technical, and part of the problem is a matter of misaligned incentives.&lt;/p&gt;
+&lt;p&gt;The technical part of the problem is that sharing big data sets is very complex, and, until recently, getting financed to work on infrastructure was very difficult.  Time spent figuring out how to put a big data set online in a way that could be producitively mined has potentially very little return.  Thankfully, there's some effort on this front - with &lt;a href="http://ivory.idyll.org/blog/2014-moore-ddd-stmt-of-work.html"&gt;Titus Brown&lt;/a&gt; and the &lt;a href="http://www.moore.org/programs/science/data-driven-discovery"&gt;Moore Foundation&lt;/a&gt; stepping in to hopefully make this easier.&lt;/p&gt;
+&lt;p&gt;The other obstacle in the way of greater data sharing is a matter of incentives.  Putting raw data in a nice format, and annotating it properly takes a lot of time, that leads to very little tangible rewards.  PIs often build careers from the results of a long running study, and sharing all the data can put their competitive advantage at risk.  In biology - there's also an additional element at work, as many journals (the big three especially) overwhelmingly favour papers with new experiments over papers that obtain novel results from existing datasets.&lt;/p&gt;
+&lt;p&gt;This bias towards new experimental results is highly counter productive, and puts scientists in a terrible spot.  In the constant quest to maximize impact (a necessity in the current funding climate) scientists have to decide how to best spread out the results from a big study among the biggest possible number of papers, making sure that no paper clips the novelty of any of the other papers.  For an example of this, look at the collection of papers from the &lt;a href="http://www.genome.gov/encode/"&gt;Encode project&lt;/a&gt;, where an immense amount of planning went into figuring out how to maximize the number of first author papers from the study.&lt;/p&gt;
+&lt;h2&gt;What Makes a Paper New?&lt;/h2&gt;
+&lt;p&gt;This emphasis on associating new experiments with novelty is largely a hold over from a previous era - where thinking of the critical experiment and performing it were far more difficult than analyzing the resulting data.  With the new data sets trickling in from high throughput experiments, obtaining insight from data is often more challenging than obtaining it in the first place, and the publishing guidelines should adjust to this new reality.&lt;/p&gt;
+&lt;p&gt;Although this is a very complex topic, I'd like to offer a few simple recommendations that don't require seismic shifts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Judge papers by how novel and robust their insights are, not how novel the data is.&lt;/li&gt;
+&lt;li&gt;Shift away from the idea of 'first author' and 'last author'.  Part of what drives the need to produce multiple papers is that on large multi-year projects, you need to produce enough first author papers for all the postdocs and PhDs.  Especially on papers that require complex experiments + computational analysis, multiple people often contribute equally.&lt;/li&gt;
+&lt;li&gt;Finally, develop a better mechanism to reward people who make highly sophisticated datasets available online.  Something in between a citation and co-authorship.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While I was putting the finishing touches on this blog, I was linked &lt;a href="http://www.plosmedicine.org/article/info%3Adoi%2F10.1371%2Fjournal.pmed.1001747"&gt;this&lt;/a&gt; excellent article by &lt;a href="https://med.stanford.edu/profiles/john-ioannidis"&gt;Ioannidis&lt;/a&gt; on how to make more published research true.  It's excellent, and everyone should read it, especially the part about the reward system.&lt;/p&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category></entry><entry><title>NumPy 1.10+ changes with openBLAS</title><link href="http://federicov.github.io/NumPy1.10+andopenblas.html" rel="alternate"></link><published>2014-09-15T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-15:NumPy1.10+andopenblas.html</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/xianyi/OpenBLAS"&gt;OpenBLAS&lt;/a&gt; is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained &lt;a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2"&gt;gotoblas&lt;/a&gt;.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).&lt;/p&gt;
+&lt;p&gt;Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for all linear algebra routines, and NumPy is no exception.  There are lots of &lt;a href="http://myvirtualbrain.blogspot.it/2013/01/compiling-and-installing-numpy-with.html"&gt;excellent&lt;/a&gt; &lt;a href="http://osdf.github.io/blog/numpyscipy-with-openblas-for-ubuntu-1204-second-try.html"&gt;guides&lt;/a&gt; to building OpenBLAS and linking it with NumPy.&lt;/p&gt;
+&lt;p&gt;However, since until recently, building NumPy with OpenBLAS required a fair bit of tinkering, all the guides suggest testing to see if your build process worked like &lt;a href="https://gist.github.com/osdf/3842524#file_test_numpy.py"&gt;so&lt;/a&gt;.  Since the NumPy 1.9 release though, all subsequent builds however changed so &lt;em&gt;numpy.core._dotblas&lt;/em&gt; is no longer built as a standalone file.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;From 1.10 the release notes:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The _dotblas module is no longer available.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you are smart enough to actually read through the release notes before building a package, I admire your discipline, and you've earned the right to feel smug for the rest of the day.  I, however, struggled like an idiot for 2 hours trying to figure out why _dotblas wasn't getting built.  Relying on a private API module to check for a succesful build wasn't a very good idea in the first place - but if you want to check if NumPy succesfully linked openblas, do this instead:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numpy.distutils.system_info&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;blas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;libraries&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;openblas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;library_dirs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/opt/OpenBLAS/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;define_macros&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;HAVE_CBLAS&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;lapack&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;libraries&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;openblas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;library_dirs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/opt/OpenBLAS/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;f77&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="[Python"></category><category term="openBLAS"></category><category term="NumPy]"></category></entry><entry><title>EuroSciPy 2014 Thoughts</title><link href="http://federicov.github.io/EuroSciPy2014.html" rel="alternate"></link><published>2014-09-05T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-05:EuroSciPy2014.html</id><summary type="html">&lt;p&gt;I just got back from Cambridge, where last week I attended &lt;a href="https://www.euroscipy.org/"&gt;EuroSciPy&lt;/a&gt;.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other organizers try to imitate what works.&lt;/p&gt;
+&lt;h2&gt;Best Conference Practices:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;The organizers didn't attempt to pack too many talks every day.&lt;/strong&gt;  Most days, talks finished around 5:30 PM, leaving lots of time for people to hang out and get to know each other.  Conferences that last until 7PM, with evening sessions after dinner result in massive burnout by the end of the conference.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;The conference was very cheap.&lt;/strong&gt;  Due to generosity of the sponsors and the excellent organization, the academic price for the full registration (including tutorials) was 100 pounds for a 4 day conference.  Cambridge was also an excellent location - flying to Stanstead is easy, and the various colleges around town offered cheap accomodation during the off-school period.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A very good mix of talks&lt;/strong&gt;.  There was a lot of spotlight for packages used by almost everyone in the scientific community (iPython, scikit-learn, etc) as well as some great talks on some incredibly impressive packages that I'd never heard about before (more on that later).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Everyone was so damn nice&lt;/strong&gt;.  Seriously - even though the community was quite small, as a relative outsider, it didn't feel cliqueish at all, and at the sprints and the social events everyone was very welcoming.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here are a few of the packages that caught my eye.&lt;/p&gt;
+&lt;h2&gt;New Packages:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/SciTools/biggus/"&gt;Biguss&lt;/a&gt;.  This is a generalization of numpy to handle data which is too big to fit into memory using delayed evaluation.  It's very similar in spirit to Blaze by Continuum, but it's less ambitious and more mature.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The optimization tools, and the HPC tools presented by Mike McKerns (https://github.com/uqfoundation).  Mystic looks very interesting (although the documentation is still a bit incomplete) but Dill (a better pickle that handles lots of objects that pickle cannot) and Pathos (a better multiprocessing) I will definitely incorporate into my workflow.  Mike did an excellent work of building tools that work very well together, but are worth using individually, which is a very difficult task that requires a lot of thought about API design and interoperability.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/firedrakeproject/firedrake"&gt;Firedrake&lt;/a&gt;.  This is an incredible tool for largescale PDE systems.  The talk by Florian Rathgeber showing off the Firedrake architecture, and how the tool was built on several layers to allow people from different backgrounds to contribute was great.  One issue with the technology that was presented is the team made a lot of effort into separating all the various layers, but they are interlocking enough that it's difficult to use them individually.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://julialang.org/"&gt;Julia&lt;/a&gt;.  The keynote by Steven Johnson was very impressive, and some of the things he implemented in there using metaprogramming to achieve greater than Fortran speed by inlining large polynomials seemed almost like black magic.  One of the biggest barriers that new languages face is the lack of a stable ecosystem, but &lt;a href="https://github.com/stevengj/PyCall.jl"&gt;PyCall&lt;/a&gt; (also by Steven Johnson) makes calling Python packages from Julia a breeze - and it does so without message passing across a Python interpreter (like RPy2 or matlab-bridge do), but through some really clever c-api hacks.  I blogged about this earlier (http://federicov.github.io/Blog/Julia-and-Scientific-Python.html):&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://pythonhosted.org/Sumatra/"&gt;Sumatra&lt;/a&gt;.  If you've ever written code to do numerical simulations which is rapidly in flux, you've probably used an unearthly combination of log files, subdirectories, and commit logs to keep track of which simulation was done with what parameters and what version of the code.  Sumatra wraps this all up in a very nice interface, and it takes very little modification to get it to work with an existing codebase.  I had already heard it mentioned on twitter, but the lightning talk showed how quick and easy to use it is, which definitely sold me on it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/sklearn-theano/sklearn-theano"&gt;Scikit-theano&lt;/a&gt;.  This is a nice package by Kyle Kastner to expose some complex estimators that are currently outside of the scope of the main scikit-learn project using a sklearn-like api, while using Theano under the hood for speed.  Anyone who is familiar with the sklearn API should be able to use it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="SciPy"></category><category term="Python"></category><category term="open source"></category></entry><entry><title>Weapons of Math Destruction</title><link href="http://federicov.github.io/deception-by-mathematics.html" rel="alternate"></link><published>2014-07-29T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-07-29:deception-by-mathematics.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for better or for worse, to our pleasure, even though perhaps also to our bafflement, to wide branches of learning.&lt;/em&gt; - Eugene Wigner, The Unreasonable Effectiveness of Mathematics in the Physical Sciences&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Trust and its role in the Scientific Enteprise&lt;/h2&gt;
+&lt;p&gt;Although radical skepticism is a consistent philosophy, it's not really a practical way to live our life.  We are all at the mercy of experts.  For example, when talking to a doctor who is discussing a complicated diagnosis with us, we assume that what she is telling us makes sense, even if we lack the expertise to critically evaluate her claims.  We don't extend the benefit of the doubt to everyone - if a PR person makes a claim about a product, most people will react skeptically and will want to verify it themselves.  Trust is an incredibly important resource, and once a group is seen as routinely exaggerating, it's very hard to gain back a positive reputation.&lt;/p&gt;
+&lt;p&gt;I want to examine the role that trust plays in science.  Math has been incredibly important in physics for the past four centuries, and it's gradually gaining in importance in other domains.  Biology is one of the frontiers where math is expanding its influence, and it has led to the creation of entirely new disciplines such as bioinformatics, systems biology (my field), computational crystallography, biophysics, etc..&lt;/p&gt;
+&lt;h2&gt;Biology and Math&lt;/h2&gt;
+&lt;p&gt;Biologists are some of the most intelligent people that I know (and I'm not just saying that because my mother is one) but the typical biology curricula offers a smattering of statistics and very little advanced math.  This makes collaborations between mathematicians/physicists/computer scientists and biologists particularly challenging and, unlike families, every happy collaboration between theoreticians and experimentalists is different.&lt;/p&gt;
+&lt;p&gt;This means that when starting a new collaboration, biologists often have to spend a long time explaining the subtleties of their particular problem to theoreticians, and theoreticians have to honestly discuss the relative pros and cons of different modeling approaches, and both parties have to agree on the correct level of abstraction.  There are some common misunderstandings.  Physicists think that everything can be modeled as an Ising model (if there's a problem, just add a little perturbation).  Biologists think that the fancier the math, the more sophisticated and clever is the approach.&lt;/p&gt;
+&lt;h2&gt;Fancy Looking Bullshit&lt;/h2&gt;
+&lt;p&gt;Expanding on that last point, biologists often lack the necessary mathematical basis to evalulate complex mathematical formalisms, and tend to assume that their collaborators are acting in good faith.  This is usually a good thing - but unfortunately it leaves the door open for unscrupulous people to peddle fancy looking bullshit.  I've been the lone theoretical person in a room of biologists listening to scientific talks where the speaker kept throwing around terms like 'non-linear', 'chaos', 'networks'  indiscriminately - and when asked simple questions at the end of the talk, clearly showed that they had no idea of what they were talking about.  I've seen meetings where theoreticians started scribbling down fancy looking formulas on the board for no purpose whatsoever except impressing their audience.  I've seen fancy-looking 3d graphs that added absolutely no information but gave an unwarranted air of complexity to an otherwise boring seminar.&lt;/p&gt;
+&lt;p&gt;For a particularly glaring example of this (in a different field) - read &lt;a href="http://retractionwatch.com/2013/09/19/fredrickson-losada-positivity-ratio-paper-partially-withdrawn/"&gt;this&lt;/a&gt; and weep.  The only reason this came to light, is that a fantastic graduate student, &lt;a href="http://steamtraen.blogspot.fr/"&gt;Nick Brown&lt;/a&gt;, with the help of &lt;a href="http://www.physics.nyu.edu/sokal/"&gt;Alan Sokal&lt;/a&gt; (another hero of mine) actually wasn't impressed by the fancy looking mathematics  and tried to get to the bottom of the story.  Of course, the person responsible for the mathematics in that paper is an executive consultant that describes himself this way:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Formerly, as Director of the Center for Advanced Research (CFAR) in Ann Arbor, Michigan, he conducted studies on the interaction dynamics and productivity of business teams that led him to implement a unique, scientifically based, approach to develop high performance teams. His pioneering work on applications of nonlinear dynamics to team interaction processes has been published in a number of prestigious scientific journals, and he has made several other contributions that have earned him worldwide recognition:&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;That's someone that leveraged impressive looking mathematics to swindle not just scientists, but also human resource processionals, book editors, and multiple people that actually assumed that there must have been some substance behind the mathematics.  Every time something like this happens, it makes it much harder for honest and well meaning mathematicians to actually start a collaboration with an experimental collaborator.  Math has a very deep reservoir of good will, but it isn't infinite.&lt;/p&gt;
+&lt;p&gt;As theoreticians, it is our duty to be honest about what we do, and the limits of our models.  This means being upfront and admitting when there is insufficient data to do anything productive, and being willing to call out bullshit for what it is - professional courtesy only goes so far, and deceiving well meaning people with buzzwords camouflaged as math poisons the well for all of us.  For people cooperating with theoreticians, beware people who throw out technical buzzwords for no apparent reason.  Unfortunately, bullshit is quite difficult to 'sniff out' if you lack sufficient background, and several bullshit artists are quite polished in their presentations - in that case, just ask someone you trust to look at their previous papers, or invite them into a meeting together and watch the sparks fly.&lt;/p&gt;</summary><category term="[social psychology"></category><category term="Sokal"></category><category term="Nick Brown"></category><category term="mathematics]"></category></entry></feed>

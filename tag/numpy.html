@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Federico's Blog - NumPy]</title>
+        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
+        <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="http://federicov.github.io/">Federico's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
+                    <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
+                    <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="http://federicov.github.io/NumPy1.10+andopenblas.html">NumPy 1.10+ changes with openBLAS</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2014-09-15T00:00:00+02:00">
+                Published: Mon 15 September 2014
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
+        </address>
+<p>In <a href="http://federicov.github.io/category/programming.html">Programming</a>.</p>
+<p>tags: <a href="http://federicov.github.io/tag/python.html">[Python</a> <a href="http://federicov.github.io/tag/openblas.html">openBLAS</a> <a href="http://federicov.github.io/tag/numpy.html">NumPy]</a> </p>
+</footer><!-- /.post-info --><p><a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a> is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained <a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2">gotoblas</a>.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).</p>
+<p>Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for all linear algebra routines, and NumPy is no exception.  There are lots of <a href="http://myvirtualbrain.blogspot.it/2013/01/compiling-and-installing-numpy-with.html">excellent</a> <a href="http://osdf.github.io/blog/numpyscipy-with-openblas-for-ubuntu-1204-second-try.html">guides</a> to building OpenBLAS and linking it with NumPy.</p>
+<p>However, since until recently, building NumPy with OpenBLAS required a fair bit of tinkering, all the guides suggest testing to see if your build process worked like <a href="https://gist.github.com/osdf/3842524#file_test_numpy.py">so</a>.  Since the NumPy 1.9 release though, all subsequent builds however changed so <em>numpy.core._dotblas</em> is no longer built as a standalone file.</p>
+<p><strong>From 1.10 the release notes:</strong></p>
+<ul>
+<li>The _dotblas module is no longer available.</li>
+</ul>
+<p>If you are smart enough to actually read through the release notes before building a package, I admire your discipline, and you've earned the right to feel smug for the rest of the day.  I, however, struggled like an idiot for 2 hours trying to figure out why _dotblas wasn't getting built.  Relying on a private API module to check for a succesful build wasn't a very good idea in the first place - but if you want to check if NumPy succesfully linked openblas, do this instead:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">numpy.distutils.system_info</span> <span class="kn">import</span> <span class="n">get_info</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">get_info</span><span class="p">(</span><span class="s1">&#39;blas&#39;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;libraries&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;openblas&#39;</span><span class="p">],</span> <span class="s1">&#39;library_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;/opt/OpenBLAS/lib&#39;</span><span class="p">],</span> <span class="s1">&#39;define_macros&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s1">&#39;HAVE_CBLAS&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)],</span> <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;c&#39;</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">get_info</span><span class="p">(</span><span class="s1">&#39;lapack&#39;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;libraries&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;openblas&#39;</span><span class="p">],</span> <span class="s1">&#39;library_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;/opt/OpenBLAS/lib&#39;</span><span class="p">],</span> <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;f77&#39;</span><span class="p">}</span>
+</pre></div>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
