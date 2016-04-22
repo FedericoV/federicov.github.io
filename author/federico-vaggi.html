@@ -15,6 +15,8 @@
         <header id="banner" class="body">
                 <h1><a href="http://federicov.github.io/">Federico's Blog </a></h1>
                 <nav><ul>
+                    <li><a href="http://federicov.github.io/pages/about.html">About</a></li>
+                    <li><a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
                     <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
                     <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
                     <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
@@ -23,7 +25,168 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="http://federicov.github.io/peer-review-at-eLife.html">The peer review process of eLife</a></h1>
+                    <h1 class="entry-title"><a href="http://federicov.github.io/word-embeddings-and-dota2.html">Gavagai</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2016-04-22T00:00:00+02:00">
+                Published: Fri 22 April 2016
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
+        </address>
+<p>In <a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
+<p>tags: <a href="http://federicov.github.io/tag/video-games.html">video games</a> <a href="http://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="http://federicov.github.io/tag/dota2.html">dota2</a> </p>
+</footer><!-- /.post-info --><p>Last time I talked about Dota2, I covered the
+<a href="http://www.datdota.com/blog/?p=1323">evolution of the metagame across patches</a>.
+This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
+<a href="https://en.wikipedia.org/wiki/Natural_language_processing">NLP</a> in a very novel way.</p>
+<h2>Introduction:</h2>
+<p>How would you teach someone what the word 'rabbit' means?  You could go out in a
+field, and every time a rabbit shows up you could point to it and exclaim
+'rabbit'.  However, even this highly simplified vignette assumes that you are
+trying to explain the concept of rabbit to someone who has a mental model of
+the world very similar to yours.  Now, imagine that instead of teaching the
+meaning of words to a human who sees the world as you do, you are trying to
+teach them to a computer.  Where do you start?</p>
+<p>This is where <a href="https://en.wikipedia.org/wiki/Word_embedding">Word Vectors</a>
+come in. The key assumption behind word vectors is that words which occur in
+similar contexts have similar meanings - and this is known as the
+<a href="https://en.wikipedia.org/wiki/Distributional_semantics">Distributional Hypothesis</a>.</p>
+<p>In the case of linguistics, this means that if you find the word 'negotiate' in
+similar contexts as the word 'bargain', their meaning is probably similar.  Using
+word vectors, it means that if you calculate the <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a>
+(a measure of how similar two vectors are) between the word vector for 'negotiate'
+and 'bargain' you'll get a value close to 1.  Another neat property of word
+vectors is that they allow us to reason by analogy: a common example is that
+(King - Man) ~= (Queen - Woman).  For an awesome example of the power of
+word vectors, check out <a href="https://sense2vec.spacy.io/?natural_language_processing%7CNOUN">an analysis</a>
+of every single reddit post done using <a href="https://twitter.com/spacy_io">spacy</a>.</p>
+<h2>From Word Vectors to Hero Vectors:</h2>
+<p>How can word vectors help us understand Dota2 teams?  Imagine that you treat every Dota2 team as a sentence, with heroes making up the words.  For example, this would be a valid sentence in Dota2ese:</p>
+<p><strong>Batrider  Disruptor   Leshrac Naga Siren  Weaver</strong></p>
+<p>and so would this:</p>
+<p><strong>Dragon Knight Weaver  Crystal Maiden  Windranger  Treant Protector</strong></p>
+<p>Recall the Distributional Hypothesis that we discussed above.  Instead of trying to understand what words mean by looking at the sentences in which they occur, we want to understand what heroes are like by looking at the kinds of team they show up in.  Concretely, if we see that heroes like <strong>Witch Doctor</strong> and <strong>Lion</strong> tend to show up in similar teams, this indicates that they have similar roles.</p>
+<p>We will use <a href="http://www.datdota.com/">datdota</a> as our database of drafts, and the excellent <a href="https://radimrehurek.com/gensim/index.html">gensim library</a> to learn
+our hero vectors.</p>
+<p>When learning our hero vectors, we have to specify how many dimensions we want to use to represent our heroes.  In general, more dimensions means that we get higher quality representations, but we require more computing power and more data.</p>
+<p>For example, after training on our dataset, this is what the hero vector for <strong>Shadowfiend</strong> looks like.</p>
+<p>[-0.06813218, -0.00902375,  0.10162564, -0.01908037,  0.03013835,<br />
+  0.16538762,  0.03104097,  0.02496031, -0.16785616,  0.3313826 ,<br />
+ -0.21904311, -0.07945664,  0.19140202,  0.12729862,  0.36308175,<br />
+  0.19962946,  0.13561839,  0.23637122, -0.32607114,  0.05647549,<br />
+  0.09655968, -0.21899879,  0.04926173,  0.12474103,  0.14504923,<br />
+  0.06281823,  0.14728694, -0.03583163, -0.00227163,  0.1205247 ,<br />
+  0.01127683,  0.01522848,  0.13806115,  0.0216765 ,  0.13671157,<br />
+ -0.1683237 ,  0.00408782,  0.10514087, -0.17610508,  0.04697264,<br />
+ -0.03406512, -0.14956233,  0.20201634,  0.00907436, -0.05804597,<br />
+ -0.00481437,  0.11493918, -0.07718568, -0.13443205, -0.01155808]</p>
+<p>The hero <strong>Shadow Fiend</strong> is now represented as a point in 50 dimensional space,
+but that's still not that useful: we turned a word we can understand into 50
+numbers that don't seem to mean anything.  However, I promise that we can do
+some really cool things: for example - let's look at the other heroes
+whose vectors are most similar to that <strong>Shadow Fiend</strong>:</p>
+<ol>
+<li><strong>Queen of Pain</strong>: 0.9340388774871826</li>
+<li><strong>Storm Spirit</strong>: 0.9170020818710327</li>
+<li><strong>Viper</strong>: 0.9082884788513184</li>
+<li><strong>Sniper</strong>: 0.8958033919334412</li>
+<li><strong>Zeus</strong>: 0.8526902794837952</li>
+</ol>
+<p>And here it is in a more visual form - each row corresponds to the vector for a
+particular hero:</p>
+<p><a href="url"><img src="http://federicov.github.io/images/Top_5_SF.png" align="left" width="800" ></a></p>
+<p>Wow - those actually all make a lot of sense.  Let's try a tougher task now and
+see if we can use hero vectors to reason about analogies.  <strong>Lion</strong>  is
+to <strong>Anti Mage</strong> as <strong>Witch Doctor</strong> is to ....:</p>
+<ol>
+<li><strong>Spectre</strong>: 0.9638912677764893</li>
+<li><strong>Phantom Lancer</strong>: 0.9185065031051636</li>
+<li><strong>Phantom Assassin</strong>: 0.9039324522018433</li>
+<li><strong>Morphling</strong>: 0.858444333076477</li>
+<li><strong>Lifestealer</strong>: 0.8570600748062134</li>
+</ol>
+<p>Again, pretty neat!  While these synergies won't exactly let you outdraft PPD,
+hero vectors can pick up on the notion of pairing a ranged support with a
+melee carry.</p>
+<h2>A Global View:</h2>
+<p>It's possible to plot the hero vectors of every single hero at the same time,
+but the results can be a bit <a href="http://federicov.github.io/images/Hero_Clusters.png">overwhelming</a>.</p>
+<p>In that figure, every column corresponds to a hero vector, and we have sorted
+rows and columns in a dendogram.  Unless you are used to looking at those kinds
+of graphs all the time, it's not very obvious which heroes form groups and which
+ heroes are similar to each other.</p>
+<p>Ignoring the hero vectors for a minute, we can cut the
+<a href="http://federicov.github.io/images/Hero_Dendogram.png">dendogram</a> (the tree-like structure at
+the top of the previous graph) and look at
+which heroes end up close to each other.</p>
+<p>We see that we have recovered some pretty meaningful (although not flawless)
+groups.  We can notice an 'offlane-like' group with Doom, Nyx, Dark Seer,
+Bristleback and Centaur.  We have a hard carry group with Drow Ranger, Slark,
+Phantom Lancer and Lifestealer.  We have a 'strength support' group with
+Wraith King, Tusk and Abbadon.</p>
+<p>There's one more way to visualize our groups.  We can project our 50 dimensional
+dataset in 2d using t-SNE](https://lvdmaaten.github.io/tsne/).  t-SNE is a very
+clever technique where we look for a lower dimensional representation that
+still maintains as much of the high level structure as possible.</p>
+<p>After manipulating the data and plotting it in 2d, here is what we get:</p>
+<p><a href="url"><img src="http://federicov.github.io/images/Heroes_TNSE.png" align="left" width="750" ></a></p>
+<p>The hero colors come from the groups we identified above.  Again - notice that
+there are easily discrete clusters that are quite meaningful.</p>
+<h2>What do the vectors mean?:</h2>
+<p>What exactly do the numbers that we obtain for each hero mean though?  For
+example, what does it mean that that the first dimension of <strong>Shadow Fiend</strong>
+has value -0.06813218?  Usually, we'd just say that it is a 'latent feature'
+and leave it at that, but in this case, we can do a little bit more.</p>
+<p>The <a href="http://dota2.gamepedia.com/">dota2 gamepedia</a> assigns a series of roles
+for each hero.  They are of course debatable, and heroes can often change from
+support to carry across different patch - but it's still a good starting point.</p>
+<p><a href="url"><img src="http://federicov.github.io/images/Hero_Roles.png" align="left" width="750" ></a></p>
+<p>Now, we have all the ingredients for the next step.  Recall that each hero is
+described by 50 numbers (from our embedding procedure) and that hero has
+certain roles (from the dota2 gamepedia).</p>
+<p>What we want to do now is to see if there is any relationship between the
+embedding and a hero's role.  There's lots of ways to do this - but perhaps
+the easiest way is to use <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a>.<br />
+For the math nerds - to insure that we get a sparse set of basis, we will
+also use a strong L1 penalty (which, as a bonus, regularizes our predictions).</p>
+<p>Here are the results of that:</p>
+<p><a href="url"><img src="http://federicov.github.io/images/LR_Weights.png" align="left" width="750" ></a></p>
+<p>What does that mean, in practice?  We see that the 46th vector is strongly
+associated with being a support, and the 38th vector is strongly associated
+with being a ranged hero.  Let's plot the 38th and 46th vector of all heroes:</p>
+<p><a href="url"><img src="http://federicov.github.io/images/Weights_vs_Roles.png" align="left" width="750" ></a></p>
+<p>As we can see - heroes that have higher values on axis 46, are a lot more
+likely to be support heroes.  Similarly, heroes that have higher values on axis
+38 are more likely to be ranged - you may notice that the two axis are somewhat
+correlated (but not perfectly so) - as support heroes are a lot more likely to
+be ranged.  Incidentally, this correctly identifies <strong>Undying</strong>, <strong>Elder Titan</strong>
+and <strong>Abbadon</strong> as melee supports (high support, low ranged) but
+incorrectly identifies <strong>Drow Ranger</strong> (and, to a certain extent, <strong>Clinkz</strong>
+as melee heroes.</p>
+<h2>Conclusion:</h2>
+<p>When training those embeddings, we did not use any information about Dota2:
+as far as the computer is concerned, each draft is an arbitrary sequence of
+symbols without any meaning... yet, starting from that, we were able to recover
+ informative representations which have meaningful high level interpretation.<br />
+ We treated Dota2 drafts as a foreign language that we do not speak, and, by
+ looking at patterns in how those words are used, managed to figure out what
+ the words mean relative to each other.</p>
+<p>Further, by connecting the features that we learned in an unsupervised way to
+class roles, we were even able to give an interpretation to our latent features.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="http://federicov.github.io/peer-review-at-eLife.html" rel="bookmark"
+                           title="Permalink to The peer review process of eLife">The peer review process of eLife</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2016-04-14T00:00:00+02:00">
                 Published: Thu 14 April 2016
@@ -34,81 +197,14 @@
         </address>
 <p>In <a href="http://federicov.github.io/category/science.html">Science</a>.</p>
 <p>tags: <a href="http://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a> <a href="http://federicov.github.io/tag/open-science.html">open science</a> </p>
-</footer><!-- /.post-info --><p>Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
+</footer><!-- /.post-info -->                <p>Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
 we just published an analysis of the peer review process of eLife on
 F1000 <a href="http://f1000research.com/articles/5-683/v1">here</a>.</p>
 <p>It was an interesting experience, and it was my first time leading a project from
-the start all the way to publication (and now, post publication peer review, as
-it should be).</p>
-<p>The idea to critically analyze peer review came after NIPS (one of the most
-prestigious machine learning conferences) decided to do a very brave experiment
-and publicly examine their own peer review process.  Briefly: for a subset of papers, NIPS
-assigned two completely independent teams of reviewers to review.  After, they
-examined the overlap in the agreement between the two sets of reviewers, and
-the results were pretty bleak.  For a longer summary, there's an excellent
-write up <a href="http://blog.mrtz.org/2014/12/15/the-nips-experiment.html">here</a>.  The
-key message is this: <strong>"about 57% of the papers accepted by the
-first committee were rejected by the second one and vice versa. In other words,
-most papers at NIPS would be rejected if one reran the conference review
-process (with a 95% confidence interval of 40-75%)."</strong>  Publishing a paper at NIPS
-can completely change the arc of your career - so the idea that someone's future
-career is at the whims of chance is fairly discouraging.</p>
-<p>Although the results were bleak, they were not surprising.  Scientists
-tend to be a fairly rational bunch <sup>[citation_needed]</sup> but when it
-comes to getting papers published and grants accepted, they fall back on superstition
-and paranoia.</p>
-<p><a href="www.smbc.com"><img alt="img" src="http://www.smbc-comics.com/comics/20120324.gif" /></a></p>
-<p>I know this first hand: with collaborators, we currently have two papers under review in
-fairly selective journals, and we spent months worth of work in trying
- to parry possible comments from reviewers/editors.  For example, we had
- conversations like: "If we get X to review our paper, we need to make sure
- that Y is done because that's their theory and they will instantly reject
-the paper if we don't discuss it".  Or "If our reviewer is a person who doesn't
-like mathematical modeling then we need to show the simpler simulations
-in the main text and the more complex ones in the supplementary."  A truly
-embarrassing amount of work is done not because the authors think it makes the
-paper stronger, but because scientists are utterly paranoid about what will
-happen during the peer review process.</p>
-<p>There are two main reasons for this paranoia.  The first one is the
-disproportionate influence played by grants obtained/impact factor when evaluating
-scientists.  The current system really sucks, but this is an area where only
-people with actual power to change the incentive structure (professors on tenure
-committees, leaders of funding bodies, etc) can make a difference.  The second
-reason is that <strong>the peer review process is remarkably un-transparent and in the
-absence of real information people fall back on anecdotes and superstition</strong>.  I
-thought that this was an area where I could actually give a small contribution.</p>
-<p>With that in mind, after NIPS published their experiments, I reached out to the
-eLife editorial team (I had an excellent experience publishing a paper there
-previously, and they have a strong commitment to improving publishing) about
-doing a serious statistical analysis of their peer review process.  Their team
-(Mark Peterson, Peter Rodgers, and especially Andy Collins) was incredibly
-pleasant to work with, and really cared about improving scientific publishing.
-Unfortunately, we were unable to actually do randomized controlled experiments
-the way NIPS did.  eLife is growing very quickly (data in the paper!) and
-splitting up papers with dual review tracks would have been too taxing for
-their resources at this point.</p>
-<p>What we ended up doing instead was looking at what factors influence how quickly
-a paper gets published, and what influences how often a paper gets cited.  More
-importantly, we make a <a href="https://github.com/FedericoV/eLife_Editorial_Process/tree/master/data">very interesting dataset</a>
-available for everyone to analyze however they want, and we have the
-<a href="https://github.com/FedericoV/eLife_Editorial_Process">code</a> to reproduce almost
-every step of our analysis.</p>
-<h2>Further Steps:</h2>
-<p>The data I published is a snapshot of the situation of eLife as of early 2016.
-Since all the scripts I used are online, it will be interesting to monitor the
-situation and see how things change in the future.  Further, F1000 makes it very
-easy to add new versions of a paper, so I am planning on trying to extend the
-work and examine other effects, such as:</p>
-<ul>
-<li>http://www.nature.com/news/papers-with-shorter-titles-get-more-citations-1.18246</li>
-<li>http://www.nature.com/news/rejection-improves-eventual-impact-of-manuscripts-1.11583</li>
-<li>http://link.springer.com/article/10.1007/s11192-016-1936-z</li>
-</ul>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+the start all the way to publication (and now …</p>
+                <a class="readmore" href="http://federicov.github.io/peer-review-at-eLife.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -132,7 +228,7 @@ work and examine other effects, such as:</p>
 reproducibility</a>
 which found that less than half of statistically significant findings recently
 published in the top psychology journals remain significant when independently
-reproduced.  If this is new to you, Jesse Singal wrote a great ...</p>
+reproduced.  If this is new to you, Jesse Singal wrote a great …</p>
                 <a class="readmore" href="http://federicov.github.io/killing-animals-for-nothing.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -156,7 +252,7 @@ reproduced.  If this is new to you, Jesse Singal wrote a great ...</p>
 <p>tags: <a href="http://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a> <a href="http://federicov.github.io/tag/incentives.html">incentives</a> </p>
 </footer><!-- /.post-info -->                <h2>Towards a Better Science</h2>
 <p>Recently, there's been a highly encouraging push towards a more open science with a greater emphasis on <a href="http://www.nature.com/nature/focus/reproducibility/">reproducibility</a>, spurred by a few <a href="http://retractionwatch.com/2014/09/11/potentially-groundbreaking-highly-provocative-nature-stap-cell-peer-reviews-published/">high profile retractions</a> and a growing awareness of the <a href="http://www.economist.com/news/briefing/21588057-scientists-think-science-self-correcting-alarming-degree-it-not-trouble">slippery nature</a> of several scientific findings.</p>
-<p>This slow shift has important implications.  While in ...</p>
+<p>This slow shift has important implications.  While in theory …</p>
                 <a class="readmore" href="http://federicov.github.io/novelty-is-overrated.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -179,7 +275,7 @@ reproduced.  If this is new to you, Jesse Singal wrote a great ...</p>
 <p>In <a href="http://federicov.github.io/category/programming.html">Programming</a>.</p>
 <p>tags: <a href="http://federicov.github.io/tag/python.html">[Python</a> <a href="http://federicov.github.io/tag/openblas.html">openBLAS</a> <a href="http://federicov.github.io/tag/numpy.html">NumPy]</a> </p>
 </footer><!-- /.post-info -->                <p><a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a> is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained <a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2">gotoblas</a>.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).</p>
-<p>Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting ...</p>
+<p>Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for …</p>
                 <a class="readmore" href="http://federicov.github.io/NumPy1.10+andopenblas.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -201,7 +297,7 @@ reproduced.  If this is new to you, Jesse Singal wrote a great ...</p>
         </address>
 <p>In <a href="http://federicov.github.io/category/misc.html">misc</a>.</p>
 <p>tags: <a href="http://federicov.github.io/tag/scipy.html">SciPy</a> <a href="http://federicov.github.io/tag/python.html">Python</a> <a href="http://federicov.github.io/tag/open-source.html">open source</a> </p>
-</footer><!-- /.post-info -->                <p>I just got back from Cambridge, where last week I attended <a href="https://www.euroscipy.org/">EuroSciPy</a>.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that ...</p>
+</footer><!-- /.post-info -->                <p>I just got back from Cambridge, where last week I attended <a href="https://www.euroscipy.org/">EuroSciPy</a>.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other …</p>
                 <a class="readmore" href="http://federicov.github.io/EuroSciPy2014.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
@@ -224,29 +320,18 @@ reproduced.  If this is new to you, Jesse Singal wrote a great ...</p>
 <p>In <a href="http://federicov.github.io/category/misc.html">misc</a>.</p>
 <p>tags: <a href="http://federicov.github.io/tag/social-psychology.html">[social psychology</a> <a href="http://federicov.github.io/tag/sokal.html">Sokal</a> <a href="http://federicov.github.io/tag/nick-brown.html">Nick Brown</a> <a href="http://federicov.github.io/tag/mathematics.html">mathematics]</a> </p>
 </footer><!-- /.post-info -->                <blockquote>
-<p><em>The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for ...</em></p></blockquote>
+<p><em>The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for …</em></p></blockquote>
                 <a class="readmore" href="http://federicov.github.io/deception-by-mathematics.html">read more</a>
                 </div><!-- /.entry-content -->
             </article></li>
                 </ol><!-- /#posts-list -->
                 </section><!-- /#content -->
         <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="#">You can modify those links in your config file</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
                 <div class="social">
                         <h2>social</h2>
                         <ul>
                             <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
-                            <li><a href="#">You can add links in your config file</a></li>
-                            <li><a href="#">Another social link</a></li>
                         </ul>
                 </div><!-- /.social -->
         </section><!-- /#extras -->
