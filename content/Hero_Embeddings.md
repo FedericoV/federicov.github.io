@@ -146,8 +146,7 @@ and leave it at that, but in this case, we can do a little bit more.
 The [dota2 gamepedia](http://dota2.gamepedia.com/) assigns a series of roles
 for each hero.  They are of course debatable, and heroes can often change from
 support to carry across different patch - but it's still a good starting point.
-
-<a href="url"><img src="{filename}/images/Hero_Roles.png" align="left" width="750" ></a>
+[Here](filename}/images/Hero_Roles.png) is a simple table of all the roles assigned to each hero.
 
 Now, we have all the ingredients for the next step.  Recall that each hero is
 described by 50 numbers (from our embedding procedure) and that hero has
