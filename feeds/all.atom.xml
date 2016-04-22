@@ -103,8 +103,8 @@ has value -0.06813218?  Usually, we'd just say that it is a 'latent feature'
 and leave it at that, but in this case, we can do a little bit more.&lt;/p&gt;
 &lt;p&gt;The &lt;a href="http://dota2.gamepedia.com/"&gt;dota2 gamepedia&lt;/a&gt; assigns a series of roles
 for each hero.  They are of course debatable, and heroes can often change from
-support to carry across different patch - but it's still a good starting point.&lt;/p&gt;
-&lt;p&gt;&lt;a href="url"&gt;&lt;img src="http://federicov.github.io/images/Hero_Roles.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+support to carry across different patch - but it's still a good starting point.
+&lt;a href="filename}/images/Hero_Roles.png"&gt;Here&lt;/a&gt; is a simple table of all the roles assigned to each hero.&lt;/p&gt;
 &lt;p&gt;Now, we have all the ingredients for the next step.  Recall that each hero is
 described by 50 numbers (from our embedding procedure) and that hero has
 certain roles (from the dota2 gamepedia).&lt;/p&gt;
