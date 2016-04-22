@@ -28,7 +28,7 @@ ARTICLE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
 LINKS = ()
 
 # Social widget
-SOCIAL =  (('twitter', 'http://twitter.com/f_vaggi'),)
+SOCIAL =  (('@f_vaggi', 'http://twitter.com/f_vaggi'),)
 DEFAULT_PAGINATION = 10
 TWITTER_USERNAME = 'f_vaggi'
 
