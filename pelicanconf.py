@@ -7,7 +7,6 @@ SITENAME = u"Federico's Blog"
 SITEURL = ''
 
 PATH = 'content'
-
 TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = u'en'
@@ -19,18 +18,27 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
+# Paths:
+STATIC_PATHS = ['images', 'pdfs']
+PAGE_PATHS = ['pages']
+PAGE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
+ARTICLE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
+
 # Blogroll
 LINKS = ()
 
 # Social widget
 SOCIAL = ()
-
 DEFAULT_PAGINATION = 10
+TWITTER_USERNAME = 'f_vaggi'
 
 MARKUP = ('md', 'ipynb')
 
-PLUGIN_PATHS = './plugins'
+PLUGIN_PATHS = ['plugins']
 PLUGINS = ['ipynb.markup']
+DISPLAY_PAGES_ON_MENU = True
+
+#MENUITEMS = []
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
