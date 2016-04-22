@@ -130,7 +130,7 @@ still maintains as much of the high level structure as possible.
 
 After manipulating the data and plotting it in 2d, here is what we get:
 
-<a href="url"><img src="{filename}/images/Heroes_TNSE.png" align="left" width="750" ></a>
+<a href="{filename}/images/Heroes_TNSE.png"><img src="{filename}/images/Heroes_TNSE.png" align="left" width="750" ></a>
 
 The hero colors come from the groups we identified above.  Again - notice that
 there are easily discrete clusters that are quite meaningful.
@@ -160,13 +160,13 @@ also use a strong L1 penalty (which, as a bonus, regularizes our predictions).
 
 Here are the results of that:
 
-<a href="url"><img src="{filename}/images/LR_Weights.png" align="left" width="750" ></a>
+<a href="{filename}/images/LR_Weights.png"><img src="{filename}/images/LR_Weights.png" align="left" width="750" ></a>
 
 What does that mean, in practice?  We see that the 46th vector is strongly
 associated with being a support, and the 38th vector is strongly associated
 with being a ranged hero.  Let's plot the 38th and 46th vector of all heroes:
 
-<a href="url"><img src="{filename}/images/Weights_vs_Roles.png" align="left" width="750" ></a>
+<a href="{filename}/images/Weights_vs_Roles.png"><img src="{filename}/images/Weights_vs_Roles.png" align="left" width="750" ></a>
 
 As we can see - heroes that have higher values on axis 46, are a lot more
 likely to be support heroes.  Similarly, heroes that have higher values on axis
