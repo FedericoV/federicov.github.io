@@ -93,7 +93,7 @@ dataset in 2d using t-SNE](https://lvdmaaten.github.io/tsne/).  t-SNE is a very
 clever technique where we look for a lower dimensional representation that
 still maintains as much of the high level structure as possible.&lt;/p&gt;
 &lt;p&gt;After manipulating the data and plotting it in 2d, here is what we get:&lt;/p&gt;
-&lt;p&gt;&lt;a href="url"&gt;&lt;img src="http://federicov.github.io/images/Heroes_TNSE.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://federicov.github.io/images/Heroes_TNSE.png"&gt;&lt;img src="http://federicov.github.io/images/Heroes_TNSE.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The hero colors come from the groups we identified above.  Again - notice that
 there are easily discrete clusters that are quite meaningful.&lt;/p&gt;
 &lt;h2&gt;What do the vectors mean?:&lt;/h2&gt;
@@ -114,11 +114,11 @@ the easiest way is to use &lt;a href="https://en.wikipedia.org/wiki/Logistic_reg
 For the math nerds - to insure that we get a sparse set of basis, we will
 also use a strong L1 penalty (which, as a bonus, regularizes our predictions).&lt;/p&gt;
 &lt;p&gt;Here are the results of that:&lt;/p&gt;
-&lt;p&gt;&lt;a href="url"&gt;&lt;img src="http://federicov.github.io/images/LR_Weights.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://federicov.github.io/images/LR_Weights.png"&gt;&lt;img src="http://federicov.github.io/images/LR_Weights.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;What does that mean, in practice?  We see that the 46th vector is strongly
 associated with being a support, and the 38th vector is strongly associated
 with being a ranged hero.  Let's plot the 38th and 46th vector of all heroes:&lt;/p&gt;
-&lt;p&gt;&lt;a href="url"&gt;&lt;img src="http://federicov.github.io/images/Weights_vs_Roles.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://federicov.github.io/images/Weights_vs_Roles.png"&gt;&lt;img src="http://federicov.github.io/images/Weights_vs_Roles.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;As we can see - heroes that have higher values on axis 46, are a lot more
 likely to be support heroes.  Similarly, heroes that have higher values on axis
 38 are more likely to be ranged - you may notice that the two axis are somewhat
