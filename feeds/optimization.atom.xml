@@ -74,8 +74,7 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;strong&gt;Relative Measurements:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;When calibrating a model to data, it's common to only have access to relative measurements.  For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in
+&lt;h2 id="Relative-Measurements:"&gt;Relative Measurements:&lt;a class="anchor-link" href="#Relative-Measurements:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;When calibrating a model to data, it's common to only have access to relative measurements.  For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in
 &lt;a href="http://en.wikipedia.org/wiki/Western_blot"&gt;western blots&lt;/a&gt;.  Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, RNA abundance from microarrays, etc.&lt;/p&gt;
 &lt;p&gt;For example, here is what a western block (column A) looks like with its relative quantification (column B):&lt;/p&gt;
 &lt;p&gt;&lt;img alt="img" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd" /&gt;&lt;/p&gt;
@@ -88,8 +87,7 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;strong&gt;Calibrating Models with Data in Arbitrary Units:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning?  In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible.  Alternatively, we can make our models completely &lt;a href="https://en.wikipedia.org/wiki/Nondimensionalization"&gt;dimensionless&lt;/a&gt; by rescaling all quantities in our model by appropriately chosen constants.&lt;/p&gt;
+&lt;h2 id="Calibrating-Models-with-Data-in-Arbitrary-Units:"&gt;Calibrating Models with Data in Arbitrary Units:&lt;a class="anchor-link" href="#Calibrating-Models-with-Data-in-Arbitrary-Units:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning?  In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible.  Alternatively, we can make our models completely &lt;a href="https://en.wikipedia.org/wiki/Nondimensionalization"&gt;dimensionless&lt;/a&gt; by rescaling all quantities in our model by appropriately chosen constants.&lt;/p&gt;
 &lt;p&gt;A third option is to use scaling factors.  To do this, we assume that in the range in which we are interested in, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA.  In practice, the relationship usually follows a saturation curve, which can be described by something like a &lt;a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29"&gt;Hill function&lt;/a&gt;.  The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the &lt;a href="https://en.wikipedia.org/wiki/Poynting_vector"&gt;Poynting vector&lt;/a&gt; which does exactly what the name suggests.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -99,8 +97,7 @@
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;strong&gt;Linearizing Saturation Curves:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately in a narrow range, so as long as we are careful to make sure our measurements are in that range, we are ok.&lt;/p&gt;
+&lt;h2 id="Linearizing-Saturation-Curves:"&gt;Linearizing Saturation Curves:&lt;a class="anchor-link" href="#Linearizing-Saturation-Curves:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately in a narrow range, so as long as we are careful to make sure our measurements are in that range, we are ok.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -388,8 +385,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;strong&gt;Example Problem: Actin Polymerization&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Let's say we want to model the &lt;a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics"&gt;polymerization of actin from barbed ends&lt;/a&gt; &lt;em&gt;in-vitro&lt;/em&gt;.  This is described by a very simple differential equation:&lt;/p&gt;
+&lt;h2 id="Example-Problem:-Actin-Polymerization"&gt;Example Problem: Actin Polymerization&lt;a class="anchor-link" href="#Example-Problem:-Actin-Polymerization"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Let's say we want to model the &lt;a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics"&gt;polymerization of actin from barbed ends&lt;/a&gt; &lt;em&gt;in-vitro&lt;/em&gt;.  This is described by a very simple differential equation:&lt;/p&gt;
 &lt;p&gt;$\frac{dFa(t)}{dt} = k_{on}*N_b*Ga(t) - k_{off}*N_b$&lt;/p&gt;
 &lt;p&gt;where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on} , k_{off}$ are the binding parameters.  If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.&lt;/p&gt;
 &lt;/div&gt;
@@ -492,7 +488,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 &lt;div class="output"&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[8]:&lt;/div&gt;
 &lt;div class="output_text output_subarea output_execute_result"&gt;
-&lt;pre&gt;&lt;matplotlib.text.text at 0x7f70a9d9c4d0&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;matplotlib.text.text at 0x7f95667f01d0&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
@@ -684,13 +680,11 @@ sfxfAAAAAElFTkSuQmCC
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;&lt;strong&gt;Working with arbitrary units:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary.  In practice, actin polymerization is almost always measured using &lt;a href="https://en.wikipedia.org/wiki/Pyrene"&gt;pyrene&lt;/a&gt; actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.&lt;/p&gt;
+&lt;h2 id="Working-with-arbitrary-units:"&gt;Working with arbitrary units:&lt;a class="anchor-link" href="#Working-with-arbitrary-units:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary.  In practice, actin polymerization is almost always measured using &lt;a href="https://en.wikipedia.org/wiki/Pyrene"&gt;pyrene&lt;/a&gt; actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.&lt;/p&gt;
 &lt;p&gt;Now, we can no longer directly minimize the difference between our simulation and the experimental data, since our simulation is in units of concentration, and our measurents are in arbitrary units.  One option is to explicitly add a parameter to our model.  We can simply define a new function, $G(x)$:&lt;/p&gt;
 &lt;p&gt;$G(x) = x[0] * f(x[1:])$&lt;/p&gt;
 &lt;p&gt;which takes an extra parameter, and scales the simulation.  This however adds a parameter to the model, and, in my experience, makes parameter much slower.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Implicit Scale Factors:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;An alternative way is to write out the minimization like so (we are assuming &lt;a href="https://en.wikipedia.org/wiki/Homoscedasticity"&gt;homoscedasticity&lt;/a&gt; to simplify the expression and ignore the variance of each individual point):&lt;/p&gt;
+&lt;h2 id="Implicit-Scale-Factors:"&gt;Implicit Scale Factors:&lt;a class="anchor-link" href="#Implicit-Scale-Factors:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;An alternative way is to write out the minimization like so (we are assuming &lt;a href="https://en.wikipedia.org/wiki/Homoscedasticity"&gt;homoscedasticity&lt;/a&gt; to simplify the expression and ignore the variance of each individual point):&lt;/p&gt;
 &lt;p&gt;$\underset{x}{\arg\min}  \bigg| \sum_i (\beta F(x)_i - y_i)  \bigg|_2$&lt;/p&gt;
 &lt;p&gt;At this point - we notice that, for a given set of parameters $x$, our loss function implicitly defines an optimal scaling factor $\beta$ - it's the scaling factor that minimizes the residuals, given a simulation $F(x)$ and data $y$.&lt;/p&gt;
 &lt;p&gt;To find the optimal scale factor, we derive our loss function with respect to $\beta$&lt;/p&gt;
@@ -699,8 +693,7 @@ $$
 $$&lt;p&gt;and solve (the best reference I've found for this is &lt;a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf"&gt;Ryan Gutenkust's PhD thesis&lt;/a&gt; and the corresponding implementation in &lt;a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568"&gt;SloppyCell&lt;/a&gt;:&lt;/p&gt;
 $$
 \beta = \frac{\sum_i F(x)_i y_i }{\sum_i F(x)_i^2 } \\
-$$&lt;p&gt;&lt;strong&gt;Updating the Jacobian:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:&lt;/p&gt;
+$$&lt;h2 id="Updating-the-Jacobian:"&gt;Updating the Jacobian:&lt;a class="anchor-link" href="#Updating-the-Jacobian:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:&lt;/p&gt;
 $$
 \frac{d}{dx} (\beta(x) F(x)) = \frac{d\beta(x)}{dx}F(x) + \frac{dF(x)}{dx}\beta(x)
 $$&lt;p&gt;$ \frac{dF(x)}{dx}$ is the old Jacobian.  Now we need to calculate $\frac{d\beta(x)}{dx}$.  To obtain that, we derive the equation for $\beta$ with respect to $x$.&lt;/p&gt;
@@ -837,7 +830,7 @@ $$
 &lt;div class="output"&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[12]:&lt;/div&gt;
 &lt;div class="output_text output_subarea output_execute_result"&gt;
-&lt;pre&gt;&lt;matplotlib.legend.legend at 0x7f70ab61e2d0&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;matplotlib.legend.legend at 0x7f95681ad850&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
@@ -1134,8 +1127,7 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;It does!  We recover the correct number of barbed ends.  Note that this result applies for more complex minimization functions where you have multiple scale factors, or where $F(x)$ is only available implicitly - such as when numerically integrating a set of differential equations.  In practice, for any large optimization problem, calculating the scale factors will almost never be a significant slowdown: what will end up dominating the run time are either computing $F(x)$ and it's Jacobian $\frac{dF(x)}{dx}$ or inverting the pseudo-Hessian inside the Levemberg-Marquardt algorithm.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Numerical Considerations:&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow.  To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the &lt;a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation"&gt;MAP&lt;/a&gt; solution.  Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently &lt;a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html"&gt;sloppy&lt;/a&gt;) and they make the estimation procedure more stable.&lt;/p&gt;
+&lt;h2 id="Numerical-Considerations:"&gt;Numerical Considerations:&lt;a class="anchor-link" href="#Numerical-Considerations:"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow.  To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the &lt;a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation"&gt;MAP&lt;/a&gt; solution.  Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently &lt;a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html"&gt;sloppy&lt;/a&gt;) and they make the estimation procedure more stable.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
