@@ -724,11 +724,11 @@ sfxfAAAAAElFTkSuQmCC
 <p>$G(x) = x[0] * f(x[1:])$</p>
 <p>which takes an extra parameter, and scales the simulation.  This however adds a parameter to the model, and, in my experience, makes parameter much slower.</p>
 <h2 id="Implicit-Scale-Factors:">Implicit Scale Factors:<a class="anchor-link" href="#Implicit-Scale-Factors:">¶</a></h2><p>An alternative way is to write out the minimization like so (we are assuming <a href="https://en.wikipedia.org/wiki/Homoscedasticity">homoscedasticity</a> to simplify the expression and ignore the variance of each individual point):</p>
-<p>$\underset{x}{\arg\min}  \bigg| \sum_i (\beta F(x)_i - y_i)  \bigg|_2$</p>
+<p>$\underset{x}{\arg\min} \sum_i (\beta F(x)_i - y_i)^2$</p>
 <p>At this point - we notice that, for a given set of parameters $x$, our loss function implicitly defines an optimal scaling factor $\beta$ - it's the scaling factor that minimizes the residuals, given a simulation $F(x)$ and data $y$.</p>
 <p>To find the optimal scale factor, we derive our loss function with respect to $\beta$</p>
 $$
-\frac{d} {d \beta} \bigg| \sum_i (\beta F(x)_i - y_i)  \bigg|_2 = 0 \\
+\frac{d} {d \beta} \sum_i (\beta F(x)_i - y_i)^2 = 0 \\
 $$<p>and solve (the best reference I've found for this is <a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf">Ryan Gutenkust's PhD thesis</a> and the corresponding implementation in <a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568">SloppyCell</a>:</p>
 $$
 \beta = \frac{\sum_i F(x)_i y_i }{\sum_i F(x)_i^2 } \\
@@ -797,15 +797,16 @@ $$
 
 <span class="k">def</span> <span class="nf">scaled_fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    Calculates the jacobian of the simulation with respect to the parameter</span>
-<span class="sd">    being optimized including the contribution of the scale factor:</span>
+<span class="sd">    Calculates the jacobian of the simulation with</span>
+<span class="sd">    respect to the parameter being optimized including</span>
+<span class="sd">    the contribution of the scale factor:</span>
 <span class="sd">    </span>
 <span class="sd">    (d/dx B(x)F(x) = dB(x)/dx*F(x) + dF(x)/dx*B(x))</span>
 <span class="sd">    """</span>
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     
-    <span class="c1"># We could write this using caching to avoid recalculating f(x) and B(x)</span>
-    <span class="c1"># In case we have already computed them with a given p</span>
+    <span class="c1"># We could write this using caching to avoid</span>
+    <span class="c1"># recalculating f(x) and B(x) every iteration.</span>
     <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     
