@@ -113,8 +113,8 @@
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Relative-Measurements:">Relative Measurements:<a class="anchor-link" href="#Relative-Measurements:">¶</a></h2><p>When calibrating a model to data, it's common to only have access to relative measurements.  For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in
-<a href="http://en.wikipedia.org/wiki/Western_blot">western blots</a>.  Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, RNA abundance from microarrays, etc.</p>
-<p>For example, here is what a western block (column A) looks like with its relative quantification (column B):</p>
+<a href="http://en.wikipedia.org/wiki/Western_blot">western blots</a>.  Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, etc...</p>
+<p>For example, here is what a western block (<strong>column A</strong>) looks like with its relative quantification (<strong>column B</strong>):</p>
 <p><img alt="img" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd" /></p>
 <p>(taken from: <a href="https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&amp;req=4">https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&req;=4</a>).</p>
 </div>
@@ -126,7 +126,7 @@
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Calibrating-Models-with-Data-in-Arbitrary-Units:">Calibrating Models with Data in Arbitrary Units:<a class="anchor-link" href="#Calibrating-Models-with-Data-in-Arbitrary-Units:">¶</a></h2><p>How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning?  In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible.  Alternatively, we can make our models completely <a href="https://en.wikipedia.org/wiki/Nondimensionalization">dimensionless</a> by rescaling all quantities in our model by appropriately chosen constants.</p>
-<p>A third option is to use scaling factors.  To do this, we assume that in the range in which we are interested in, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA.  In practice, the relationship usually follows a saturation curve, which can be described by something like a <a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29">Hill function</a>.  The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the <a href="https://en.wikipedia.org/wiki/Poynting_vector">Poynting vector</a> which does exactly what the name suggests.</p>
+<p>A third option is to use scaling factors.  To do this, we assume that in the range in which we are interested, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA.  In practice, the relationship usually follows a saturation curve, which can be described by something like a <a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29">Hill function</a>.  The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the <a href="https://en.wikipedia.org/wiki/Poynting_vector">Poynting vector</a> which does exactly what the name suggests.</p>
 </div>
 </div>
 </div>
@@ -135,7 +135,7 @@
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Linearizing-Saturation-Curves:">Linearizing Saturation Curves:<a class="anchor-link" href="#Linearizing-Saturation-Curves:">¶</a></h2><p>Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately in a narrow range, so as long as we are careful to make sure our measurements are in that range, we are ok.</p>
+<h2 id="Linearizing-Saturation-Curves:">Linearizing Saturation Curves:<a class="anchor-link" href="#Linearizing-Saturation-Curves:">¶</a></h2><p>Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately, as long as we are careful to make sure our measurements are done in the correct range.</p>
 </div>
 </div>
 </div>
@@ -423,9 +423,9 @@ npPUcqeMAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Example-Problem:-Actin-Polymerization">Example Problem: Actin Polymerization<a class="anchor-link" href="#Example-Problem:-Actin-Polymerization">¶</a></h2><p>Let's say we want to model the <a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics">polymerization of actin from barbed ends</a> <em>in-vitro</em>.  This is described by a very simple differential equation:</p>
+<h2 id="Example-Problem:-Actin-Polymerization">Example Problem: Actin Polymerization<a class="anchor-link" href="#Example-Problem:-Actin-Polymerization">¶</a></h2><p>Let's say we want to model the <a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics">polymerization of actin</a> from barbed ends <em>in-vitro</em>.  This is described by a very simple differential equation:</p>
 <p>$\frac{dFa(t)}{dt} = k_{on}*N_b*Ga(t) - k_{off}*N_b$</p>
-<p>where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on} , k_{off}$ are the binding parameters.  If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.</p>
+<p>where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on} , k_{off}$ are the 1st and 0th order binding and unbinding parameters.  If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.</p>
 </div>
 </div>
 </div>
@@ -494,10 +494,13 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 <span class="n">initial_cond</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">'C1'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s1">'C1'</span><span class="p">,</span> <span class="n">initial_cond</span><span class="p">)</span>
 
-<span class="n">fact_timecourse</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span> <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">)</span>
+<span class="n">fact_timecourse</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
+                           <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">)</span>
 
-<span class="c1"># We take advantage of SymPy again to obtain the gradient of the function wrt the number of barbed ends</span>
-<span class="n">fact_grad</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span> <span class="n">diff</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">Nb</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">)</span>
+<span class="c1"># We take advantage of SymPy again to obtain the gradient</span>
+<span class="c1"># of the function wrt the number of barbed ends</span>
+<span class="n">fact_grad</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
+                     <span class="n">diff</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">Nb</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -513,9 +516,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">simulation</span><span class="p">)</span>
-
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'F-Actin'</span><span class="p">)</span>
 </pre></div>
@@ -526,7 +527,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 <div class="output">
 <div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre><matplotlib.text.text at 0x7f95667f01d0></pre>
+<pre><matplotlib.text.text at 0x7f9f6c912290></pre>
 </div>
 </div>
 <div class="output_area"><div class="prompt"></div>
@@ -663,7 +664,7 @@ sfxfAAAAAElFTkSuQmCC
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>What if we didn't actually know the number of barbed ends in solution, and wanted to estimate it on the basis of F-Actin time course data?  That's very easy using SciPy and SymPy!</p>
 <p>This is just a simple least squares minimization problem:</p>
-<p>$\underset{x}{\arg\min}  \bigg| \sum_i(F(x)_i - y_i)  \bigg|_2$</p>
+<p>$\underset{x}{\arg\min} \sum_i(F(x)_i - y_i)^2$</p>
 <p>Where $F(x)_i$ is our simulation of actin dynamics, $x$ is our unknown parameter (in this case, the number of barbed ends - we presume we know everything else) and $y_i$ is the experimental data.</p>
 </div>
 </div>
@@ -687,9 +688,9 @@ sfxfAAAAAElFTkSuQmCC
 
 <span class="k">def</span> <span class="nf">fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">'''</span>
-<span class="sd">    Returns the jacobian: The gradient at every timestep with respect</span>
-<span class="sd">    to nb.  Since we are only optimizing a single parameter, this has</span>
-<span class="sd">    an extra axis.'''</span>
+<span class="sd">    Returns the jacobian: The gradient at every timestep</span>
+<span class="sd">    with respect to nb.  Since we are only optimizing a</span>
+<span class="sd">    single parameter, this has an extra axis.'''</span>
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     
@@ -757,8 +758,8 @@ $$
 <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    Calculates the optimal scale factor (B) between simulated and</span>
-<span class="sd">    experimental data.</span>
+<span class="sd">    Calculates the optimal scale factor (B) between</span>
+<span class="sd">    simulated and experimental data.</span>
 <span class="sd">    """</span>
     <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
@@ -766,22 +767,25 @@ $$
     
 <span class="k">def</span> <span class="nf">calculate_sf_grad</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim_jac</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    Calculates the gradient of the scale factor (dB/dx) with respect to the</span>
-<span class="sd">    parameters being optimized.</span>
+<span class="sd">    Calculates the gradient of the scale factor </span>
+<span class="sd">    (dB/dx) with respect to the parameters being</span>
+<span class="sd">    optimized.</span>
 <span class="sd">    """</span>
     <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
     <span class="n">jac_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">jac_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">sim</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     
-    <span class="n">sf_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">jac_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">sim_dot_exp</span> <span class="o">*</span> <span class="n">jac_dot_sim</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sim_dot_sim</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">sf_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">jac_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span>  \
+               <span class="p">(</span><span class="n">sim_dot_exp</span> <span class="o">*</span> <span class="n">jac_dot_sim</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sim_dot_sim</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sf_grad</span>
 
 <span class="k">def</span> <span class="nf">scaled_fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    Calculates the residuals between simulated data and experimental data</span>
-<span class="sd">    after scaling the simulations using the scale factor.</span>
+<span class="sd">    Calculates the residuals between simulated data and</span>
+<span class="sd">    experimental data after scaling the simulations using</span>
+<span class="sd">    the scale factor.</span>
 <span class="sd">    """</span>
     
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -858,7 +862,8 @@ $$
 <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">,</span> <span class="s1">'r-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'scaled_sim'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="o">*</span><span class="n">sf</span><span class="p">,</span> <span class="s1">'bo'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim*scale_factor'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="o">*</span><span class="n">sf</span><span class="p">,</span> <span class="s1">'bo'</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim*scale_factor'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'best'</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -868,7 +873,7 @@ $$
 <div class="output">
 <div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre><matplotlib.legend.legend at 0x7f95681ad850></pre>
+<pre><matplotlib.legend.legend at 0x7f9f6e2fb050></pre>
 </div>
 </div>
 <div class="output_area"><div class="prompt"></div>
@@ -1142,8 +1147,10 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
 <div class="inner_cell">
 <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">scaled_fact_residuals</span><span class="p">,</span> <span class="n">init_guess</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">scaled_measures</span><span class="p">,),</span>
-              <span class="n">full_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="n">scaled_fact_jac</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">scaled_fact_residuals</span><span class="p">,</span> <span class="n">init_guess</span><span class="p">,</span>
+              <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">scaled_measures</span><span class="p">,),</span>
+              <span class="n">full_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">Dfun</span><span class="o">=</span><span class="n">scaled_fact_jac</span><span class="p">)</span>
 <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
