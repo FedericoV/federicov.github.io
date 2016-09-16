@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog</title><link href="http://federicov.github.io/" rel="alternate"></link><link href="http://federicov.github.io/feeds/all.atom.xml" rel="self"></link><id>http://federicov.github.io/</id><updated>2016-05-04T00:00:00+02:00</updated><entry><title>Fitting Models with Dimensionless Data</title><link href="http://federicov.github.io/Models-With-Scale-Factors.html" rel="alternate"></link><published>2016-05-04T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-05-04:Models-With-Scale-Factors.html</id><summary type="html">&lt;style type="text/css"&gt;/*!
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog</title><link href="http://federicov.github.io/" rel="alternate"></link><link href="http://federicov.github.io/feeds/all.atom.xml" rel="self"></link><id>http://federicov.github.io/</id><updated>2016-05-04T00:00:00+02:00</updated><entry><title>Fitting Models with Dimensionless Data</title><link href="http://federicov.github.io/Models-With-Scale-Factors.html" rel="alternate"></link><published>2016-05-04T00:00:00+02:00</published><updated>2016-05-04T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-05-04:Models-With-Scale-Factors.html</id><summary type="html">&lt;style type="text/css"&gt;/*!
 *
 * IPython notebook
 *
@@ -106,9 +106,9 @@
 &lt;div class="prompt input_prompt"&gt;In [1]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;autograd.numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;autograd&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;grad&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;autograd.numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;autograd&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;grad&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
 &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="k"&gt;matplotlib&lt;/span&gt; inline
 
 
@@ -132,7 +132,7 @@
 &lt;div class="prompt input_prompt"&gt;In [2]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;Km&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;
 &lt;span class="n"&gt;Vmax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
 &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
@@ -154,7 +154,7 @@
 &lt;div class="prompt input_prompt"&gt;In [3]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;111&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'Hill Function'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -396,7 +396,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 &lt;div class="prompt input_prompt"&gt;In [4]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sympy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sympy&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
 &lt;span class="n"&gt;init_printing&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
@@ -408,7 +408,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 &lt;div class="prompt input_prompt"&gt;In [5]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;At&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;symbols&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'At Nb k_on k_off t'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;At&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;symbols&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'At Nb k_on k_off t'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;Fa&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'Fa'&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;Ga&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;At&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Fa&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -421,7 +421,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 &lt;div class="prompt input_prompt"&gt;In [6]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;eq&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Eq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Ga&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Nb&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;diff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fa&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;eq&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Eq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Ga&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Nb&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;diff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fa&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="n"&gt;sol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dsolve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eq&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;simplify&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -452,7 +452,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 &lt;div class="prompt input_prompt"&gt;In [7]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#Solve for initial condition of 0 F-Actin at t=0&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#Solve for initial condition of 0 F-Actin at t=0&lt;/span&gt;
 &lt;span class="n"&gt;initial_cond&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rhs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;'C1'&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;sol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rhs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'C1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;initial_cond&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -473,7 +473,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 &lt;div class="prompt input_prompt"&gt;In [8]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;simulation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
 &lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -489,7 +489,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 &lt;div class="output"&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[8]:&lt;/div&gt;
 &lt;div class="output_text output_subarea output_execute_result"&gt;
-&lt;pre&gt;&lt;matplotlib.text.text at 0x7f9f6c912290&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;matplotlib.text.text at 0x113e86710&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
@@ -636,7 +636,7 @@ sfxfAAAAAElFTkSuQmCC
 &lt;div class="prompt input_prompt"&gt;In [9]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fact_residuals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fact_residuals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;'''&lt;/span&gt;
 &lt;span class="sd"&gt;    Returns the residuals between the simulation calculated&lt;/span&gt;
 &lt;span class="sd"&gt;    with nb == p[0] and the original simulation with the known&lt;/span&gt;
@@ -656,10 +656,10 @@ sfxfAAAAAElFTkSuQmCC
     &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;fact_grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reshape&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.optimize&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.optimize&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;
 
-&lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fact_residuals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;simulation&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;full_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-              &lt;span class="n"&gt;col_deriv&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Dfun&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fact_jac&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fact_residuals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;simulation&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;full_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;col_deriv&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Dfun&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fact_jac&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -718,7 +718,7 @@ $$
 &lt;div class="prompt input_prompt"&gt;In [10]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="sd"&gt;"""&lt;/span&gt;
 &lt;span class="sd"&gt;    Calculates the optimal scale factor (B) between&lt;/span&gt;
 &lt;span class="sd"&gt;    simulated and experimental data.&lt;/span&gt;
@@ -792,17 +792,17 @@ $$
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
-&lt;div class="prompt input_prompt"&gt;In [11]:&lt;/div&gt;
+&lt;div class="prompt input_prompt"&gt;In [13]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;
 
 &lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
 &lt;span class="n"&gt;scaled_measures&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;simulation&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="mf"&gt;1.7&lt;/span&gt;
 &lt;span class="n"&gt;sf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scaled_measures&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;sf&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -820,10 +820,10 @@ $$
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
-&lt;div class="prompt input_prompt"&gt;In [12]:&lt;/div&gt;
+&lt;div class="prompt input_prompt"&gt;In [14]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'unscaled_sim'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'unscaled_sim'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scaled_measures&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'r-'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'scaled_sim'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'bo'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
          &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'unscaled_sim*scale_factor'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -834,9 +834,9 @@ $$
 &lt;/div&gt;
 &lt;div class="output_wrapper"&gt;
 &lt;div class="output"&gt;
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[12]:&lt;/div&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[14]:&lt;/div&gt;
 &lt;div class="output_text output_subarea output_execute_result"&gt;
-&lt;pre&gt;&lt;matplotlib.legend.legend at 0x7f9f6e2fb050&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;matplotlib.legend.legend at 0x115febe48&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="output_area"&gt;&lt;div class="prompt"&gt;&lt;/div&gt;
@@ -1106,13 +1106,13 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
-&lt;div class="prompt input_prompt"&gt;In [13]:&lt;/div&gt;
+&lt;div class="prompt input_prompt"&gt;In [15]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython2"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;init_guess&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;init_guess&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scaled_fact_residuals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;init_guess&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
               &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scaled_measures&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt;
-              &lt;span class="n"&gt;full_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;col_deriv&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;full_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;col_deriv&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
               &lt;span class="n"&gt;Dfun&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;scaled_fact_jac&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -1121,7 +1121,7 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
 &lt;/div&gt;
 &lt;div class="output_wrapper"&gt;
 &lt;div class="output"&gt;
-&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[13]:&lt;/div&gt;
+&lt;div class="output_area"&gt;&lt;div class="prompt output_prompt"&gt;Out[15]:&lt;/div&gt;
 &lt;div class="output_text output_subarea output_execute_result"&gt;
 &lt;pre&gt;array([ 0.0001])&lt;/pre&gt;
 &lt;/div&gt;
@@ -1166,7 +1166,7 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 &lt;/script&gt;
-</summary><category term="Python"></category><category term="ODE"></category><category term="SymPy"></category><category term="Optimization"></category></entry><entry><title>Gavagai</title><link href="http://federicov.github.io/word-embeddings-and-dota2.html" rel="alternate"></link><published>2016-04-22T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-22:word-embeddings-and-dota2.html</id><summary type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
+</summary><category term="Python"></category><category term="ODE"></category><category term="SymPy"></category><category term="Optimization"></category></entry><entry><title>Gavagai</title><link href="http://federicov.github.io/word-embeddings-and-dota2.html" rel="alternate"></link><published>2016-04-22T00:00:00+02:00</published><updated>2016-04-22T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-22:word-embeddings-and-dota2.html</id><summary type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
 &lt;a href="http://www.datdota.com/blog/?p=1323"&gt;evolution of the metagame across patches&lt;/a&gt;.
 This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
 &lt;a href="https://en.wikipedia.org/wiki/Natural_language_processing"&gt;NLP&lt;/a&gt; in a very novel way.&lt;/p&gt;
@@ -1303,7 +1303,7 @@ symbols without any meaning... yet, starting from that, we were able to recover
  looking at patterns in how those words are used, managed to figure out what
  the words mean relative to each other.&lt;/p&gt;
 &lt;p&gt;Further, by connecting the features that we learned in an unsupervised way to
-class roles, we were even able to give an interpretation to our latent features.&lt;/p&gt;</summary><category term="video games"></category><category term="machine learning"></category><category term="dota2"></category></entry><entry><title>The peer review process of eLife</title><link href="http://federicov.github.io/peer-review-at-eLife.html" rel="alternate"></link><published>2016-04-14T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-14:peer-review-at-eLife.html</id><summary type="html">&lt;p&gt;Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
+class roles, we were even able to give an interpretation to our latent features.&lt;/p&gt;</summary><category term="video games"></category><category term="machine learning"></category><category term="dota2"></category></entry><entry><title>The peer review process of eLife</title><link href="http://federicov.github.io/peer-review-at-eLife.html" rel="alternate"></link><published>2016-04-14T00:00:00+02:00</published><updated>2016-04-14T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-14:peer-review-at-eLife.html</id><summary type="html">&lt;p&gt;Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
 we just published an analysis of the peer review process of eLife on
 F1000 &lt;a href="http://f1000research.com/articles/5-683/v1"&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;It was an interesting experience, and it was my first time leading a project from
@@ -1372,7 +1372,7 @@ work and examine other effects, such as:&lt;/p&gt;
 &lt;li&gt;http://www.nature.com/news/papers-with-shorter-titles-get-more-citations-1.18246&lt;/li&gt;
 &lt;li&gt;http://www.nature.com/news/rejection-improves-eventual-impact-of-manuscripts-1.11583&lt;/li&gt;
 &lt;li&gt;http://link.springer.com/article/10.1007/s11192-016-1936-z&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="scientific publishing"></category><category term="open science"></category></entry><entry><title>Yet Another Instance of a Broken Publishing System at Work</title><link href="http://federicov.github.io/killing-animals-for-nothing.html" rel="alternate"></link><published>2015-10-15T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2015-10-15:killing-animals-for-nothing.html</id><summary type="html">&lt;h2&gt;Reproducibility in the Spotlight:&lt;/h2&gt;
+&lt;/ul&gt;</summary><category term="scientific publishing"></category><category term="open science"></category></entry><entry><title>Yet Another Instance of a Broken Publishing System at Work</title><link href="http://federicov.github.io/killing-animals-for-nothing.html" rel="alternate"></link><published>2015-10-15T00:00:00+02:00</published><updated>2015-10-15T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2015-10-15:killing-animals-for-nothing.html</id><summary type="html">&lt;h2&gt;Reproducibility in the Spotlight:&lt;/h2&gt;
 &lt;p&gt;Psychology is still reeling from the results of a &lt;a href="https://www.sciencemag.org/content/349/6251/aac4716.abstract"&gt;massive study of
 reproducibility&lt;/a&gt;
 which found that less than half of statistically significant findings recently
@@ -1454,7 +1454,7 @@ by their institutions to obtain grants, and it's getting harder and harder.&lt;/
 &lt;p&gt;Further, missing grants doesn't just hurt the career of the PI.  Very few people
 in science have the luxury of fixed positions - even lab technicians and staff
 scientists are often funded by grants, and not getting a grant renewed can mean
-having to fire people people you've worked with for many years.&lt;/p&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category><category term="research"></category></entry><entry><title>Why Scientists Don't Share Data and How to Fix it</title><link href="http://federicov.github.io/novelty-is-overrated.html" rel="alternate"></link><published>2014-10-29T00:00:00+01:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-10-29:novelty-is-overrated.html</id><summary type="html">&lt;h2&gt;Towards a Better Science&lt;/h2&gt;
+having to fire people people you've worked with for many years.&lt;/p&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category><category term="research"></category></entry><entry><title>Why Scientists Don't Share Data and How to Fix it</title><link href="http://federicov.github.io/novelty-is-overrated.html" rel="alternate"></link><published>2014-10-29T00:00:00+01:00</published><updated>2014-10-29T00:00:00+01:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-10-29:novelty-is-overrated.html</id><summary type="html">&lt;h2&gt;Towards a Better Science&lt;/h2&gt;
 &lt;p&gt;Recently, there's been a highly encouraging push towards a more open science with a greater emphasis on &lt;a href="http://www.nature.com/nature/focus/reproducibility/"&gt;reproducibility&lt;/a&gt;, spurred by a few &lt;a href="http://retractionwatch.com/2014/09/11/potentially-groundbreaking-highly-provocative-nature-stap-cell-peer-reviews-published/"&gt;high profile retractions&lt;/a&gt; and a growing awareness of the &lt;a href="http://www.economist.com/news/briefing/21588057-scientists-think-science-self-correcting-alarming-degree-it-not-trouble"&gt;slippery nature&lt;/a&gt; of several scientific findings.&lt;/p&gt;
 &lt;p&gt;This slow shift has important implications.  While in theory journals encourage or require the sharing of published data to anyone who requests it, often this is very difficult or even unpleasant, requiring multiple requests to journal editors to compel the authors to share the raw data.  Why is this data sharing so controversial and complex?&lt;/p&gt;
 &lt;h2&gt;Incentives and Data Sharing&lt;/h2&gt;
@@ -1470,7 +1470,7 @@ having to fire people people you've worked with for many years.&lt;/p&gt;</summa
 &lt;li&gt;Shift away from the idea of 'first author' and 'last author'.  Part of what drives the need to produce multiple papers is that on large multi-year projects, you need to produce enough first author papers for all the postdocs and PhDs.  Especially on papers that require complex experiments + computational analysis, multiple people often contribute equally.&lt;/li&gt;
 &lt;li&gt;Finally, develop a better mechanism to reward people who make highly sophisticated datasets available online.  Something in between a citation and co-authorship.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;While I was putting the finishing touches on this blog, I was linked &lt;a href="http://www.plosmedicine.org/article/info%3Adoi%2F10.1371%2Fjournal.pmed.1001747"&gt;this&lt;/a&gt; excellent article by &lt;a href="https://med.stanford.edu/profiles/john-ioannidis"&gt;Ioannidis&lt;/a&gt; on how to make more published research true.  It's excellent, and everyone should read it, especially the part about the reward system.&lt;/p&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category></entry><entry><title>NumPy 1.10+ changes with openBLAS</title><link href="http://federicov.github.io/NumPy1.10+andopenblas.html" rel="alternate"></link><published>2014-09-15T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-15:NumPy1.10+andopenblas.html</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/xianyi/OpenBLAS"&gt;OpenBLAS&lt;/a&gt; is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained &lt;a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2"&gt;gotoblas&lt;/a&gt;.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).&lt;/p&gt;
+&lt;p&gt;While I was putting the finishing touches on this blog, I was linked &lt;a href="http://www.plosmedicine.org/article/info%3Adoi%2F10.1371%2Fjournal.pmed.1001747"&gt;this&lt;/a&gt; excellent article by &lt;a href="https://med.stanford.edu/profiles/john-ioannidis"&gt;Ioannidis&lt;/a&gt; on how to make more published research true.  It's excellent, and everyone should read it, especially the part about the reward system.&lt;/p&gt;</summary><category term="scientific publishing"></category><category term="incentives"></category></entry><entry><title>NumPy 1.10+ changes with openBLAS</title><link href="http://federicov.github.io/NumPy1.10+andopenblas.html" rel="alternate"></link><published>2014-09-15T00:00:00+02:00</published><updated>2014-09-15T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-15:NumPy1.10+andopenblas.html</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/xianyi/OpenBLAS"&gt;OpenBLAS&lt;/a&gt; is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained &lt;a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2"&gt;gotoblas&lt;/a&gt;.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).&lt;/p&gt;
 &lt;p&gt;Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for all linear algebra routines, and NumPy is no exception.  There are lots of &lt;a href="http://myvirtualbrain.blogspot.it/2013/01/compiling-and-installing-numpy-with.html"&gt;excellent&lt;/a&gt; &lt;a href="http://osdf.github.io/blog/numpyscipy-with-openblas-for-ubuntu-1204-second-try.html"&gt;guides&lt;/a&gt; to building OpenBLAS and linking it with NumPy.&lt;/p&gt;
 &lt;p&gt;However, since until recently, building NumPy with OpenBLAS required a fair bit of tinkering, all the guides suggest testing to see if your build process worked like &lt;a href="https://gist.github.com/osdf/3842524#file_test_numpy.py"&gt;so&lt;/a&gt;.  Since the NumPy 1.9 release though, all subsequent builds however changed so &lt;em&gt;numpy.core._dotblas&lt;/em&gt; is no longer built as a standalone file.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;From 1.10 the release notes:&lt;/strong&gt;&lt;/p&gt;
@@ -1483,7 +1483,7 @@ having to fire people people you've worked with for many years.&lt;/p&gt;</summa
 &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;libraries&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;openblas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;library_dirs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/opt/OpenBLAS/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;define_macros&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;HAVE_CBLAS&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;lapack&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;libraries&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;openblas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;library_dirs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/opt/OpenBLAS/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;f77&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="[Python"></category><category term="openBLAS"></category><category term="NumPy]"></category></entry><entry><title>EuroSciPy 2014 Thoughts</title><link href="http://federicov.github.io/EuroSciPy2014.html" rel="alternate"></link><published>2014-09-05T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-05:EuroSciPy2014.html</id><summary type="html">&lt;p&gt;I just got back from Cambridge, where last week I attended &lt;a href="https://www.euroscipy.org/"&gt;EuroSciPy&lt;/a&gt;.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other organizers try to imitate what works.&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="[Python"></category><category term="openBLAS"></category><category term="NumPy]"></category></entry><entry><title>EuroSciPy 2014 Thoughts</title><link href="http://federicov.github.io/EuroSciPy2014.html" rel="alternate"></link><published>2014-09-05T00:00:00+02:00</published><updated>2014-09-05T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-05:EuroSciPy2014.html</id><summary type="html">&lt;p&gt;I just got back from Cambridge, where last week I attended &lt;a href="https://www.euroscipy.org/"&gt;EuroSciPy&lt;/a&gt;.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other organizers try to imitate what works.&lt;/p&gt;
 &lt;h2&gt;Best Conference Practices:&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -1520,7 +1520,7 @@ having to fire people people you've worked with for many years.&lt;/p&gt;</summa
 &lt;li&gt;
 &lt;p&gt;&lt;a href="https://github.com/sklearn-theano/sklearn-theano"&gt;Scikit-theano&lt;/a&gt;.  This is a nice package by Kyle Kastner to expose some complex estimators that are currently outside of the scope of the main scikit-learn project using a sklearn-like api, while using Theano under the hood for speed.  Anyone who is familiar with the sklearn API should be able to use it.&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</summary><category term="SciPy"></category><category term="Python"></category><category term="open source"></category></entry><entry><title>Weapons of Math Destruction</title><link href="http://federicov.github.io/deception-by-mathematics.html" rel="alternate"></link><published>2014-07-29T00:00:00+02:00</published><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-07-29:deception-by-mathematics.html</id><summary type="html">&lt;blockquote&gt;
+&lt;/ul&gt;</summary><category term="SciPy"></category><category term="Python"></category><category term="open source"></category></entry><entry><title>Weapons of Math Destruction</title><link href="http://federicov.github.io/deception-by-mathematics.html" rel="alternate"></link><published>2014-07-29T00:00:00+02:00</published><updated>2014-07-29T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-07-29:deception-by-mathematics.html</id><summary type="html">&lt;blockquote&gt;
 &lt;p&gt;&lt;em&gt;The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for better or for worse, to our pleasure, even though perhaps also to our bafflement, to wide branches of learning.&lt;/em&gt; - Eugene Wigner, The Unreasonable Effectiveness of Mathematics in the Physical Sciences&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2&gt;Trust and its role in the Scientific Enteprise&lt;/h2&gt;

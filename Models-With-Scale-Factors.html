@@ -150,9 +150,9 @@
 <div class="prompt input_prompt">In [1]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">autograd</span> <span class="kn">import</span> <span class="n">grad</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">autograd</span> <span class="k">import</span> <span class="n">grad</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 
 
@@ -176,7 +176,7 @@
 <div class="prompt input_prompt">In [2]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">Km</span> <span class="o">=</span> <span class="mf">0.5</span>
 <span class="n">Vmax</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
@@ -198,7 +198,7 @@
 <div class="prompt input_prompt">In [3]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Hill Function'</span><span class="p">)</span>
@@ -440,7 +440,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In [4]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="o">*</span>
 <span class="n">init_printing</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -452,7 +452,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In [5]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">At</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">'At Nb k_on k_off t'</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">At</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">'At Nb k_on k_off t'</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">Fa</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">'Fa'</span><span class="p">)(</span><span class="n">t</span><span class="p">)</span>
 <span class="n">Ga</span> <span class="o">=</span> <span class="n">At</span> <span class="o">-</span> <span class="n">Fa</span>
 </pre></div>
@@ -465,7 +465,7 @@ npPUcqeMAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In [6]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="n">k_on</span><span class="o">*</span><span class="n">Ga</span><span class="o">*</span><span class="n">Nb</span> <span class="o">-</span> <span class="n">k_off</span><span class="o">*</span><span class="n">Nb</span><span class="p">,</span> <span class="n">diff</span><span class="p">(</span><span class="n">Fa</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="n">k_on</span><span class="o">*</span><span class="n">Ga</span><span class="o">*</span><span class="n">Nb</span> <span class="o">-</span> <span class="n">k_off</span><span class="o">*</span><span class="n">Nb</span><span class="p">,</span> <span class="n">diff</span><span class="p">(</span><span class="n">Fa</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
 <span class="n">sol</span> <span class="o">=</span> <span class="n">dsolve</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
 <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
 </pre></div>
@@ -496,7 +496,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 <div class="prompt input_prompt">In [7]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#Solve for initial condition of 0 F-Actin at t=0</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Solve for initial condition of 0 F-Actin at t=0</span>
 <span class="n">initial_cond</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">'C1'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s1">'C1'</span><span class="p">,</span> <span class="n">initial_cond</span><span class="p">)</span>
 
@@ -517,7 +517,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 <div class="prompt input_prompt">In [8]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">timesteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">timesteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
@@ -533,7 +533,7 @@ $$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{o
 <div class="output">
 <div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre><matplotlib.text.text at 0x7f9f6c912290></pre>
+<pre><matplotlib.text.text at 0x113e86710></pre>
 </div>
 </div>
 <div class="output_area"><div class="prompt"></div>
@@ -680,7 +680,7 @@ sfxfAAAAAElFTkSuQmCC
 <div class="prompt input_prompt">In [9]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">'''</span>
 <span class="sd">    Returns the residuals between the simulation calculated</span>
 <span class="sd">    with nb == p[0] and the original simulation with the known</span>
@@ -700,10 +700,10 @@ sfxfAAAAAElFTkSuQmCC
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">leastsq</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">leastsq</span>
 
-<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">fact_residuals</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">simulation</span><span class="p">,),</span> <span class="n">full_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-              <span class="n">col_deriv</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="n">fact_jac</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">fact_residuals</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">simulation</span><span class="p">,),</span> <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="n">fact_jac</span><span class="p">)</span>
 
 <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
@@ -762,7 +762,7 @@ $$
 <div class="prompt input_prompt">In [10]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Calculates the optimal scale factor (B) between</span>
 <span class="sd">    simulated and experimental data.</span>
@@ -836,17 +836,17 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [11]:</div>
+<div class="prompt input_prompt">In [13]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="mf">0.0001</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="mf">0.0001</span>
 
 <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
 <span class="n">scaled_measures</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">*</span><span class="mf">1.7</span>
 <span class="n">sf</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">)</span>
 
-<span class="k">print</span> <span class="n">sf</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">sf</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -864,10 +864,10 @@ $$
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [12]:</div>
+<div class="prompt input_prompt">In [14]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim'</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">,</span> <span class="s1">'r-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'scaled_sim'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="o">*</span><span class="n">sf</span><span class="p">,</span> <span class="s1">'bo'</span><span class="p">,</span>
          <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim*scale_factor'</span><span class="p">)</span>
@@ -878,9 +878,9 @@ $$
 </div>
 <div class="output_wrapper">
 <div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
 <div class="output_text output_subarea output_execute_result">
-<pre><matplotlib.legend.legend at 0x7f9f6e2fb050></pre>
+<pre><matplotlib.legend.legend at 0x115febe48></pre>
 </div>
 </div>
 <div class="output_area"><div class="prompt"></div>
@@ -1150,13 +1150,13 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In [13]:</div>
+<div class="prompt input_prompt">In [15]:</div>
 <div class="inner_cell">
 <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">scaled_fact_residuals</span><span class="p">,</span> <span class="n">init_guess</span><span class="p">,</span>
               <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">scaled_measures</span><span class="p">,),</span>
-              <span class="n">full_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">Dfun</span><span class="o">=</span><span class="n">scaled_fact_jac</span><span class="p">)</span>
 <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
@@ -1165,7 +1165,7 @@ twZel+sobx0UkNcCuBTri9BG4AOs1kGBei3SbOf1LVYlZotAuRZAJlAAnMEKiGOAMHedO3Ae8K5t
 </div>
 <div class="output_wrapper">
 <div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[13]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
 <div class="output_text output_subarea output_execute_result">
 <pre>array([ 0.0001])</pre>
 </div>
