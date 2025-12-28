@@ -1,182 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>Fitting Models with Dimensionless Data</title>
-        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
-        <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Fitting Models with Dimensionless Data</title>
+                        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
+                                <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+    <meta name="description" content="How to fit models with dimensionless data" />
+        </head>
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-</head>
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="http://federicov.github.io/">Federico's Blog</a></h1>
+                        <nav><ul>
+                                                <li><a href="http://federicov.github.io/pages/about.html">About</a></li>
+                                                <li><a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
+                                                <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
+                                                <li class="active"><a href="http://federicov.github.io/category/optimization.html">Optimization</a></li>
+                                                <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
+                                                <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="http://federicov.github.io/Models-With-Scale-Factors.html" rel="bookmark"
+             title="Permalink to Fitting Models with Dimensionless Data">Fitting Models with Dimensionless Data</a></h1>
+    <a rel="nofollow" href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="f_vaggi">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+      </header>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="http://federicov.github.io/">Federico's Blog </a></h1>
-                <nav><ul>
-                    <li><a href="http://federicov.github.io/pages/about.html">About</a></li>
-                    <li><a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
-                    <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
-                    <li class="active"><a href="http://federicov.github.io/category/optimization.html">Optimization</a></li>
-                    <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
-                    <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="http://federicov.github.io/Models-With-Scale-Factors.html" rel="bookmark"
-           title="Permalink to Fitting Models with Dimensionless Data">Fitting Models with Dimensionless Data</a></h1>
-<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="f_vaggi">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-    </header>
-
-    <div class="entry-content">
+      <div class="entry-content">
 <footer class="post-info">
-        <abbr class="published" title="2016-05-04T00:00:00+02:00">
+        <abbr class="published" title="2016-05-04T00:00:00-07:00">
                 Published: Wed 04 May 2016
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-        </address>
-<p>In <a href="http://federicov.github.io/category/optimization.html">Optimization</a>.</p>
-<p>tags: <a href="http://federicov.github.io/tag/python.html">Python</a> <a href="http://federicov.github.io/tag/ode.html">ODE</a> <a href="http://federicov.github.io/tag/sympy.html">SymPy</a> <a href="http://federicov.github.io/tag/optimization.html">Optimization</a> </p>
-</footer><!-- /.post-info -->      <style type="text/css">/*!
-*
-* IPython notebook
-*
-*/.ansibold{font-weight:700}.ansiblack{}.ansired{color:#8b0000}.ansigreen{6400}.ansiyellow{color:#c4a000}.ansiblue{8b}.ansipurple{color:#9400d3}.ansicyan{color:#4682b4}.ansigray{color:gray}.ansibgblack{background-}.ansibgred{background-color:red}.ansibggreen{background-color:green}.ansibgyellow{background-color:#ff0}.ansibgblue{background-f}.ansibgpurple{background-color:#ff00ff}.ansibgcyan{background-ff}.ansibggray{background-color:gray}div.cell{border:1px solid transparent;display:-webkit-box;-webkit-box-orient:vertical;display:-moz-box;-moz-box-orient:vertical;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;border-radius:2px;box-sizing:border-box;-moz-box-sizing:border-box;border-width:thin;border-style:solid;width:100%;padding:5px;margin:0;outline:0}div.cell.selected{border-color:#ababab}@media print{div.cell.selected{border-color:transparent}}.edit_mode div.cell.selected{border-color:green}.prompt{min-width:14ex;padding:.4em;margin:0;font-family:monospace;text-align:right;line-height:1.21429em}div.inner_cell{display:-webkit-box;-webkit-box-orient:vertical;display:-moz-box;-moz-box-orient:vertical;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1}@-moz-document url-prefix(){div.inner_cell{overflow-x:hidden}}div.input_area{border:1px solid #cfcfcf;border-radius:2px;background:#f7f7f7;line-height:1.21429em}div.prompt:empty{padding-top:0;padding-bottom:0}div.unrecognized_cell{padding:5px 5px 5px 0;display:-webkit-box;-webkit-box-orient:horizontal;display:-moz-box;-moz-box-orient:horizontal;display:box;box-orient:horizontal;box-align:stretch;display:flex;flex-direction:row;align-items:stretch}div.unrecognized_cell .inner_cell{border-radius:2px;padding:5px;font-weight:700;color:red;border:1px solid #cfcfcf;background:#eaeaea}div.unrecognized_cell .inner_cell a,div.unrecognized_cell .inner_cell a:hover{color:inherit;text-decoration:none}@media (max-width:540px){.prompt{text-align:left}div.unrecognized_cell>div.prompt{display:none}}div.code_cell{}div.input{page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;display:-moz-box;-moz-box-orient:horizontal;display:box;box-orient:horizontal;box-align:stretch;display:flex;flex-direction:row;align-items:stretch}@media (max-width:540px){div.input{-webkit-box-orient:vertical;-moz-box-orient:vertical;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}}div.input_prompt{color:navy;border-top:1px solid transparent}div.input_area>div.highlight{margin:.4em;border:none;padding:0;background-color:transparent}div.input_area>div.highlight>pre{margin:0;border:none;padding:0;background-color:transparent}.CodeMirror{line-height:1.21429em;font-size:14px;height:auto;background:0 0}.CodeMirror-scroll{overflow-y:hidden;overflow-x:auto}.CodeMirror-lines{padding:.4em}.CodeMirror-linenumber{padding:0 8px 0 4px}.CodeMirror-gutters{border-bottom-left-radius:2px;border-top-left-radius:2px}.CodeMirror pre{padding:0;border:0;border-radius:0}.highlight-base,.highlight-variable{}.highlight-variable-2{color:#1a1a1a}.highlight-variable-3{color:#333}.highlight-string{color:#BA2121}.highlight-comment{color:#408080;font-style:italic}.highlight-number{80}.highlight-atom{color:#88F}.highlight-keyword{color:green;font-weight:700}.highlight-builtin{color:green}.highlight-error{color:red}.highlight-operator{color:#A2F;font-weight:700}.highlight-meta{color:#A2F}.highlight-def{f}.highlight-string-2{color:#f50}.highlight-qualifier{color:#555}.highlight-bracket{color:#997}.highlight-tag{color:#170}.highlight-attribute{c}.highlight-header{f}.highlight-quote{90}.highlight-link{c}.cm-s-ipython span.cm-keyword{color:green;font-weight:700}.cm-s-ipython span.cm-atom{color:#88F}.cm-s-ipython span.cm-number{80}.cm-s-ipython span.cm-def{f}.cm-s-ipython span.cm-variable{}.cm-s-ipython span.cm-operator{color:#A2F;font-weight:700}.cm-s-ipython span.cm-variable-2{color:#1a1a1a}.cm-s-ipython span.cm-variable-3{color:#333}.cm-s-ipython span.cm-comment{color:#408080;font-style:italic}.cm-s-ipython span.cm-string{color:#BA2121}.cm-s-ipython span.cm-string-2{color:#f50}.cm-s-ipython span.cm-meta{color:#A2F}.cm-s-ipython span.cm-qualifier{color:#555}.cm-s-ipython span.cm-builtin{color:green}.cm-s-ipython span.cm-bracket{color:#997}.cm-s-ipython span.cm-tag{color:#170}.cm-s-ipython span.cm-attribute{c}.cm-s-ipython span.cm-header{f}.cm-s-ipython span.cm-quote{90}.cm-s-ipython span.cm-link{c}.cm-s-ipython span.cm-error{color:red}.cm-s-ipython span.cm-tab{background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=')right no-repeat}div.output_wrapper{display:-webkit-box;-webkit-box-align:stretch;display:-moz-box;-moz-box-align:stretch;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch;z-index:1}div.output_scroll{height:24em;width:100%;overflow:auto;border-radius:2px;-webkit-box-shadow:inset 0 2px 8px rgba(0,0,0,.8);box-shadow:inset 0 2px 8px rgba(0,0,0,.8);display:block}div.output_collapsed{margin:0;padding:0;display:-webkit-box;-webkit-box-orient:vertical;display:-moz-box;-moz-box-orient:vertical;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}div.out_prompt_overlay{height:100%;padding:0 .4em;position:absolute;border-radius:2px}div.out_prompt_overlay:hover{-webkit-box-shadow:inset 0 0 1px #000;box-shadow:inset 0 0 1px #000;background:rgba(240,240,240,.5)}div.output_prompt{color:#8b0000}div.output_area{padding:0;page-break-inside:avoid;display:-webkit-box;-webkit-box-orient:horizontal;display:-moz-box;-moz-box-orient:horizontal;display:box;box-orient:horizontal;box-align:stretch;display:flex;flex-direction:row;align-items:stretch}div.output_area .MathJax_Display{text-align:left!important}div.output_area div.output_area img,div.output_area svg{max-width:100%;height:auto}div.output_area img.unconfined,div.output_area svg.unconfined{max-width:none}.output{display:-webkit-box;-webkit-box-orient:vertical;display:-moz-box;-moz-box-orient:vertical;display:box;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}@media (max-width:540px){div.output_area{-webkit-box-orient:vertical;-moz-box-orient:vertical;box-orient:vertical;box-align:stretch;display:flex;flex-direction:column;align-items:stretch}}div.output_area pre{margin:0;padding:0;border:0;vertical-align:baseline;background-color:transparent;border-radius:0}div.output_subarea{overflow-x:auto;padding:.4em;-webkit-box-flex:1;-moz-box-flex:1;box-flex:1;flex:1;max-width:calc(100% - 14ex)}div.output_text{text-align:left;line-height:1.21429em}div.output_stderr{background:#fdd}div.output_latex{text-align:left}div.output_javascript:empty{padding:0}.js-error{color:#8b0000}div.raw_input_container{font-family:monospace;padding-top:5px}span.raw_input_prompt{}input.raw_input{font-family:inherit;font-size:inherit;color:inherit;width:auto;vertical-align:baseline;padding:0 .25em;margin:0 .25em}input.raw_input:focus{box-shadow:none}p.p-space{margin-bottom:10px}div.output_unrecognized{padding:5px;font-weight:700;color:red}div.output_unrecognized a,div.output_unrecognized a:hover{color:inherit;text-decoration:none}.rendered_html{}.rendered_html :link,.rendered_html :visited,.rendered_html h1:first-child{margin-top:.538em}.rendered_html h2:first-child{margin-top:.636em}.rendered_html h3:first-child{margin-top:.777em}.rendered_html h4:first-child,.rendered_html h5:first-child,.rendered_html h6:first-child{margin-top:1em}.rendered_html *+ol,.rendered_html *+ul{margin-top:1em}.rendered_html *+table{margin-top:1em}.rendered_html *+p{margin-top:1em}.rendered_html *+img{margin-top:1em}div.text_cell{display:-webkit-box;-webkit-box-orient:horizontal;display:-moz-box;-moz-box-orient:horizontal;display:box;box-orient:horizontal;box-align:stretch;display:flex;flex-direction:row;align-items:stretch}@media (max-width:540px){div.text_cell>div.prompt{display:none}}div.text_cell_render{outline:0;resize:none;width:inherit;border-style:none;padding:.5em .5em .5em .4em;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box}a.anchor-link:link{text-decoration:none;padding:0 20px;visibility:hidden}h1:hover .anchor-link,h2:hover .anchor-link,h3:hover .anchor-link,h4:hover .anchor-link,h5:hover .anchor-link,h6:hover .anchor-link{visibility:visible}.text_cell.rendered .input_area{display:none}.text_cell.rendered .text_cell.unrendered .text_cell_render{display:none}.cm-header-1,.cm-header-2,.cm-header-3,.cm-header-4,.cm-header-5,.cm-header-6{font-weight:700;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}.cm-header-1{font-size:185.7%}.cm-header-2{font-size:157.1%}.cm-header-3{font-size:128.6%}.cm-header-4{font-size:110%}.cm-header-5,.cm-header-6{font-size:100%;font-style:italic}</style>
-<style type="text/css">.highlight .hll { background-color: #ffffcc }
-.highlight  { background: #f8f8f8; }
-.highlight .c { color: #408080; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
-.highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
-.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
-.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
-.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
-.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
-.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
-.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
-.highlight .gd { color: #A00000 } /* Generic.Deleted */
-.highlight .ge { font-style: italic } /* Generic.Emph */
-.highlight .gr { color: #FF0000 } /* Generic.Error */
-.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.highlight .gi { color: #00A000 } /* Generic.Inserted */
-.highlight .go { color: #888888 } /* Generic.Output */
-.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.highlight .gs { font-weight: bold } /* Generic.Strong */
-.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
-.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.highlight .kp { color: #008000 } /* Keyword.Pseudo */
-.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
-.highlight .s { color: #BA2121 } /* Literal.String */
-.highlight .na { color: #7D9029 } /* Name.Attribute */
-.highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
-.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
-.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
-.highlight .nl { color: #A0A000 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
-.highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
-.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
-.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
-.highlight .sx { color: #008000 } /* Literal.String.Other */
-.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
-.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
-.highlight .ss { color: #19177C } /* Literal.String.Symbol */
-.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .vc { color: #19177C } /* Name.Variable.Class */
-.highlight .vg { color: #19177C } /* Name.Variable.Global */
-.highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Relative-Measurements:">Relative Measurements:<a class="anchor-link" href="#Relative-Measurements:">¶</a></h2><p>When calibrating a model to data, it's common to only have access to relative measurements.  For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in
-<a href="http://en.wikipedia.org/wiki/Western_blot">western blots</a>.  Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, etc...</p>
-<p>For example, here is what a western block (<strong>column A</strong>) looks like with its relative quantification (<strong>column B</strong>):</p>
-<p><img alt="img" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd" /></p>
-<p>(taken from: <a href="https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&amp;req=4">https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&req;=4</a>).</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Calibrating-Models-with-Data-in-Arbitrary-Units:">Calibrating Models with Data in Arbitrary Units:<a class="anchor-link" href="#Calibrating-Models-with-Data-in-Arbitrary-Units:">¶</a></h2><p>How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning?  In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible.  Alternatively, we can make our models completely <a href="https://en.wikipedia.org/wiki/Nondimensionalization">dimensionless</a> by rescaling all quantities in our model by appropriately chosen constants.</p>
-<p>A third option is to use scaling factors.  To do this, we assume that in the range in which we are interested, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA.  In practice, the relationship usually follows a saturation curve, which can be described by something like a <a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29">Hill function</a>.  The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the <a href="https://en.wikipedia.org/wiki/Poynting_vector">Poynting vector</a> which does exactly what the name suggests.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Linearizing-Saturation-Curves:">Linearizing Saturation Curves:<a class="anchor-link" href="#Linearizing-Saturation-Curves:">¶</a></h2><p>Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately, as long as we are careful to make sure our measurements are done in the correct range.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [1]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">autograd</span> <span class="k">import</span> <span class="n">grad</span>
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
+                </address>
+        <p>In <a href="http://federicov.github.io/category/optimization.html">Optimization</a>.</p>
+<p>tags: <a href="http://federicov.github.io/tag/python.html">Python</a> <a href="http://federicov.github.io/tag/ode.html">ODE</a> <a href="http://federicov.github.io/tag/sympy.html">SymPy</a> <a href="http://federicov.github.io/tag/optimization.html">Optimization</a> </p>        
+</footer><!-- /.post-info -->        <h2>Relative Measurements</h2>
+<p>When calibrating a model to data, it's common to only have access to relative measurements. For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in <a href="http://en.wikipedia.org/wiki/Western_blot">western blots</a>. Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, etc...</p>
+<p>For example, here is what a western blot (<strong>column A</strong>) looks like with its relative quantification (<strong>column B</strong>):</p>
+<p><img alt="Western blot example" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd"></p>
+<p>(taken from: https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&amp;req=4).</p>
+<h2>Calibrating Models with Data in Arbitrary Units</h2>
+<p>How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning? In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible. Alternatively, we can make our models completely <a href="https://en.wikipedia.org/wiki/Nondimensionalization">dimensionless</a> by rescaling all quantities in our model by appropriately chosen constants.</p>
+<p>A third option is to use scaling factors. To do this, we assume that in the range in which we are interested, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA. In practice, the relationship usually follows a saturation curve, which can be described by something like a <a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29">Hill function</a>. The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the <a href="https://en.wikipedia.org/wiki/Poynting_vector">Poynting vector</a> which does exactly what the name suggests.</p>
+<h2>Linearizing Saturation Curves</h2>
+<p>Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately, as long as we are careful to make sure our measurements are done in the correct range.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">autograd</span> <span class="kn">import</span> <span class="n">grad</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-
 
 <span class="k">def</span> <span class="nf">hill</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Standard Hill function"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Hill function&quot;&quot;&quot;</span>
     <span class="n">numerator</span> <span class="o">=</span> <span class="n">Vmax</span><span class="o">*</span><span class="p">(</span><span class="n">L</span><span class="o">**</span><span class="n">n</span><span class="p">)</span>
     <span class="n">denominator</span> <span class="o">=</span> <span class="n">Km</span><span class="o">**</span><span class="n">n</span> <span class="o">+</span> <span class="n">L</span><span class="o">**</span><span class="n">n</span>
-    
     <span class="k">return</span> <span class="n">numerator</span><span class="o">/</span><span class="n">denominator</span>
 
 <span class="c1"># To calculate the gradient of the Hill function (with respect to L) we use autograd.</span>
 <span class="n">hill_grad</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">hill</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [2]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">Km</span> <span class="o">=</span> <span class="mf">0.5</span>
 <span class="n">Vmax</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
@@ -188,1051 +77,209 @@
 
 <span class="c1"># Approximate the Hill function as a linear equation using a 1st order Taylor series:</span>
 <span class="n">v_approx</span> <span class="o">=</span> <span class="n">hill</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">L</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">dv_dl</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [3]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Hill Function'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v_approx</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'First Order Taylor Series'</span><span class="p">)</span>
-
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'best'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Hill Function&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v_approx</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;First Order Taylor Series&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[3]:</div>
-<div class="output_text output_subarea output_execute_result">
-<pre>(0, 1)</pre>
-</div>
-</div>
-<div class="output_area"><div class="prompt"></div>
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-npPUcqeMAAAAAElFTkSuQmCC
-">
-</img></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Example-Problem:-Actin-Polymerization">Example Problem: Actin Polymerization<a class="anchor-link" href="#Example-Problem:-Actin-Polymerization">¶</a></h2><p>Let's say we want to model the <a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics">polymerization of actin</a> from barbed ends <em>in-vitro</em>.  This is described by a very simple differential equation:</p>
-<p>$\frac{dFa(t)}{dt} = k_{on}*N_b*Ga(t) - k_{off}*N_b$</p>
-<p>where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on} , k_{off}$ are the 1st and 0th order binding and unbinding parameters.  If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [4]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="o">*</span>
+</code></pre></div>
+
+<h2>Example Problem: Actin Polymerization</h2>
+<p>Let's say we want to model the <a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics">polymerization of actin</a> from barbed ends <em>in-vitro</em>. This is described by a very simple differential equation:</p>
+<p>$$\frac{dFa(t)}{dt} = k_{on} \cdot N_b \cdot Ga(t) - k_{off} \cdot N_b$$</p>
+<p>where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on}, k_{off}$ are the 1st and 0th order binding and unbinding parameters. If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">init_printing</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [5]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">At</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">'At Nb k_on k_off t'</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">Fa</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">'Fa'</span><span class="p">)(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="n">At</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;At Nb k_on k_off t&#39;</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Fa</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;Fa&#39;</span><span class="p">)(</span><span class="n">t</span><span class="p">)</span>
 <span class="n">Ga</span> <span class="o">=</span> <span class="n">At</span> <span class="o">-</span> <span class="n">Fa</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [6]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="n">k_on</span><span class="o">*</span><span class="n">Ga</span><span class="o">*</span><span class="n">Nb</span> <span class="o">-</span> <span class="n">k_off</span><span class="o">*</span><span class="n">Nb</span><span class="p">,</span> <span class="n">diff</span><span class="p">(</span><span class="n">Fa</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+
+<span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="n">k_on</span><span class="o">*</span><span class="n">Ga</span><span class="o">*</span><span class="n">Nb</span> <span class="o">-</span> <span class="n">k_off</span><span class="o">*</span><span class="n">Nb</span><span class="p">,</span> <span class="n">diff</span><span class="p">(</span><span class="n">Fa</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
 <span class="n">sol</span> <span class="o">=</span> <span class="n">dsolve</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
 <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
-<div class="output_latex output_subarea output_execute_result">
-$$\operatorname{Fa}{\left (t \right )} = \frac{1}{k_{on}} \left(At k_{on} - k_{off} + e^{k_{on} \left(C_{1} - Nb t\right)}\right)$$
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>This solution has an integration constant.  Assume that Fa(0) = 0 (meaning, at time zero, all actin is in soluble form)</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [7]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Solve for initial condition of 0 F-Actin at t=0</span>
-<span class="n">initial_cond</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">'C1'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s1">'C1'</span><span class="p">,</span> <span class="n">initial_cond</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This gives us the solution:</p>
+<p>$$Fa(t) = \frac{At \cdot k_{on} - k_{off} + e^{k_{on}(C_1 - N_b t)}}{k_{on}}$$</p>
+<p>This solution has an integration constant. Assume that $Fa(0) = 0$ (meaning, at time zero, all actin is in soluble form):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Solve for initial condition of 0 F-Actin at t=0</span>
+<span class="n">initial_cond</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;C1&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">initial_cond</span><span class="p">)</span>
 
 <span class="n">fact_timecourse</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
-                           <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">)</span>
+                           <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
 
 <span class="c1"># We take advantage of SymPy again to obtain the gradient</span>
 <span class="c1"># of the function wrt the number of barbed ends</span>
 <span class="n">fact_grad</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
-                     <span class="n">diff</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">Nb</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">'numpy'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [8]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">timesteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+                     <span class="n">diff</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">Nb</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+
+<span class="n">timesteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">simulation</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'F-Actin'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
-<div class="output_text output_subarea output_execute_result">
-<pre><matplotlib.text.text at 0x113e86710></pre>
-</div>
-</div>
-<div class="output_area"><div class="prompt"></div>
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-sfxfAAAAAElFTkSuQmCC
-">
-</img></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>What if we didn't actually know the number of barbed ends in solution, and wanted to estimate it on the basis of F-Actin time course data?  That's very easy using SciPy and SymPy!</p>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;F-Actin&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>What if we didn't actually know the number of barbed ends in solution, and wanted to estimate it on the basis of F-Actin time course data? That's very easy using SciPy and SymPy!</p>
 <p>This is just a simple least squares minimization problem:</p>
-<p>$\underset{x}{\arg\min} \sum_i(F(x)_i - y_i)^2$</p>
+<p>$$\underset{x}{\arg\min} \sum_i(F(x)_i - y_i)^2$$</p>
 <p>Where $F(x)_i$ is our simulation of actin dynamics, $x$ is our unknown parameter (in this case, the number of barbed ends - we presume we know everything else) and $y_i$ is the experimental data.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [9]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">'''</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the residuals between the simulation calculated</span>
 <span class="sd">    with nb == p[0] and the original simulation with the known</span>
 <span class="sd">    value of nb</span>
-<span class="sd">    '''</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">residuals</span> <span class="o">=</span> <span class="n">new_sim</span> <span class="o">-</span> <span class="n">data</span>
     <span class="k">return</span> <span class="n">residuals</span>
 
-
 <span class="k">def</span> <span class="nf">fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">'''</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the jacobian: The gradient at every timestep</span>
-<span class="sd">    with respect to nb.  Since we are only optimizing a</span>
-<span class="sd">    single parameter, this has an extra axis.'''</span>
+<span class="sd">    with respect to nb. Since we are only optimizing a</span>
+<span class="sd">    single parameter, this has an extra axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">leastsq</span>
+
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">leastsq</span>
 
 <span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">fact_residuals</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">simulation</span><span class="p">,),</span> <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="n">fact_jac</span><span class="p">)</span>
 
-<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
-<div class="output_text output_subarea output_execute_result">
-<pre>array([ 0.0001])</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Working-with-arbitrary-units:">Working with arbitrary units:<a class="anchor-link" href="#Working-with-arbitrary-units:">¶</a></h2><p>But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary.  In practice, actin polymerization is almost always measured using <a href="https://en.wikipedia.org/wiki/Pyrene">pyrene</a> actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.</p>
-<p>Now, we can no longer directly minimize the difference between our simulation and the experimental data, since our simulation is in units of concentration, and our measurents are in arbitrary units.  One option is to explicitly add a parameter to our model.  We can simply define a new function, $G(x)$:</p>
-<p>$G(x) = x[0] * f(x[1:])$</p>
-<p>which takes an extra parameter, and scales the simulation.  This however adds a parameter to the model, and, in my experience, makes parameter much slower.</p>
-<h2 id="Implicit-Scale-Factors:">Implicit Scale Factors:<a class="anchor-link" href="#Implicit-Scale-Factors:">¶</a></h2><p>An alternative way is to write out the minimization like so (we are assuming <a href="https://en.wikipedia.org/wiki/Homoscedasticity">homoscedasticity</a> to simplify the expression and ignore the variance of each individual point):</p>
-<p>$\underset{x}{\arg\min} \sum_i (\beta F(x)_i - y_i)^2$</p>
+<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Returns: array([ 0.0001])</span>
+</code></pre></div>
+
+<h2>Working with Arbitrary Units</h2>
+<p>But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary. In practice, actin polymerization is almost always measured using <a href="https://en.wikipedia.org/wiki/Pyrene">pyrene</a> actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.</p>
+<p>Now, we can no longer directly minimize the difference between our simulation and the experimental data, since our simulation is in units of concentration, and our measurements are in arbitrary units. One option is to explicitly add a parameter to our model. We can simply define a new function, $G(x)$:</p>
+<p>$$G(x) = x[0] \cdot f(x[1:])$$</p>
+<p>which takes an extra parameter, and scales the simulation. This however adds a parameter to the model, and, in my experience, makes parameter estimation much slower.</p>
+<h2>Implicit Scale Factors</h2>
+<p>An alternative way is to write out the minimization like so (we are assuming <a href="https://en.wikipedia.org/wiki/Homoscedasticity">homoscedasticity</a> to simplify the expression and ignore the variance of each individual point):</p>
+<p>$$\underset{x}{\arg\min} \sum_i (\beta F(x)_i - y_i)^2$$</p>
 <p>At this point - we notice that, for a given set of parameters $x$, our loss function implicitly defines an optimal scaling factor $\beta$ - it's the scaling factor that minimizes the residuals, given a simulation $F(x)$ and data $y$.</p>
-<p>To find the optimal scale factor, we derive our loss function with respect to $\beta$</p>
-$$
-\frac{d} {d \beta} \sum_i (\beta F(x)_i - y_i)^2 = 0 \\
-$$<p>and solve (the best reference I've found for this is <a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf">Ryan Gutenkust's PhD thesis</a> and the corresponding implementation in <a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568">SloppyCell</a>:</p>
-$$
-\beta = \frac{\sum_i F(x)_i y_i }{\sum_i F(x)_i^2 } \\
-$$<h2 id="Updating-the-Jacobian:">Updating the Jacobian:<a class="anchor-link" href="#Updating-the-Jacobian:">¶</a></h2><p>However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:</p>
-$$
-\frac{d}{dx} (\beta(x) F(x)) = \frac{d\beta(x)}{dx}F(x) + \frac{dF(x)}{dx}\beta(x)
-$$<p>$ \frac{dF(x)}{dx}$ is the old Jacobian.  Now we need to calculate $\frac{d\beta(x)}{dx}$.  To obtain that, we derive the equation for $\beta$ with respect to $x$.</p>
-$$
-\frac{d\beta}{dx} = \frac{d}{dx}  \frac{ \sum_i \frac{dF(x)_i}{dx} y_i}{ \sum_i F(x)_i^2}
-$$
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's write a quick and dirty implementation of the different functions.</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [10]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<p>To find the optimal scale factor, we derive our loss function with respect to $\beta$:</p>
+<p>$$\frac{d}{d\beta} \sum_i (\beta F(x)_i - y_i)^2 = 0$$</p>
+<p>and solve (the best reference I've found for this is <a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf">Ryan Gutenkunst's PhD thesis</a> and the corresponding implementation in <a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568">SloppyCell</a>):</p>
+<p>$$\beta = \frac{\sum_i F(x)_i y_i}{\sum_i F(x)_i^2}$$</p>
+<h2>Updating the Jacobian</h2>
+<p>However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:</p>
+<p>$$\frac{d}{dx}(\beta(x) F(x)) = \frac{d\beta(x)}{dx}F(x) + \frac{dF(x)}{dx}\beta(x)$$</p>
+<p>$\frac{dF(x)}{dx}$ is the old Jacobian. Now we need to calculate $\frac{d\beta(x)}{dx}$. To obtain that, we derive the equation for $\beta$ with respect to $x$:</p>
+<p>$$\frac{d\beta}{dx} = \frac{d}{dx} \frac{\sum_i \frac{dF(x)_i}{dx} y_i}{\sum_i F(x)_i^2}$$</p>
+<p>Let's write a quick and dirty implementation of the different functions:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the optimal scale factor (B) between</span>
 <span class="sd">    simulated and experimental data.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sim_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span>
-    
+
 <span class="k">def</span> <span class="nf">calculate_sf_grad</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim_jac</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Calculates the gradient of the scale factor </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the gradient of the scale factor</span>
 <span class="sd">    (dB/dx) with respect to the parameters being</span>
 <span class="sd">    optimized.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
     <span class="n">jac_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">jac_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">sim</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    
-    <span class="n">sf_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">jac_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span>  \
+
+    <span class="n">sf_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">jac_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span>
                <span class="p">(</span><span class="n">sim_dot_exp</span> <span class="o">*</span> <span class="n">jac_dot_sim</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sim_dot_sim</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sf_grad</span>
 
 <span class="k">def</span> <span class="nf">scaled_fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the residuals between simulated data and</span>
 <span class="sd">    experimental data after scaling the simulations using</span>
 <span class="sd">    the scale factor.</span>
-<span class="sd">    """</span>
-    
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">residuals</span> <span class="o">=</span> <span class="n">beta</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">-</span> <span class="n">data</span>
-    
     <span class="k">return</span> <span class="n">residuals</span>
 
 <span class="k">def</span> <span class="nf">scaled_fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-    <span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the jacobian of the simulation with</span>
 <span class="sd">    respect to the parameter being optimized including</span>
 <span class="sd">    the contribution of the scale factor:</span>
-<span class="sd">    </span>
+
 <span class="sd">    (d/dx B(x)F(x) = dB(x)/dx*F(x) + dF(x)/dx*B(x))</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    
+
     <span class="c1"># We could write this using caching to avoid</span>
     <span class="c1"># recalculating f(x) and B(x) every iteration.</span>
     <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    
+
     <span class="n">jac</span> <span class="o">=</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">beta_grad</span> <span class="o">=</span> <span class="n">calculate_sf_grad</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">beta_grad</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">+</span> <span class="p">(</span><span class="n">jac</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's test to see if the scale factor calculation works as we expect:</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [13]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="mf">0.0001</span>
 
+    <span class="k">return</span> <span class="n">beta_grad</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">+</span> <span class="p">(</span><span class="n">jac</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+
+<p>Let's test to see if the scale factor calculation works as we expect:</p>
+<div class="highlight"><pre><span></span><code><span class="n">nb</span> <span class="o">=</span> <span class="mf">0.0001</span>
 <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-<span class="n">scaled_measures</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">*</span><span class="mf">1.7</span>
+<span class="n">scaled_measures</span> <span class="o">=</span> <span class="n">simulation</span> <span class="o">*</span> <span class="mf">1.7</span>
 <span class="n">sf</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">)</span>
 
-<span class="nb">print</span> <span class="p">(</span><span class="n">sf</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>1.7
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [14]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">,</span> <span class="s1">'r-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'scaled_sim'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">new_sim</span><span class="o">*</span><span class="n">sf</span><span class="p">,</span> <span class="s1">'bo'</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="s1">'unscaled_sim*scale_factor'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'best'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
-<div class="output_text output_subarea output_execute_result">
-<pre><matplotlib.legend.legend at 0x115febe48></pre>
-</div>
-</div>
-<div class="output_area"><div class="prompt"></div>
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-0yCglFIB7P8BXcj4SMI1gMYAAAAASUVORK5CYII=
-">
-</img></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
+<span class="nb">print</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>  <span class="c1"># Output: 1.7</span>
+</code></pre></div>
+
 <p>Now, let's check to see if the optimization procedure works:</p>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In [15]:</div>
-<div class="inner_cell">
-<div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">scaled_fact_residuals</span><span class="p">,</span> <span class="n">init_guess</span><span class="p">,</span>
               <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">scaled_measures</span><span class="p">,),</span>
               <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">Dfun</span><span class="o">=</span><span class="n">scaled_fact_jac</span><span class="p">)</span>
-<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
-<div class="output_text output_subarea output_execute_result">
-<pre>array([ 0.0001])</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>It does!  We recover the correct number of barbed ends.  Note that this result applies for more complex minimization functions where you have multiple scale factors, or where $F(x)$ is only available implicitly - such as when numerically integrating a set of differential equations.  In practice, for any large optimization problem, calculating the scale factors will almost never be a significant slowdown: what will end up dominating the run time are either computing $F(x)$ and it's Jacobian $\frac{dF(x)}{dx}$ or inverting the pseudo-Hessian inside the Levemberg-Marquardt algorithm.</p>
-<h2 id="Numerical-Considerations:">Numerical Considerations:<a class="anchor-link" href="#Numerical-Considerations:">¶</a></h2><p>However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow.  To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the <a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation">MAP</a> solution.  Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently <a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html">sloppy</a>) and they make the estimation procedure more stable.</p>
-</div>
-</div>
-</div>
-<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-    var mathjaxscript = document.createElement('script');
-    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-    mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-        "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-        "    displayAlign: 'center'," +
-        "    displayIndent: '0em'," +
-        "    showMathMenu: true," +
-        "    tex2jax: { " +
-        "        inlineMath: [ ['$','$'] ], " +
-        "        displayMath: [ ['$$','$$'] ]," +
-        "        processEscapes: true," +
-        "        preview: 'TeX'," +
-        "    }, " +
-        "    'HTML-CSS': { " +
-        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-        "    } " +
-        "}); ";
-    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-}
-</script>
+<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Returns: array([ 0.0001])</span>
+</code></pre></div>
 
-    </div><!-- /.entry-content -->
+<p>It does! We recover the correct number of barbed ends. Note that this result applies for more complex minimization functions where you have multiple scale factors, or where $F(x)$ is only available implicitly - such as when numerically integrating a set of differential equations. In practice, for any large optimization problem, calculating the scale factors will almost never be a significant slowdown: what will end up dominating the run time are either computing $F(x)$ and its Jacobian $\frac{dF(x)}{dx}$ or inverting the pseudo-Hessian inside the Levenberg-Marquardt algorithm.</p>
+<h2>Numerical Considerations</h2>
+<p>However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow. To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the <a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation">MAP</a> solution. Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently <a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html">sloppy</a>) and they make the estimation procedure more stable.</p>
+      </div><!-- /.entry-content -->
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-                            <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+                                                        <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
-                            <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>

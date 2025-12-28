@@ -1,49 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <meta charset="utf-8" />
-        <title>Gavagai</title>
-        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
-        <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>Gavagai</title>
+                        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
+                                <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+    <meta name="description" content="Last time I talked about Dota2, I covered the evolution of the metagame across patches. This time, I'll focus on analyzing the way pros draft -..." />
+        </head>
 
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-</head>
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="http://federicov.github.io/">Federico's Blog</a></h1>
+                        <nav><ul>
+                                                <li><a href="http://federicov.github.io/pages/about.html">About</a></li>
+                                                <li class="active"><a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
+                                                <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
+                                                <li><a href="http://federicov.github.io/category/optimization.html">Optimization</a></li>
+                                                <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
+                                                <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+  <section id="content" class="body">
+    <article>
+      <header>
+        <h1 class="entry-title">
+          <a href="http://federicov.github.io/word-embeddings-and-dota2.html" rel="bookmark"
+             title="Permalink to Gavagai">Gavagai</a></h1>
+    <a rel="nofollow" href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="f_vaggi">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+      </header>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="http://federicov.github.io/">Federico's Blog </a></h1>
-                <nav><ul>
-                    <li><a href="http://federicov.github.io/pages/about.html">About</a></li>
-                    <li class="active"><a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
-                    <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
-                    <li><a href="http://federicov.github.io/category/optimization.html">Optimization</a></li>
-                    <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
-                    <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="http://federicov.github.io/word-embeddings-and-dota2.html" rel="bookmark"
-           title="Permalink to Gavagai">Gavagai</a></h1>
-<a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="f_vaggi">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-    </header>
-
-    <div class="entry-content">
+      <div class="entry-content">
 <footer class="post-info">
-        <abbr class="published" title="2016-04-22T00:00:00+02:00">
+        <abbr class="published" title="2016-04-22T00:00:00-07:00">
                 Published: Fri 22 April 2016
         </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-        </address>
-<p>In <a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
-<p>tags: <a href="http://federicov.github.io/tag/video-games.html">video games</a> <a href="http://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="http://federicov.github.io/tag/dota2.html">dota2</a> </p>
-</footer><!-- /.post-info -->      <p>Last time I talked about Dota2, I covered the
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
+                </address>
+        <p>In <a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
+<p>tags: <a href="http://federicov.github.io/tag/video-games.html">video games</a> <a href="http://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="http://federicov.github.io/tag/dota2.html">dota2</a> </p>        
+</footer><!-- /.post-info -->        <p>Last time I talked about Dota2, I covered the
 <a href="http://www.datdota.com/blog/?p=1323">evolution of the metagame across patches</a>.
 This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
 <a href="https://en.wikipedia.org/wiki/Natural_language_processing">NLP</a> in a very novel way.</p>
@@ -78,15 +77,15 @@ of every single reddit post done using <a href="https://twitter.com/spacy_io">sp
 our hero vectors.</p>
 <p>When learning our hero vectors, we have to specify how many dimensions we want to use to represent our heroes.  In general, more dimensions means that we get higher quality representations, but we require more computing power and more data.</p>
 <p>For example, after training on our dataset, this is what the hero vector for <strong>Shadowfiend</strong> looks like.</p>
-<p>[-0.06813218, -0.00902375,  0.10162564, -0.01908037,  0.03013835,<br />
-  0.16538762,  0.03104097,  0.02496031, -0.16785616,  0.3313826 ,<br />
- -0.21904311, -0.07945664,  0.19140202,  0.12729862,  0.36308175,<br />
-  0.19962946,  0.13561839,  0.23637122, -0.32607114,  0.05647549,<br />
-  0.09655968, -0.21899879,  0.04926173,  0.12474103,  0.14504923,<br />
-  0.06281823,  0.14728694, -0.03583163, -0.00227163,  0.1205247 ,<br />
-  0.01127683,  0.01522848,  0.13806115,  0.0216765 ,  0.13671157,<br />
- -0.1683237 ,  0.00408782,  0.10514087, -0.17610508,  0.04697264,<br />
- -0.03406512, -0.14956233,  0.20201634,  0.00907436, -0.05804597,<br />
+<p>[-0.06813218, -0.00902375,  0.10162564, -0.01908037,  0.03013835,<br>
+  0.16538762,  0.03104097,  0.02496031, -0.16785616,  0.3313826 ,<br>
+ -0.21904311, -0.07945664,  0.19140202,  0.12729862,  0.36308175,<br>
+  0.19962946,  0.13561839,  0.23637122, -0.32607114,  0.05647549,<br>
+  0.09655968, -0.21899879,  0.04926173,  0.12474103,  0.14504923,<br>
+  0.06281823,  0.14728694, -0.03583163, -0.00227163,  0.1205247 ,<br>
+  0.01127683,  0.01522848,  0.13806115,  0.0216765 ,  0.13671157,<br>
+ -0.1683237 ,  0.00408782,  0.10514087, -0.17610508,  0.04697264,<br>
+ -0.03406512, -0.14956233,  0.20201634,  0.00907436, -0.05804597,<br>
  -0.00481437,  0.11493918, -0.07718568, -0.13443205, -0.01155808]</p>
 <p>The hero <strong>Shadow Fiend</strong> is now represented as a point in 50 dimensional space,
 but that's still not that useful: we turned a word we can understand into 50
@@ -154,7 +153,7 @@ described by 50 numbers (from our embedding procedure) and that hero has
 certain roles (from the dota2 gamepedia).</p>
 <p>What we want to do now is to see if there is any relationship between the
 embedding and a hero's role.  There's lots of ways to do this - but perhaps
-the easiest way is to use <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a>.<br />
+the easiest way is to use <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a>.<br>
 For the math nerds - to insure that we get a sparse set of basis, we will
 also use a strong L1 penalty (which, as a bonus, regularizes our predictions).</p>
 <p>Here are the results of that:</p>
@@ -175,34 +174,34 @@ as melee heroes.</p>
 <p>When training those embeddings, we did not use any information about Dota2:
 as far as the computer is concerned, each draft is an arbitrary sequence of
 symbols without any meaning... yet, starting from that, we were able to recover
- informative representations which have meaningful high level interpretation.<br />
+ informative representations which have meaningful high level interpretation.<br>
  We treated Dota2 drafts as a foreign language that we do not speak, and, by
  looking at patterns in how those words are used, managed to figure out what
  the words mean relative to each other.</p>
 <p>Further, by connecting the features that we learned in an unsupervised way to
 class roles, we were even able to give an interpretation to our latent features.</p>
-    </div><!-- /.entry-content -->
+      </div><!-- /.entry-content -->
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-                            <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+    </article>
+  </section>
+                <section id="extras" class="body">
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+                                                        <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
-                            <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+                                                        <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
 
-</body>
+        </body>
 </html>

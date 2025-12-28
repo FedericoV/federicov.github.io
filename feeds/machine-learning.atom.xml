@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog</title><link href="http://federicov.github.io/" rel="alternate"></link><link href="http://federicov.github.io/feeds/machine-learning.atom.xml" rel="self"></link><id>http://federicov.github.io/</id><updated>2016-04-22T00:00:00+02:00</updated><entry><title>Gavagai</title><link href="http://federicov.github.io/word-embeddings-and-dota2.html" rel="alternate"></link><published>2016-04-22T00:00:00+02:00</published><updated>2016-04-22T00:00:00+02:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-22:word-embeddings-and-dota2.html</id><summary type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog - Machine Learning</title><link href="http://federicov.github.io/" rel="alternate"/><link href="http://federicov.github.io/feeds/machine-learning.atom.xml" rel="self"/><id>http://federicov.github.io/</id><updated>2016-04-22T00:00:00-07:00</updated><entry><title>Gavagai</title><link href="http://federicov.github.io/word-embeddings-and-dota2.html" rel="alternate"/><published>2016-04-22T00:00:00-07:00</published><updated>2016-04-22T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-22:/word-embeddings-and-dota2.html</id><summary type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
+&lt;a href="http://www.datdota.com/blog/?p=1323"&gt;evolution of the metagame across patches&lt;/a&gt;.
+This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
+&lt;a href="https://en.wikipedia.org/wiki/Natural_language_processing"&gt;NLP&lt;/a&gt; in a very novel way.&lt;/p&gt;
+&lt;h2&gt;Introduction:&lt;/h2&gt;
+&lt;p&gt;How would you teach someone what the word 'rabbit' means?  You …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
 &lt;a href="http://www.datdota.com/blog/?p=1323"&gt;evolution of the metagame across patches&lt;/a&gt;.
 This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
 &lt;a href="https://en.wikipedia.org/wiki/Natural_language_processing"&gt;NLP&lt;/a&gt; in a very novel way.&lt;/p&gt;
@@ -34,15 +39,15 @@ of every single reddit post done using &lt;a href="https://twitter.com/spacy_io"
 our hero vectors.&lt;/p&gt;
 &lt;p&gt;When learning our hero vectors, we have to specify how many dimensions we want to use to represent our heroes.  In general, more dimensions means that we get higher quality representations, but we require more computing power and more data.&lt;/p&gt;
 &lt;p&gt;For example, after training on our dataset, this is what the hero vector for &lt;strong&gt;Shadowfiend&lt;/strong&gt; looks like.&lt;/p&gt;
-&lt;p&gt;[-0.06813218, -0.00902375,  0.10162564, -0.01908037,  0.03013835,&lt;br /&gt;
-  0.16538762,  0.03104097,  0.02496031, -0.16785616,  0.3313826 ,&lt;br /&gt;
- -0.21904311, -0.07945664,  0.19140202,  0.12729862,  0.36308175,&lt;br /&gt;
-  0.19962946,  0.13561839,  0.23637122, -0.32607114,  0.05647549,&lt;br /&gt;
-  0.09655968, -0.21899879,  0.04926173,  0.12474103,  0.14504923,&lt;br /&gt;
-  0.06281823,  0.14728694, -0.03583163, -0.00227163,  0.1205247 ,&lt;br /&gt;
-  0.01127683,  0.01522848,  0.13806115,  0.0216765 ,  0.13671157,&lt;br /&gt;
- -0.1683237 ,  0.00408782,  0.10514087, -0.17610508,  0.04697264,&lt;br /&gt;
- -0.03406512, -0.14956233,  0.20201634,  0.00907436, -0.05804597,&lt;br /&gt;
+&lt;p&gt;[-0.06813218, -0.00902375,  0.10162564, -0.01908037,  0.03013835,&lt;br&gt;
+  0.16538762,  0.03104097,  0.02496031, -0.16785616,  0.3313826 ,&lt;br&gt;
+ -0.21904311, -0.07945664,  0.19140202,  0.12729862,  0.36308175,&lt;br&gt;
+  0.19962946,  0.13561839,  0.23637122, -0.32607114,  0.05647549,&lt;br&gt;
+  0.09655968, -0.21899879,  0.04926173,  0.12474103,  0.14504923,&lt;br&gt;
+  0.06281823,  0.14728694, -0.03583163, -0.00227163,  0.1205247 ,&lt;br&gt;
+  0.01127683,  0.01522848,  0.13806115,  0.0216765 ,  0.13671157,&lt;br&gt;
+ -0.1683237 ,  0.00408782,  0.10514087, -0.17610508,  0.04697264,&lt;br&gt;
+ -0.03406512, -0.14956233,  0.20201634,  0.00907436, -0.05804597,&lt;br&gt;
  -0.00481437,  0.11493918, -0.07718568, -0.13443205, -0.01155808]&lt;/p&gt;
 &lt;p&gt;The hero &lt;strong&gt;Shadow Fiend&lt;/strong&gt; is now represented as a point in 50 dimensional space,
 but that's still not that useful: we turned a word we can understand into 50
@@ -110,7 +115,7 @@ described by 50 numbers (from our embedding procedure) and that hero has
 certain roles (from the dota2 gamepedia).&lt;/p&gt;
 &lt;p&gt;What we want to do now is to see if there is any relationship between the
 embedding and a hero's role.  There's lots of ways to do this - but perhaps
-the easiest way is to use &lt;a href="https://en.wikipedia.org/wiki/Logistic_regression"&gt;logistic regression&lt;/a&gt;.&lt;br /&gt;
+the easiest way is to use &lt;a href="https://en.wikipedia.org/wiki/Logistic_regression"&gt;logistic regression&lt;/a&gt;.&lt;br&gt;
 For the math nerds - to insure that we get a sparse set of basis, we will
 also use a strong L1 penalty (which, as a bonus, regularizes our predictions).&lt;/p&gt;
 &lt;p&gt;Here are the results of that:&lt;/p&gt;
@@ -131,9 +136,9 @@ as melee heroes.&lt;/p&gt;
 &lt;p&gt;When training those embeddings, we did not use any information about Dota2:
 as far as the computer is concerned, each draft is an arbitrary sequence of
 symbols without any meaning... yet, starting from that, we were able to recover
- informative representations which have meaningful high level interpretation.&lt;br /&gt;
+ informative representations which have meaningful high level interpretation.&lt;br&gt;
  We treated Dota2 drafts as a foreign language that we do not speak, and, by
  looking at patterns in how those words are used, managed to figure out what
  the words mean relative to each other.&lt;/p&gt;
 &lt;p&gt;Further, by connecting the features that we learned in an unsupervised way to
-class roles, we were even able to give an interpretation to our latent features.&lt;/p&gt;</summary><category term="video games"></category><category term="machine learning"></category><category term="dota2"></category></entry></feed>
+class roles, we were even able to give an interpretation to our latent features.&lt;/p&gt;</content><category term="Machine Learning"/><category term="video games"/><category term="machine learning"/><category term="dota2"/></entry></feed>
