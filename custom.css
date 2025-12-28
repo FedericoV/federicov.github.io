@@ -1,0 +1,63 @@
+/* Custom Blue-Green/Teal Theme */
+
+:root {
+  --teal: #0d7377;
+  --teal-light: #14a3a8;
+  --teal-dark: #094c4e;
+  --slate: #2c3e50;
+  --slate-light: #34495e;
+}
+
+/* Sidebar */
+aside {
+  background: linear-gradient(135deg, var(--slate) 0%, var(--teal-dark) 100%) !important;
+}
+
+/* Links */
+a {
+  color: var(--teal) !important;
+}
+
+a:hover {
+  color: var(--teal-light) !important;
+}
+
+/* Sidebar links stay white */
+aside a {
+  color: #ffffff !important;
+}
+
+aside a:hover {
+  color: #e0e0e0 !important;
+}
+
+/* Tags and buttons */
+.post-info .tag {
+  background-color: var(--teal) !important;
+}
+
+.post-info .tag:hover {
+  background-color: var(--teal-light) !important;
+}
+
+/* Category links */
+.post-info a {
+  color: var(--teal) !important;
+}
+
+/* Code blocks - use monokai style which works well with teal */
+code {
+  background-color: #f4f4f4;
+  border-radius: 3px;
+  padding: 2px 5px;
+}
+
+/* Headings */
+article h1, article h2, article h3, article h4 {
+  color: var(--slate);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--teal);
+}

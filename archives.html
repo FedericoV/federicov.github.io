@@ -1,66 +1,196 @@
+
 <!DOCTYPE html>
 <html lang="en">
-        <head>
-                        <meta charset="utf-8" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <meta name="generator" content="Pelican" />
-                        <title>Federico's Blog</title>
-                        <link rel="stylesheet" href="https://federicov.github.io/theme/css/main.css" />
-                                <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
-        </head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
 
-        <body id="index" class="home">
-                <header id="banner" class="body">
-                        <h1><a href="https://federicov.github.io/">Federico's Blog</a></h1>
-                        <nav><ul>
-                                                <li><a href="https://federicov.github.io/pages/about.html">About</a></li>
-                                                <li><a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
-                                                <li><a href="https://federicov.github.io/category/misc.html">misc</a></li>
-                                                <li><a href="https://federicov.github.io/category/optimization.html">Optimization</a></li>
-                                                <li><a href="https://federicov.github.io/category/programming.html">Programming</a></li>
-                                                <li><a href="https://federicov.github.io/category/science.html">Science</a></li>
-                        </ul></nav>
-                </header><!-- /#banner -->
-    <section id="content" class="body">
-        <h1>Archives for Federico's Blog</h1>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-        <dl>
-                <dt>Wed 04 May 2016</dt>
-                <dd><a href="https://federicov.github.io/Models-With-Scale-Factors.html">Fitting Models with Dimensionless Data</a></dd>
-                <dt>Fri 22 April 2016</dt>
-                <dd><a href="https://federicov.github.io/word-embeddings-and-dota2.html">Gavagai</a></dd>
-                <dt>Thu 14 April 2016</dt>
-                <dd><a href="https://federicov.github.io/peer-review-at-eLife.html">The peer review process of eLife</a></dd>
-                <dt>Thu 15 October 2015</dt>
-                <dd><a href="https://federicov.github.io/killing-animals-for-nothing.html">Yet Another Instance of a Broken Publishing System at Work</a></dd>
-                <dt>Wed 29 October 2014</dt>
-                <dd><a href="https://federicov.github.io/novelty-is-overrated.html">Why Scientists Don't Share Data and How to Fix it</a></dd>
-                <dt>Mon 15 September 2014</dt>
-                <dd><a href="https://federicov.github.io/NumPy1.10+andopenblas.html">NumPy 1.10+ changes with openBLAS</a></dd>
-                <dt>Fri 05 September 2014</dt>
-                <dd><a href="https://federicov.github.io/EuroSciPy2014.html">EuroSciPy 2014 Thoughts</a></dd>
-                <dt>Tue 29 July 2014</dt>
-                <dd><a href="https://federicov.github.io/deception-by-mathematics.html">Weapons of Math Destruction</a></dd>
-        </dl>
-    </section>
-                <section id="extras" class="body">
-                                <div class="social">
-                                        <h2>social</h2>
-                                        <ul>
-                                                        <li><a href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+    <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/stylesheet/style.min.css">
 
-                                                        <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
-                                        </ul>
-                                </div><!-- /.social -->
-                </section><!-- /#extras -->
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="https://federicov.github.io/theme/stylesheet/dark-theme.min.css">
 
-                <footer id="contentinfo" class="body">
-                        <address id="about" class="vcard body">
-                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
-                        </address><!-- /#about -->
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
 
-                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-                </footer><!-- /#contentinfo -->
 
-        </body>
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/solid.css">
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/custom.css">
+
+
+
+  <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+    <meta name="author" content="Federico Vaggi" />
+    <meta name="description" content="" />
+  <meta property="og:site_name" content="Federico's Blog"/>
+  <meta property="og:type" content="blog"/>
+  <meta property="og:title" content="Federico's Blog"/>
+  <meta property="og:description" content=""/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://federicov.github.io"/>
+
+  <title>Federico's Blog &ndash; Archives</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="https://federicov.github.io/">
+      <img src="https://federicov.github.io/theme/img/profile.png" alt="Federico Vaggi" title="Federico Vaggi">
+    </a>
+
+    <h1>
+      <a href="https://federicov.github.io/">Federico Vaggi</a>
+    </h1>
+
+    <p>Systems Biology, Machine Learning, and Scientific Python</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://federicov.github.io/pages/about.html#about">
+                About
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/FedericoV"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/f_vaggi"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="https://federicov.github.io/">Home</a>
+
+  <a href="/archives.html">Archives</a>
+  <a href="/categories.html">Categories</a>
+
+  <a href="https://federicov.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+    <h1 id="archives">Archives</h1>
+  </header>
+  <div>
+    <dl>
+
+          <dt>Wed 04 May 2016</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/Models-With-Scale-Factors.html">Fitting Models with Dimensionless Data</a>
+        </dd>
+          <dt>Fri 22 April 2016</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/word-embeddings-and-dota2.html">Gavagai</a>
+        </dd>
+          <dt>Thu 14 April 2016</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/peer-review-at-eLife.html">The peer review process of eLife</a>
+        </dd>
+          <dt>Thu 15 October 2015</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/killing-animals-for-nothing.html">Yet Another Instance of a Broken Publishing System at Work</a>
+        </dd>
+          <dt>Wed 29 October 2014</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/novelty-is-overrated.html">Why Scientists Don't Share Data and How to Fix it</a>
+        </dd>
+          <dt>Mon 15 September 2014</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/NumPy1.10+andopenblas.html">NumPy 1.10+ changes with openBLAS</a>
+        </dd>
+          <dt>Fri 05 September 2014</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/EuroSciPy2014.html">EuroSciPy 2014 Thoughts</a>
+        </dd>
+          <dt>Tue 29 July 2014</dt>
+
+        <dd>
+          <a href="https://federicov.github.io/deception-by-mathematics.html">Weapons of Math Destruction</a>
+        </dd>
+    </dl>
+  </div>
+</article>
+
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="https://federicov.github.io/theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="light"
+          type="text/javascript">
+  </script>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Federico's Blog ",
+  "url" : "https://federicov.github.io",
+  "image": "",
+  "description": ""
+}
+</script>
+</body>
 </html>

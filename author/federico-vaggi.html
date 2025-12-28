@@ -1,453 +1,330 @@
+
 <!DOCTYPE html>
 <html lang="en">
-        <head>
-                        <meta charset="utf-8" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <meta name="generator" content="Pelican" />
-                        <title>Federico's Blog - Federico Vaggi</title>
-                        <link rel="stylesheet" href="https://federicov.github.io/theme/css/main.css" />
-                                <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
-        </head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
 
-        <body id="index" class="home">
-                <header id="banner" class="body">
-                        <h1><a href="https://federicov.github.io/">Federico's Blog</a></h1>
-                        <nav><ul>
-                                                <li><a href="https://federicov.github.io/pages/about.html">About</a></li>
-                                                <li><a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
-                                                <li><a href="https://federicov.github.io/category/misc.html">misc</a></li>
-                                                <li><a href="https://federicov.github.io/category/optimization.html">Optimization</a></li>
-                                                <li><a href="https://federicov.github.io/category/programming.html">Programming</a></li>
-                                                <li><a href="https://federicov.github.io/category/science.html">Science</a></li>
-                        </ul></nav>
-                </header><!-- /#banner -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-                <aside id="featured" class="body">
-                    <article>
-                        <h1 class="entry-title"><a href="https://federicov.github.io/Models-With-Scale-Factors.html">Fitting Models with Dimensionless Data</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2016-05-04T00:00:00-07:00">
-                Published: Wed 04 May 2016
-        </abbr>
+    <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/stylesheet/style.min.css">
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/optimization.html">Optimization</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/python.html">Python</a> <a href="https://federicov.github.io/tag/ode.html">ODE</a> <a href="https://federicov.github.io/tag/sympy.html">SymPy</a> <a href="https://federicov.github.io/tag/optimization.html">Optimization</a> </p>        
-</footer><!-- /.post-info --><h2>Relative Measurements</h2>
-<p>When calibrating a model to data, it's common to only have access to relative measurements. For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in <a href="http://en.wikipedia.org/wiki/Western_blot">western blots</a>. Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, etc...</p>
-<p>For example, here is what a western blot (<strong>column A</strong>) looks like with its relative quantification (<strong>column B</strong>):</p>
-<p><img alt="Western blot example" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd"></p>
-<p>(taken from: https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&amp;req=4).</p>
-<h2>Calibrating Models with Data in Arbitrary Units</h2>
-<p>How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning? In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible. Alternatively, we can make our models completely <a href="https://en.wikipedia.org/wiki/Nondimensionalization">dimensionless</a> by rescaling all quantities in our model by appropriately chosen constants.</p>
-<p>A third option is to use scaling factors. To do this, we assume that in the range in which we are interested, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA. In practice, the relationship usually follows a saturation curve, which can be described by something like a <a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29">Hill function</a>. The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the <a href="https://en.wikipedia.org/wiki/Poynting_vector">Poynting vector</a> which does exactly what the name suggests.</p>
-<h2>Linearizing Saturation Curves</h2>
-<p>Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately, as long as we are careful to make sure our measurements are done in the correct range.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">autograd</span> <span class="kn">import</span> <span class="n">grad</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="https://federicov.github.io/theme/stylesheet/dark-theme.min.css">
 
-<span class="k">def</span> <span class="nf">hill</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Hill function&quot;&quot;&quot;</span>
-    <span class="n">numerator</span> <span class="o">=</span> <span class="n">Vmax</span><span class="o">*</span><span class="p">(</span><span class="n">L</span><span class="o">**</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">denominator</span> <span class="o">=</span> <span class="n">Km</span><span class="o">**</span><span class="n">n</span> <span class="o">+</span> <span class="n">L</span><span class="o">**</span><span class="n">n</span>
-    <span class="k">return</span> <span class="n">numerator</span><span class="o">/</span><span class="n">denominator</span>
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
 
-<span class="c1"># To calculate the gradient of the Hill function (with respect to L) we use autograd.</span>
-<span class="n">hill_grad</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">hill</span><span class="p">)</span>
 
-<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">Km</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="n">Vmax</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
 
-<span class="n">v</span> <span class="o">=</span> <span class="n">hill</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/solid.css">
 
-<span class="c1"># Evaluate the gradient at 0.5 wrt L</span>
-<span class="n">dv_dl</span> <span class="o">=</span> <span class="n">hill_grad</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/custom.css">
 
-<span class="c1"># Approximate the Hill function as a linear equation using a 1st order Taylor series:</span>
-<span class="n">v_approx</span> <span class="o">=</span> <span class="n">hill</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">L</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">dv_dl</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Hill Function&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v_approx</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;First Order Taylor Series&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</code></pre></div>
 
-<h2>Example Problem: Actin Polymerization</h2>
-<p>Let's say we want to model the <a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics">polymerization of actin</a> from barbed ends <em>in-vitro</em>. This is described by a very simple differential equation:</p>
-<p>$$\frac{dFa(t)}{dt} = k_{on} \cdot N_b \cdot Ga(t) - k_{off} \cdot N_b$$</p>
-<p>where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on}, k_{off}$ are the 1st and 0th order binding and unbinding parameters. If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">init_printing</span><span class="p">()</span>
+  <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom">
 
-<span class="n">At</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;At Nb k_on k_off t&#39;</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">Fa</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;Fa&#39;</span><span class="p">)(</span><span class="n">t</span><span class="p">)</span>
-<span class="n">Ga</span> <span class="o">=</span> <span class="n">At</span> <span class="o">-</span> <span class="n">Fa</span>
 
-<span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="n">k_on</span><span class="o">*</span><span class="n">Ga</span><span class="o">*</span><span class="n">Nb</span> <span class="o">-</span> <span class="n">k_off</span><span class="o">*</span><span class="n">Nb</span><span class="p">,</span> <span class="n">diff</span><span class="p">(</span><span class="n">Fa</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="n">dsolve</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
-<span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
-</code></pre></div>
 
-<p>This gives us the solution:</p>
-<p>$$Fa(t) = \frac{At \cdot k_{on} - k_{off} + e^{k_{on}(C_1 - N_b t)}}{k_{on}}$$</p>
-<p>This solution has an integration constant. Assume that $Fa(0) = 0$ (meaning, at time zero, all actin is in soluble form):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Solve for initial condition of 0 F-Actin at t=0</span>
-<span class="n">initial_cond</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;C1&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">initial_cond</span><span class="p">)</span>
 
-<span class="n">fact_timecourse</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
-                           <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
 
-<span class="c1"># We take advantage of SymPy again to obtain the gradient</span>
-<span class="c1"># of the function wrt the number of barbed ends</span>
-<span class="n">fact_grad</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
-                     <span class="n">diff</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">Nb</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
 
-<span class="n">timesteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
-<span class="n">simulation</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">simulation</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;F-Actin&#39;</span><span class="p">)</span>
-</code></pre></div>
 
-<p>What if we didn't actually know the number of barbed ends in solution, and wanted to estimate it on the basis of F-Actin time course data? That's very easy using SciPy and SymPy!</p>
-<p>This is just a simple least squares minimization problem:</p>
-<p>$$\underset{x}{\arg\min} \sum_i(F(x)_i - y_i)^2$$</p>
-<p>Where $F(x)_i$ is our simulation of actin dynamics, $x$ is our unknown parameter (in this case, the number of barbed ends - we presume we know everything else) and $y_i$ is the experimental data.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns the residuals between the simulation calculated</span>
-<span class="sd">    with nb == p[0] and the original simulation with the known</span>
-<span class="sd">    value of nb</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-    <span class="n">residuals</span> <span class="o">=</span> <span class="n">new_sim</span> <span class="o">-</span> <span class="n">data</span>
-    <span class="k">return</span> <span class="n">residuals</span>
+ 
 
-<span class="k">def</span> <span class="nf">fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns the jacobian: The gradient at every timestep</span>
-<span class="sd">    with respect to nb. Since we are only optimizing a</span>
-<span class="sd">    single parameter, this has an extra axis.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <meta name="author" content="Federico Vaggi" />
+    <meta name="description" content="" />
+  <meta property="og:site_name" content="Federico's Blog"/>
+  <meta property="og:type" content="blog"/>
+  <meta property="og:title" content="Federico's Blog"/>
+  <meta property="og:description" content=""/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://federicov.github.io"/>
 
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">leastsq</span>
+  <title>Federico's Blog &ndash; Posts by Federico Vaggi:</title>
 
-<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">fact_residuals</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">simulation</span><span class="p">,),</span> <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="n">fact_jac</span><span class="p">)</span>
 
-<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Returns: array([ 0.0001])</span>
-</code></pre></div>
+</head>
+<body >
 
-<h2>Working with Arbitrary Units</h2>
-<p>But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary. In practice, actin polymerization is almost always measured using <a href="https://en.wikipedia.org/wiki/Pyrene">pyrene</a> actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.</p>
-<p>Now, we can no longer directly minimize the difference between our simulation and the experimental data, since our simulation is in units of concentration, and our measurements are in arbitrary units. One option is to explicitly add a parameter to our model. We can simply define a new function, $G(x)$:</p>
-<p>$$G(x) = x[0] \cdot f(x[1:])$$</p>
-<p>which takes an extra parameter, and scales the simulation. This however adds a parameter to the model, and, in my experience, makes parameter estimation much slower.</p>
-<h2>Implicit Scale Factors</h2>
-<p>An alternative way is to write out the minimization like so (we are assuming <a href="https://en.wikipedia.org/wiki/Homoscedasticity">homoscedasticity</a> to simplify the expression and ignore the variance of each individual point):</p>
-<p>$$\underset{x}{\arg\min} \sum_i (\beta F(x)_i - y_i)^2$$</p>
-<p>At this point - we notice that, for a given set of parameters $x$, our loss function implicitly defines an optimal scaling factor $\beta$ - it's the scaling factor that minimizes the residuals, given a simulation $F(x)$ and data $y$.</p>
-<p>To find the optimal scale factor, we derive our loss function with respect to $\beta$:</p>
-<p>$$\frac{d}{d\beta} \sum_i (\beta F(x)_i - y_i)^2 = 0$$</p>
-<p>and solve (the best reference I've found for this is <a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf">Ryan Gutenkunst's PhD thesis</a> and the corresponding implementation in <a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568">SloppyCell</a>):</p>
-<p>$$\beta = \frac{\sum_i F(x)_i y_i}{\sum_i F(x)_i^2}$$</p>
-<h2>Updating the Jacobian</h2>
-<p>However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:</p>
-<p>$$\frac{d}{dx}(\beta(x) F(x)) = \frac{d\beta(x)}{dx}F(x) + \frac{dF(x)}{dx}\beta(x)$$</p>
-<p>$\frac{dF(x)}{dx}$ is the old Jacobian. Now we need to calculate $\frac{d\beta(x)}{dx}$. To obtain that, we derive the equation for $\beta$ with respect to $x$:</p>
-<p>$$\frac{d\beta}{dx} = \frac{d}{dx} \frac{\sum_i \frac{dF(x)_i}{dx} y_i}{\sum_i F(x)_i^2}$$</p>
-<p>Let's write a quick and dirty implementation of the different functions:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the optimal scale factor (B) between</span>
-<span class="sd">    simulated and experimental data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sim_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span>
+<aside>
+  <div>
+    <a href="https://federicov.github.io/">
+      <img src="https://federicov.github.io/theme/img/profile.png" alt="Federico Vaggi" title="Federico Vaggi">
+    </a>
 
-<span class="k">def</span> <span class="nf">calculate_sf_grad</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim_jac</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the gradient of the scale factor</span>
-<span class="sd">    (dB/dx) with respect to the parameters being</span>
-<span class="sd">    optimized.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
-    <span class="n">jac_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">jac_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">sim</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <h1>
+      <a href="https://federicov.github.io/">Federico Vaggi</a>
+    </h1>
 
-    <span class="n">sf_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">jac_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span>
-               <span class="p">(</span><span class="n">sim_dot_exp</span> <span class="o">*</span> <span class="n">jac_dot_sim</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sim_dot_sim</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <p>Systems Biology, Machine Learning, and Scientific Python</p>
 
-    <span class="k">return</span> <span class="n">sf_grad</span>
 
-<span class="k">def</span> <span class="nf">scaled_fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the residuals between simulated data and</span>
-<span class="sd">    experimental data after scaling the simulations using</span>
-<span class="sd">    the scale factor.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    <span class="n">residuals</span> <span class="o">=</span> <span class="n">beta</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">-</span> <span class="n">data</span>
-    <span class="k">return</span> <span class="n">residuals</span>
+    <nav>
+      <ul class="list">
 
-<span class="k">def</span> <span class="nf">scaled_fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the jacobian of the simulation with</span>
-<span class="sd">    respect to the parameter being optimized including</span>
-<span class="sd">    the contribution of the scale factor:</span>
 
-<span class="sd">    (d/dx B(x)F(x) = dB(x)/dx*F(x) + dF(x)/dx*B(x))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <li>
+              <a target="_self"
+                 href="https://federicov.github.io/pages/about.html#about">
+                About
+              </a>
+            </li>
 
-    <span class="c1"># We could write this using caching to avoid</span>
-    <span class="c1"># recalculating f(x) and B(x) every iteration.</span>
-    <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+      </ul>
+    </nav>
 
-    <span class="n">jac</span> <span class="o">=</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">beta_grad</span> <span class="o">=</span> <span class="n">calculate_sf_grad</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/FedericoV"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/f_vaggi"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
 
-    <span class="k">return</span> <span class="n">beta_grad</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">+</span> <span class="p">(</span><span class="n">jac</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-</code></pre></div>
+</aside>
+  <main>
 
-<p>Let's test to see if the scale factor calculation works as we expect:</p>
-<div class="highlight"><pre><span></span><code><span class="n">nb</span> <span class="o">=</span> <span class="mf">0.0001</span>
-<span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<nav>
+  <a href="https://federicov.github.io/">Home</a>
 
-<span class="n">scaled_measures</span> <span class="o">=</span> <span class="n">simulation</span> <span class="o">*</span> <span class="mf">1.7</span>
-<span class="n">sf</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">)</span>
+  <a href="/archives.html">Archives</a>
+  <a href="/categories.html">Categories</a>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>  <span class="c1"># Output: 1.7</span>
-</code></pre></div>
+  <a href="https://federicov.github.io/feeds/all.atom.xml">Atom</a>
 
-<p>Now, let's check to see if the optimization procedure works:</p>
-<div class="highlight"><pre><span></span><code><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">scaled_fact_residuals</span><span class="p">,</span> <span class="n">init_guess</span><span class="p">,</span>
-              <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">scaled_measures</span><span class="p">,),</span>
-              <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">Dfun</span><span class="o">=</span><span class="n">scaled_fact_jac</span><span class="p">)</span>
-<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Returns: array([ 0.0001])</span>
-</code></pre></div>
+</nav>
 
-<p>It does! We recover the correct number of barbed ends. Note that this result applies for more complex minimization functions where you have multiple scale factors, or where $F(x)$ is only available implicitly - such as when numerically integrating a set of differential equations. In practice, for any large optimization problem, calculating the scale factors will almost never be a significant slowdown: what will end up dominating the run time are either computing $F(x)$ and its Jacobian $\frac{dF(x)}{dx}$ or inverting the pseudo-Hessian inside the Levenberg-Marquardt algorithm.</p>
-<h2>Numerical Considerations</h2>
-<p>However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow. To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the <a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation">MAP</a> solution. Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently <a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html">sloppy</a>) and they make the estimation procedure more stable.</p>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/word-embeddings-and-dota2.html" rel="bookmark"
-                               title="Permalink to Gavagai">Gavagai</a></h1>
-                    </header>
 
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-04-22T00:00:00-07:00">
-                Published: Fri 22 April 2016
-        </abbr>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/Models-With-Scale-Factors.html#Models-With-Scale-Factors">Fitting Models with Dimensionless Data</a></h2>
+    <p>
+      Posted on Wed 04 May 2016 in <a href="https://federicov.github.io/category/optimization.html">Optimization</a>
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/video-games.html">video games</a> <a href="https://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="https://federicov.github.io/tag/dota2.html">dota2</a> </p>        
-</footer><!-- /.post-info -->                        <p>Last time I talked about Dota2, I covered the
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/python.html">Python</a>,              <a href="https://federicov.github.io/tag/ode.html">ODE</a>,              <a href="https://federicov.github.io/tag/sympy.html">SymPy</a>,              <a href="https://federicov.github.io/tag/optimization.html">Optimization</a>
+    </p>
+  </header>
+  <div>
+      <div><p>How to fit models with dimensionless data</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/Models-With-Scale-Factors.html#Models-With-Scale-Factors">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/word-embeddings-and-dota2.html#word-embeddings-and-dota2">Gavagai</a></h2>
+    <p>
+      Posted on Fri 22 April 2016 in <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>
+
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/video-games.html">video games</a>,              <a href="https://federicov.github.io/tag/machine-learning.html">machine learning</a>,              <a href="https://federicov.github.io/tag/dota2.html">dota2</a>
+    </p>
+  </header>
+  <div>
+      <div><p>Last time I talked about Dota2, I covered the
 <a href="http://www.datdota.com/blog/?p=1323">evolution of the metagame across patches</a>.
 This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
 <a href="https://en.wikipedia.org/wiki/Natural_language_processing">NLP</a> in a very novel way.</p>
 <h2>Introduction:</h2>
-<p>How would you teach someone what the word 'rabbit' means?  You …</p>
-                        <a class="readmore" href="https://federicov.github.io/word-embeddings-and-dota2.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
+<p>How would you teach someone what the word 'rabbit' means?  You …</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/word-embeddings-and-dota2.html#word-embeddings-and-dota2">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/peer-review-at-eLife.html#peer-review-at-eLife">The peer review process of eLife</a></h2>
+    <p>
+      Posted on Thu 14 April 2016 in <a href="https://federicov.github.io/category/science.html">Science</a>
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/peer-review-at-eLife.html" rel="bookmark"
-                               title="Permalink to The peer review process of eLife">The peer review process of eLife</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-04-14T00:00:00-07:00">
-                Published: Thu 14 April 2016
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/science.html">Science</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a> <a href="https://federicov.github.io/tag/open-science.html">open science</a> </p>        
-</footer><!-- /.post-info -->                        <p>Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a>,              <a href="https://federicov.github.io/tag/open-science.html">open science</a>
+    </p>
+  </header>
+  <div>
+      <div><p>Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
 we just published an analysis of the peer review process of eLife on
 F1000 <a href="http://f1000research.com/articles/5-683/v1">here</a>.</p>
 <p>It was an interesting experience, and it was my first time leading a project from
-the start all the way to publication (and now …</p>
-                        <a class="readmore" href="https://federicov.github.io/peer-review-at-eLife.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
+the start all the way to publication (and now …</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/peer-review-at-eLife.html#peer-review-at-eLife">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/killing-animals-for-nothing.html#killing-animals-for-nothing">Yet Another Instance of a Broken Publishing System at Work</a></h2>
+    <p>
+      Posted on Thu 15 October 2015 in <a href="https://federicov.github.io/category/science.html">Science</a>
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/killing-animals-for-nothing.html" rel="bookmark"
-                               title="Permalink to Yet Another Instance of a Broken Publishing System at Work">Yet Another Instance of a Broken Publishing System at Work</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2015-10-15T00:00:00-07:00">
-                Published: Thu 15 October 2015
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/science.html">Science</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a> <a href="https://federicov.github.io/tag/incentives.html">incentives</a> <a href="https://federicov.github.io/tag/research.html">research</a> </p>        
-</footer><!-- /.post-info -->                        <h2>Reproducibility in the Spotlight:</h2>
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a>,              <a href="https://federicov.github.io/tag/incentives.html">incentives</a>,              <a href="https://federicov.github.io/tag/research.html">research</a>
+    </p>
+  </header>
+  <div>
+      <div><h2>Reproducibility in the Spotlight:</h2>
 <p>Psychology is still reeling from the results of a <a href="https://www.sciencemag.org/content/349/6251/aac4716.abstract">massive study of
 reproducibility</a>
 which found that less than half of statistically significant findings recently
 published in the top psychology journals remain significant when independently
-reproduced.  If this is new to you, Jesse Singal wrote a great …</p>
-                        <a class="readmore" href="https://federicov.github.io/killing-animals-for-nothing.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
+reproduced.  If this is new to you, Jesse Singal wrote a great …</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/killing-animals-for-nothing.html#killing-animals-for-nothing">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/novelty-is-overrated.html#novelty-is-overrated">Why Scientists Don't Share Data and How to Fix it</a></h2>
+    <p>
+      Posted on Wed 29 October 2014 in <a href="https://federicov.github.io/category/science.html">Science</a>
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/novelty-is-overrated.html" rel="bookmark"
-                               title="Permalink to Why Scientists Don't Share Data and How to Fix it">Why Scientists Don't Share Data and How to Fix it</a></h1>
-                    </header>
-
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-10-29T00:00:00-07:00">
-                Published: Wed 29 October 2014
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/science.html">Science</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a> <a href="https://federicov.github.io/tag/incentives.html">incentives</a> </p>        
-</footer><!-- /.post-info -->                        <h2>Towards a Better Science</h2>
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/scientific-publishing.html">scientific publishing</a>,              <a href="https://federicov.github.io/tag/incentives.html">incentives</a>
+    </p>
+  </header>
+  <div>
+      <div><h2>Towards a Better Science</h2>
 <p>Recently, there's been a highly encouraging push towards a more open science with a greater emphasis on <a href="http://www.nature.com/nature/focus/reproducibility/">reproducibility</a>, spurred by a few <a href="http://retractionwatch.com/2014/09/11/potentially-groundbreaking-highly-provocative-nature-stap-cell-peer-reviews-published/">high profile retractions</a> and a growing awareness of the <a href="http://www.economist.com/news/briefing/21588057-scientists-think-science-self-correcting-alarming-degree-it-not-trouble">slippery nature</a> of several scientific findings.</p>
-<p>This slow shift has important implications.  While in theory …</p>
-                        <a class="readmore" href="https://federicov.github.io/novelty-is-overrated.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
+<p>This slow shift has important implications.  While in theory …</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/novelty-is-overrated.html#novelty-is-overrated">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/NumPy1.10+andopenblas.html#NumPy1.10+andopenblas">NumPy 1.10+ changes with openBLAS</a></h2>
+    <p>
+      Posted on Mon 15 September 2014 in <a href="https://federicov.github.io/category/programming.html">Programming</a>
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/NumPy1.10+andopenblas.html" rel="bookmark"
-                               title="Permalink to NumPy 1.10+ changes with openBLAS">NumPy 1.10+ changes with openBLAS</a></h1>
-                    </header>
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/python.html">[Python</a>,              <a href="https://federicov.github.io/tag/openblas.html">openBLAS</a>,              <a href="https://federicov.github.io/tag/numpy.html">NumPy]</a>
+    </p>
+  </header>
+  <div>
+      <div><p><a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a> is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained <a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2">gotoblas</a>.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).</p>
+<p>Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for …</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/NumPy1.10+andopenblas.html#NumPy1.10+andopenblas">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/EuroSciPy2014.html#EuroSciPy2014">EuroSciPy 2014 Thoughts</a></h2>
+    <p>
+      Posted on Fri 05 September 2014 in <a href="https://federicov.github.io/category/misc.html">misc</a>
 
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-09-15T00:00:00-07:00">
-                Published: Mon 15 September 2014
-        </abbr>
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/scipy.html">SciPy</a>,              <a href="https://federicov.github.io/tag/python.html">Python</a>,              <a href="https://federicov.github.io/tag/open-source.html">open source</a>
+    </p>
+  </header>
+  <div>
+      <div><p>I just got back from Cambridge, where last week I attended <a href="https://www.euroscipy.org/">EuroSciPy</a>.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other …</p></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/EuroSciPy2014.html#EuroSciPy2014">
+          Continue reading
+        </a>
+  </div>
+  <hr />
+</article>
+<article>
+  <header>
+    <h2><a href="https://federicov.github.io/deception-by-mathematics.html#deception-by-mathematics">Weapons of Math Destruction</a></h2>
+    <p>
+      Posted on Tue 29 July 2014 in <a href="https://federicov.github.io/category/misc.html">misc</a>
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/programming.html">Programming</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/python.html">[Python</a> <a href="https://federicov.github.io/tag/openblas.html">openBLAS</a> <a href="https://federicov.github.io/tag/numpy.html">NumPy]</a> </p>        
-</footer><!-- /.post-info -->                        <p><a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a> is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained <a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2">gotoblas</a>.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).</p>
-<p>Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for …</p>
-                        <a class="readmore" href="https://federicov.github.io/NumPy1.10+andopenblas.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
+          &#8226; Tagged with
+              <a href="https://federicov.github.io/tag/social-psychology.html">[social psychology</a>,              <a href="https://federicov.github.io/tag/sokal.html">Sokal</a>,              <a href="https://federicov.github.io/tag/nick-brown.html">Nick Brown</a>,              <a href="https://federicov.github.io/tag/mathematics.html">mathematics]</a>
+    </p>
+  </header>
+  <div>
+      <div><blockquote>
+<p><em>The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for …</em></p></blockquote></div>
+        <br>
+        <a class="btn"
+           href="https://federicov.github.io/deception-by-mathematics.html#deception-by-mathematics">
+          Continue reading
+        </a>
+  </div>
+</article>
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/EuroSciPy2014.html" rel="bookmark"
-                               title="Permalink to EuroSciPy 2014 Thoughts">EuroSciPy 2014 Thoughts</a></h1>
-                    </header>
+  <div class="pagination">
+  </div>
 
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-09-05T00:00:00-07:00">
-                Published: Fri 05 September 2014
-        </abbr>
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/misc.html">misc</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/scipy.html">SciPy</a> <a href="https://federicov.github.io/tag/python.html">Python</a> <a href="https://federicov.github.io/tag/open-source.html">open source</a> </p>        
-</footer><!-- /.post-info -->                        <p>I just got back from Cambridge, where last week I attended <a href="https://www.euroscipy.org/">EuroSciPy</a>.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other …</p>
-                        <a class="readmore" href="https://federicov.github.io/EuroSciPy2014.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
 
-                <li><article class="hentry">
-                    <header>
-                        <h1><a href="https://federicov.github.io/deception-by-mathematics.html" rel="bookmark"
-                               title="Permalink to Weapons of Math Destruction">Weapons of Math Destruction</a></h1>
-                    </header>
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="https://federicov.github.io/theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="light"
+          type="text/javascript">
+  </script>
+</p></footer>  </main>
 
-                    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-07-29T00:00:00-07:00">
-                Published: Tue 29 July 2014
-        </abbr>
-
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/misc.html">misc</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/social-psychology.html">[social psychology</a> <a href="https://federicov.github.io/tag/sokal.html">Sokal</a> <a href="https://federicov.github.io/tag/nick-brown.html">Nick Brown</a> <a href="https://federicov.github.io/tag/mathematics.html">mathematics]</a> </p>        
-</footer><!-- /.post-info -->                        <blockquote>
-<p><em>The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for …</em></p></blockquote>
-                        <a class="readmore" href="https://federicov.github.io/deception-by-mathematics.html">read more</a>
-                    </div><!-- /.entry-content -->
-                </article></li>
-                    </ol><!-- /#posts-list -->
-                    </section><!-- /#content -->
-                <section id="extras" class="body">
-                                <div class="social">
-                                        <h2>social</h2>
-                                        <ul>
-                                                        <li><a href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
-
-                                                        <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
-                                        </ul>
-                                </div><!-- /.social -->
-                </section><!-- /#extras -->
-
-                <footer id="contentinfo" class="body">
-                        <address id="about" class="vcard body">
-                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
-                        </address><!-- /#about -->
-
-                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-                </footer><!-- /#contentinfo -->
-
-        </body>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Federico's Blog ",
+  "url" : "https://federicov.github.io",
+  "image": "",
+  "description": ""
+}
+</script>
+</body>
 </html>

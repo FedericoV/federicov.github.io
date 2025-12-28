@@ -1,48 +1,146 @@
+
 <!DOCTYPE html>
 <html lang="en">
-        <head>
-                        <meta charset="utf-8" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <meta name="generator" content="Pelican" />
-                        <title>Gavagai</title>
-                        <link rel="stylesheet" href="https://federicov.github.io/theme/css/main.css" />
-                                <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
-    <meta name="description" content="Last time I talked about Dota2, I covered the evolution of the metagame across patches. This time, I'll focus on analyzing the way pros draft -..." />
-        </head>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
 
-        <body id="index" class="home">
-                <header id="banner" class="body">
-                        <h1><a href="https://federicov.github.io/">Federico's Blog</a></h1>
-                        <nav><ul>
-                                                <li><a href="https://federicov.github.io/pages/about.html">About</a></li>
-                                                <li class="active"><a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
-                                                <li><a href="https://federicov.github.io/category/misc.html">misc</a></li>
-                                                <li><a href="https://federicov.github.io/category/optimization.html">Optimization</a></li>
-                                                <li><a href="https://federicov.github.io/category/programming.html">Programming</a></li>
-                                                <li><a href="https://federicov.github.io/category/science.html">Science</a></li>
-                        </ul></nav>
-                </header><!-- /#banner -->
-  <section id="content" class="body">
-    <article>
-      <header>
-        <h1 class="entry-title">
-          <a href="https://federicov.github.io/word-embeddings-and-dota2.html" rel="bookmark"
-             title="Permalink to Gavagai">Gavagai</a></h1>
-    <a rel="nofollow" href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="f_vaggi">Tweet</a><script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
-      </header>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-      <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2016-04-22T00:00:00-07:00">
-                Published: Fri 22 April 2016
-        </abbr>
+    <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/stylesheet/style.min.css">
 
-                <address class="vcard author">
-                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
-                </address>
-        <p>In <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
-<p>tags: <a href="https://federicov.github.io/tag/video-games.html">video games</a> <a href="https://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="https://federicov.github.io/tag/dota2.html">dota2</a> </p>        
-</footer><!-- /.post-info -->        <p>Last time I talked about Dota2, I covered the
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="https://federicov.github.io/theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/solid.css">
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/custom.css">
+
+
+
+  <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="Federico Vaggi" />
+<meta name="description" content="Last time I talked about Dota2, I covered the evolution of the metagame across patches. This time, I&#39;ll focus on analyzing the way pros draft - but looking at it using tools from NLP in a very novel way. Introduction: How would you teach someone what the word &#39;rabbit&#39; means? You …" />
+<meta name="keywords" content="video games, machine learning, dota2">
+
+
+  <meta property="og:site_name" content="Federico's Blog"/>
+  <meta property="og:title" content="Gavagai"/>
+  <meta property="og:description" content="Last time I talked about Dota2, I covered the evolution of the metagame across patches. This time, I&#39;ll focus on analyzing the way pros draft - but looking at it using tools from NLP in a very novel way. Introduction: How would you teach someone what the word &#39;rabbit&#39; means? You …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://federicov.github.io/word-embeddings-and-dota2.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-04-22 00:00:00-07:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="https://federicov.github.io/author/federico-vaggi.html">
+  <meta property="article:section" content="Machine Learning"/>
+  <meta property="article:tag" content="video games"/>
+  <meta property="article:tag" content="machine learning"/>
+  <meta property="article:tag" content="dota2"/>
+  <meta property="og:image" content="">
+
+  <title>Federico's Blog &ndash; Gavagai</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="https://federicov.github.io/">
+      <img src="https://federicov.github.io/theme/img/profile.png" alt="Federico Vaggi" title="Federico Vaggi">
+    </a>
+
+    <h1>
+      <a href="https://federicov.github.io/">Federico Vaggi</a>
+    </h1>
+
+    <p>Systems Biology, Machine Learning, and Scientific Python</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://federicov.github.io/pages/about.html#about">
+                About
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/FedericoV"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/f_vaggi"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="https://federicov.github.io/">Home</a>
+
+  <a href="/archives.html">Archives</a>
+  <a href="/categories.html">Categories</a>
+
+  <a href="https://federicov.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="word-embeddings-and-dota2">Gavagai</h1>
+    <p>
+      Posted on Fri 22 April 2016 in <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>Last time I talked about Dota2, I covered the
 <a href="http://www.datdota.com/blog/?p=1323">evolution of the metagame across patches</a>.
 This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
 <a href="https://en.wikipedia.org/wiki/Natural_language_processing">NLP</a> in a very novel way.</p>
@@ -180,28 +278,46 @@ symbols without any meaning... yet, starting from that, we were able to recover
  the words mean relative to each other.</p>
 <p>Further, by connecting the features that we learned in an unsupervised way to
 class roles, we were even able to give an interpretation to our latent features.</p>
-      </div><!-- /.entry-content -->
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://federicov.github.io/tag/video-games.html">video games</a>
+      <a href="https://federicov.github.io/tag/machine-learning.html">machine learning</a>
+      <a href="https://federicov.github.io/tag/dota2.html">dota2</a>
+    </p>
+  </div>
 
-    </article>
-  </section>
-                <section id="extras" class="body">
-                                <div class="social">
-                                        <h2>social</h2>
-                                        <ul>
-                                                        <li><a href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
-                                                        <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
-                                        </ul>
-                                </div><!-- /.social -->
-                </section><!-- /#extras -->
 
-                <footer id="contentinfo" class="body">
-                        <address id="about" class="vcard body">
-                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
-                        </address><!-- /#about -->
 
-                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-                </footer><!-- /#contentinfo -->
 
-        </body>
+
+
+</article>
+
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="https://federicov.github.io/theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="light"
+          type="text/javascript">
+  </script>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Federico's Blog ",
+  "url" : "https://federicov.github.io",
+  "image": "",
+  "description": ""
+}
+</script>
+</body>
 </html>
