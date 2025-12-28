@@ -5,36 +5,36 @@
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
                         <title>Federico's Blog - video games</title>
-                        <link rel="stylesheet" href="http://federicov.github.io/theme/css/main.css" />
-                                <link href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
+                        <link rel="stylesheet" href="https://federicov.github.io/theme/css/main.css" />
+                                <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom Feed" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="http://federicov.github.io/">Federico's Blog</a></h1>
+                        <h1><a href="https://federicov.github.io/">Federico's Blog</a></h1>
                         <nav><ul>
-                                                <li><a href="http://federicov.github.io/pages/about.html">About</a></li>
-                                                <li><a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
-                                                <li><a href="http://federicov.github.io/category/misc.html">misc</a></li>
-                                                <li><a href="http://federicov.github.io/category/optimization.html">Optimization</a></li>
-                                                <li><a href="http://federicov.github.io/category/programming.html">Programming</a></li>
-                                                <li><a href="http://federicov.github.io/category/science.html">Science</a></li>
+                                                <li><a href="https://federicov.github.io/pages/about.html">About</a></li>
+                                                <li><a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a></li>
+                                                <li><a href="https://federicov.github.io/category/misc.html">misc</a></li>
+                                                <li><a href="https://federicov.github.io/category/optimization.html">Optimization</a></li>
+                                                <li><a href="https://federicov.github.io/category/programming.html">Programming</a></li>
+                                                <li><a href="https://federicov.github.io/category/science.html">Science</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="http://federicov.github.io/word-embeddings-and-dota2.html">Gavagai</a></h1>
+                        <h1 class="entry-title"><a href="https://federicov.github.io/word-embeddings-and-dota2.html">Gavagai</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2016-04-22T00:00:00-07:00">
                 Published: Fri 22 April 2016
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="http://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
+                        By                                 <a class="url fn" href="https://federicov.github.io/author/federico-vaggi.html">Federico Vaggi</a>
                 </address>
-        <p>In <a href="http://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
-<p>tags: <a href="http://federicov.github.io/tag/video-games.html">video games</a> <a href="http://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="http://federicov.github.io/tag/dota2.html">dota2</a> </p>        
+        <p>In <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>.</p>
+<p>tags: <a href="https://federicov.github.io/tag/video-games.html">video games</a> <a href="https://federicov.github.io/tag/machine-learning.html">machine learning</a> <a href="https://federicov.github.io/tag/dota2.html">dota2</a> </p>        
 </footer><!-- /.post-info --><p>Last time I talked about Dota2, I covered the
 <a href="http://www.datdota.com/blog/?p=1323">evolution of the metagame across patches</a>.
 This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
@@ -94,7 +94,7 @@ whose vectors are most similar to that <strong>Shadow Fiend</strong>:</p>
 </ol>
 <p>And here it is in a more visual form - each row corresponds to the vector for a
 particular hero:</p>
-<p><a href="url"><img src="http://federicov.github.io/images/Top_5_SF.png" align="left" width="800" ></a></p>
+<p><a href="url"><img src="https://federicov.github.io/images/Top_5_SF.png" align="left" width="800" ></a></p>
 <p>Wow - those actually all make a lot of sense.  Let's try a tougher task now and
 see if we can use hero vectors to reason about analogies.  <strong>Lion</strong>  is
 to <strong>Anti Mage</strong> as <strong>Witch Doctor</strong> is to ....:</p>
@@ -110,13 +110,13 @@ hero vectors can pick up on the notion of pairing a ranged support with a
 melee carry.</p>
 <h2>A Global View:</h2>
 <p>It's possible to plot the hero vectors of every single hero at the same time,
-but the results can be a bit <a href="http://federicov.github.io/images/Hero_Clusters.png">overwhelming</a>.</p>
+but the results can be a bit <a href="https://federicov.github.io/images/Hero_Clusters.png">overwhelming</a>.</p>
 <p>In that figure, every column corresponds to a hero vector, and we have sorted
 rows and columns in a dendogram.  Unless you are used to looking at those kinds
 of graphs all the time, it's not very obvious which heroes form groups and which
  heroes are similar to each other.</p>
 <p>Ignoring the hero vectors for a minute, we can cut the
-<a href="http://federicov.github.io/images/Hero_Dendogram.png">dendogram</a> (the tree-like structure at
+<a href="https://federicov.github.io/images/Hero_Dendogram.png">dendogram</a> (the tree-like structure at
 the top of the previous graph) and look at
 which heroes end up close to each other.</p>
 <p>We see that we have recovered some pretty meaningful (although not flawless)
@@ -129,7 +129,7 @@ dataset in 2d using t-SNE](https://lvdmaaten.github.io/tsne/).  t-SNE is a very
 clever technique where we look for a lower dimensional representation that
 still maintains as much of the high level structure as possible.</p>
 <p>After manipulating the data and plotting it in 2d, here is what we get:</p>
-<p><a href="http://federicov.github.io/images/Heroes_TNSE.png"><img src="http://federicov.github.io/images/Heroes_TNSE.png" align="left" width="750" ></a></p>
+<p><a href="https://federicov.github.io/images/Heroes_TNSE.png"><img src="https://federicov.github.io/images/Heroes_TNSE.png" align="left" width="750" ></a></p>
 <p>The hero colors come from the groups we identified above.  Again - notice that
 there are easily discrete clusters that are quite meaningful.</p>
 <h2>What do the vectors mean?:</h2>
@@ -150,11 +150,11 @@ the easiest way is to use <a href="https://en.wikipedia.org/wiki/Logistic_regres
 For the math nerds - to insure that we get a sparse set of basis, we will
 also use a strong L1 penalty (which, as a bonus, regularizes our predictions).</p>
 <p>Here are the results of that:</p>
-<p><a href="http://federicov.github.io/images/LR_Weights.png"><img src="http://federicov.github.io/images/LR_Weights.png" align="left" width="750" ></a></p>
+<p><a href="https://federicov.github.io/images/LR_Weights.png"><img src="https://federicov.github.io/images/LR_Weights.png" align="left" width="750" ></a></p>
 <p>What does that mean, in practice?  We see that the 46th vector is strongly
 associated with being a support, and the 38th vector is strongly associated
 with being a ranged hero.  Let's plot the 38th and 46th vector of all heroes:</p>
-<p><a href="http://federicov.github.io/images/Weights_vs_Roles.png"><img src="http://federicov.github.io/images/Weights_vs_Roles.png" align="left" width="750" ></a></p>
+<p><a href="https://federicov.github.io/images/Weights_vs_Roles.png"><img src="https://federicov.github.io/images/Weights_vs_Roles.png" align="left" width="750" ></a></p>
 <p>As we can see - heroes that have higher values on axis 46, are a lot more
 likely to be support heroes.  Similarly, heroes that have higher values on axis
 38 are more likely to be ranged - you may notice that the two axis are somewhat
@@ -178,7 +178,7 @@ class roles, we were even able to give an interpretation to our latent features.
                                 <div class="social">
                                         <h2>social</h2>
                                         <ul>
-                                                        <li><a href="http://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                                                        <li><a href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                                                         <li><a href="http://twitter.com/f_vaggi">@f_vaggi</a></li>
                                         </ul>
