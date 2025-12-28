@@ -85,7 +85,7 @@ whose vectors are most similar to that **Shadow Fiend**:
 And here it is in a more visual form - each row corresponds to the vector for a
 particular hero:
 
-<a href="url"><img src="{filename}/images/Top_5_SF.png" align="left" width="800" ></a>
+<a href="url"><img src="{static}/images/Top_5_SF.png" align="left" width="800" ></a>
 
 Wow - those actually all make a lot of sense.  Let's try a tougher task now and
 see if we can use hero vectors to reason about analogies.  **Lion**  is
@@ -105,7 +105,7 @@ melee carry.
 A Global View:
 --------------
 It's possible to plot the hero vectors of every single hero at the same time,
-but the results can be a bit [overwhelming]({filename}/images/Hero_Clusters.png).
+but the results can be a bit [overwhelming]({static}/images/Hero_Clusters.png).
 
 In that figure, every column corresponds to a hero vector, and we have sorted
 rows and columns in a dendogram.  Unless you are used to looking at those kinds
@@ -113,7 +113,7 @@ of graphs all the time, it's not very obvious which heroes form groups and which
  heroes are similar to each other.
 
 Ignoring the hero vectors for a minute, we can cut the
-[dendogram]({filename}/images/Hero_Dendogram.png) (the tree-like structure at
+[dendogram]({static}/images/Hero_Dendogram.png) (the tree-like structure at
 the top of the previous graph) and look at
 which heroes end up close to each other.
 
@@ -130,7 +130,7 @@ still maintains as much of the high level structure as possible.
 
 After manipulating the data and plotting it in 2d, here is what we get:
 
-<a href="{filename}/images/Heroes_TNSE.png"><img src="{filename}/images/Heroes_TNSE.png" align="left" width="750" ></a>
+<a href="{static}/images/Heroes_TNSE.png"><img src="{static}/images/Heroes_TNSE.png" align="left" width="750" ></a>
 
 The hero colors come from the groups we identified above.  Again - notice that
 there are easily discrete clusters that are quite meaningful.
@@ -160,13 +160,13 @@ also use a strong L1 penalty (which, as a bonus, regularizes our predictions).
 
 Here are the results of that:
 
-<a href="{filename}/images/LR_Weights.png"><img src="{filename}/images/LR_Weights.png" align="left" width="750" ></a>
+<a href="{static}/images/LR_Weights.png"><img src="{static}/images/LR_Weights.png" align="left" width="750" ></a>
 
 What does that mean, in practice?  We see that the 46th vector is strongly
 associated with being a support, and the 38th vector is strongly associated
 with being a ranged hero.  Let's plot the 38th and 46th vector of all heroes:
 
-<a href="{filename}/images/Weights_vs_Roles.png"><img src="{filename}/images/Weights_vs_Roles.png" align="left" width="750" ></a>
+<a href="{static}/images/Weights_vs_Roles.png"><img src="{static}/images/Weights_vs_Roles.png" align="left" width="750" ></a>
 
 As we can see - heroes that have higher values on axis 46, are a lot more
 likely to be support heroes.  Similarly, heroes that have higher values on axis
