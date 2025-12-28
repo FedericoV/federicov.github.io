@@ -5,3 +5,8 @@ wpimport/
 pelicanconf_*.py
 pelican-plugins
 cv.pdf
+
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
