@@ -8,28 +8,11 @@
   --slate-light: #34495e;
 }
 
-/* Sidebar with background image */
+/* Sidebar with background image and dark overlay */
 aside {
-  background: url('/images/blog_background_hawaii.jpg') center center / cover no-repeat !important;
-  position: relative;
-}
-
-/* Dark overlay for readability */
-aside::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 0;
-}
-
-/* Ensure sidebar content stays above overlay */
-aside > * {
-  position: relative;
-  z-index: 1;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url('/images/blog_background_hawaii.jpg') center center / cover no-repeat !important;
 }
 
 /* Links */
