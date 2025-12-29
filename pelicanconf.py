@@ -2,6 +2,7 @@ AUTHOR = 'Federico Vaggi'
 SITENAME = "Federico's Blog"
 SITETITLE = "Federico Vaggi"
 SITESUBTITLE = "Systems Biology, Machine Learning, and Scientific Python"
+SITELOGO = '/images/profile.jpg'
 SITEURL = ''
 
 PATH = 'content'
