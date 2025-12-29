@@ -12,7 +12,8 @@
 aside {
   background:
     linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-    url('/images/blog_background_hawaii.jpg') center center / cover no-repeat !important;
+    url('https://federicov.github.io/images/blog_background_hawaii.jpg') center center / cover no-repeat !important;
+  background-color: #333 !important;
 }
 
 /* Links */
