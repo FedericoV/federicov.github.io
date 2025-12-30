@@ -1,9 +1,9 @@
 AUTHOR = 'Federico Vaggi'
 SITENAME = "Federico's Blog"
 SITETITLE = "Federico Vaggi"
-SITESUBTITLE = "Systems Biology, Machine Learning, and Scientific Python"
+SITESUBTITLE = "Machine Learning, Causal Inference, and whatever else I find interesting"
 SITELOGO = '/images/profile.jpg'
-SITEURL = ''
+SITEURL = 'https://federicov.github.io/'
 
 PATH = 'content'
 TIMEZONE = 'America/Los_Angeles'
