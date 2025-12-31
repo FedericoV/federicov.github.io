@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="https://federicov.github.io/theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/solid.css">
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/custom.css">
+
+
+
+  <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="Federico Vaggi" />
+<meta name="description" content="OpenBLAS is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained gotoblas. It&#39;s free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS). Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for …" />
+<meta name="keywords" content="[Python, openBLAS, NumPy]">
+
+
+  <meta property="og:site_name" content="Federico's Blog"/>
+  <meta property="og:title" content="NumPy 1.10+ changes with openBLAS"/>
+  <meta property="og:description" content="OpenBLAS is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained gotoblas. It&#39;s free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS). Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://federicov.github.io/NumPy1.10+andopenblas.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2014-09-15 00:00:00-07:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="https://federicov.github.io/author/federico-vaggi.html">
+  <meta property="article:section" content="Programming"/>
+  <meta property="article:tag" content="[Python"/>
+  <meta property="article:tag" content="openBLAS"/>
+  <meta property="article:tag" content="NumPy]"/>
+  <meta property="og:image" content="/images/profile.jpg">
+
+  <title>Federico's Blog &ndash; NumPy 1.10+ changes with openBLAS</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="https://federicov.github.io/">
+      <img src="/images/profile.jpg" alt="Federico Vaggi" title="Federico Vaggi">
+    </a>
+
+    <h1>
+      <a href="https://federicov.github.io/">Federico Vaggi</a>
+    </h1>
+
+    <p>Machine Learning, Causal Inference, and whatever else I find interesting</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://federicov.github.io/pages/about.html#about">
+                About
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/FedericoV"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/f_vaggi"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-linkedin"
+           href="https://www.linkedin.com/in/federico-vaggi-ba72a654"
+           target="_blank">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="https://federicov.github.io/">Home</a>
+
+  <a href="/archives.html">Archives</a>
+  <a href="/categories.html">Categories</a>
+
+  <a href="https://federicov.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="NumPy1.10+andopenblas">NumPy 1.10+ changes with openBLAS</h1>
+    <p>
+      Posted on Mon 15 September 2014 in <a href="https://federicov.github.io/category/programming.html">Programming</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><a href="https://github.com/xianyi/OpenBLAS">OpenBLAS</a> is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained <a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2">gotoblas</a>.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).</p>
+<p>Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for all linear algebra routines, and NumPy is no exception.  There are lots of <a href="http://myvirtualbrain.blogspot.it/2013/01/compiling-and-installing-numpy-with.html">excellent</a> <a href="http://osdf.github.io/blog/numpyscipy-with-openblas-for-ubuntu-1204-second-try.html">guides</a> to building OpenBLAS and linking it with NumPy.</p>
+<p>However, since until recently, building NumPy with OpenBLAS required a fair bit of tinkering, all the guides suggest testing to see if your build process worked like <a href="https://gist.github.com/osdf/3842524#file_test_numpy.py">so</a>.  Since the NumPy 1.9 release though, all subsequent builds however changed so <em>numpy.core._dotblas</em> is no longer built as a standalone file.</p>
+<p><strong>From 1.10 the release notes:</strong></p>
+<ul>
+<li>The _dotblas module is no longer available.</li>
+</ul>
+<p>If you are smart enough to actually read through the release notes before building a package, I admire your discipline, and you've earned the right to feel smug for the rest of the day.  I, however, struggled like an idiot for 2 hours trying to figure out why _dotblas wasn't getting built.  Relying on a private API module to check for a succesful build wasn't a very good idea in the first place - but if you want to check if NumPy succesfully linked openblas, do this instead:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">numpy.distutils.system_info</span> <span class="kn">import</span> <span class="n">get_info</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">get_info</span><span class="p">(</span><span class="s1">&#39;blas&#39;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;libraries&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;openblas&#39;</span><span class="p">],</span> <span class="s1">&#39;library_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;/opt/OpenBLAS/lib&#39;</span><span class="p">],</span> <span class="s1">&#39;define_macros&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s1">&#39;HAVE_CBLAS&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)],</span> <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;c&#39;</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">get_info</span><span class="p">(</span><span class="s1">&#39;lapack&#39;</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;libraries&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;openblas&#39;</span><span class="p">],</span> <span class="s1">&#39;library_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;/opt/OpenBLAS/lib&#39;</span><span class="p">],</span> <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;f77&#39;</span><span class="p">}</span>
+</code></pre></div>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://federicov.github.io/tag/python.html">[Python</a>
+      <a href="https://federicov.github.io/tag/openblas.html">openBLAS</a>
+      <a href="https://federicov.github.io/tag/numpy.html">NumPy]</a>
+    </p>
+  </div>
+
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="https://federicov.github.io/theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="light"
+          type="text/javascript">
+  </script>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Federico's Blog ",
+  "url" : "https://federicov.github.io",
+  "image": "/images/profile.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>

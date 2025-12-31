@@ -1,2 +1,605 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog</title><link href="https://federicov.github.io/" rel="alternate"/><link href="https://federicov.github.io/feeds/all.atom.xml" rel="self"/><id>https://federicov.github.io/</id><updated>2025-12-31T00:18:11.626035+00:00</updated><subtitle>Machine Learning, Causal Inference, and whatever else I find interesting</subtitle></feed>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Federico's Blog</title><link href="https://federicov.github.io/" rel="alternate"/><link href="https://federicov.github.io/feeds/all.atom.xml" rel="self"/><id>https://federicov.github.io/</id><updated>2016-05-04T00:00:00-07:00</updated><subtitle>Machine Learning, Causal Inference, and whatever else I find interesting</subtitle><entry><title>Fitting Models with Dimensionless Data</title><link href="https://federicov.github.io/Models-With-Scale-Factors.html" rel="alternate"/><published>2016-05-04T00:00:00-07:00</published><updated>2016-05-04T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-05-04:/Models-With-Scale-Factors.html</id><summary type="html">&lt;p&gt;How to fit models with dimensionless data&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Relative Measurements&lt;/h2&gt;
+&lt;p&gt;When calibrating a model to data, it's common to only have access to relative measurements. For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in &lt;a href="http://en.wikipedia.org/wiki/Western_blot"&gt;western blots&lt;/a&gt;. Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, etc...&lt;/p&gt;
+&lt;p&gt;For example, here is what a western blot (&lt;strong&gt;column A&lt;/strong&gt;) looks like with its relative quantification (&lt;strong&gt;column B&lt;/strong&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Western blot example" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd"&gt;&lt;/p&gt;
+&lt;p&gt;(taken from: https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&amp;amp;req=4).&lt;/p&gt;
+&lt;h2&gt;Calibrating Models with Data in Arbitrary Units&lt;/h2&gt;
+&lt;p&gt;How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning? In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible. Alternatively, we can make our models completely &lt;a href="https://en.wikipedia.org/wiki/Nondimensionalization"&gt;dimensionless&lt;/a&gt; by rescaling all quantities in our model by appropriately chosen constants.&lt;/p&gt;
+&lt;p&gt;A third option is to use scaling factors. To do this, we assume that in the range in which we are interested, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA. In practice, the relationship usually follows a saturation curve, which can be described by something like a &lt;a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29"&gt;Hill function&lt;/a&gt;. The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the &lt;a href="https://en.wikipedia.org/wiki/Poynting_vector"&gt;Poynting vector&lt;/a&gt; which does exactly what the name suggests.&lt;/p&gt;
+&lt;h2&gt;Linearizing Saturation Curves&lt;/h2&gt;
+&lt;p&gt;Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately, as long as we are careful to make sure our measurements are done in the correct range.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;autograd.numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;autograd&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;grad&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hill&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Km&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Vmax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Standard Hill function&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;numerator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Vmax&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;denominator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Km&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;numerator&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;denominator&lt;/span&gt;
+
+&lt;span class="c1"&gt;# To calculate the gradient of the Hill function (with respect to L) we use autograd.&lt;/span&gt;
+&lt;span class="n"&gt;hill_grad&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hill&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;L&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Km&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt;
+&lt;span class="n"&gt;Vmax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+
+&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hill&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Km&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Vmax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Evaluate the gradient at 0.5 wrt L&lt;/span&gt;
+&lt;span class="n"&gt;dv_dl&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hill_grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Km&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Vmax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Approximate the Hill function as a linear equation using a 1st order Taylor series:&lt;/span&gt;
+&lt;span class="n"&gt;v_approx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hill&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Km&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Vmax&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;dv_dl&lt;/span&gt;
+
+&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;111&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hill Function&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;L&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;v_approx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;First Order Taylor Series&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;legend&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loc&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;best&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_ylim&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Example Problem: Actin Polymerization&lt;/h2&gt;
+&lt;p&gt;Let's say we want to model the &lt;a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics"&gt;polymerization of actin&lt;/a&gt; from barbed ends &lt;em&gt;in-vitro&lt;/em&gt;. This is described by a very simple differential equation:&lt;/p&gt;
+&lt;p&gt;$$\frac{dFa(t)}{dt} = k_{on} \cdot N_b \cdot Ga(t) - k_{off} \cdot N_b$$&lt;/p&gt;
+&lt;p&gt;where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on}, k_{off}$ are the 1st and 0th order binding and unbinding parameters. If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;sympy&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;init_printing&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;At&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;symbols&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;At Nb k_on k_off t&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;positive&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Fa&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Fa&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Ga&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;At&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;Fa&lt;/span&gt;
+
+&lt;span class="n"&gt;eq&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Eq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Ga&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Nb&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;diff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fa&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;sol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dsolve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eq&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;simplify&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This gives us the solution:&lt;/p&gt;
+&lt;p&gt;$$Fa(t) = \frac{At \cdot k_{on} - k_{off} + e^{k_{on}(C_1 - N_b t)}}{k_{on}}$$&lt;/p&gt;
+&lt;p&gt;This solution has an integration constant. Assume that $Fa(0) = 0$ (meaning, at time zero, all actin is in soluble form):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Solve for initial condition of 0 F-Actin at t=0&lt;/span&gt;
+&lt;span class="n"&gt;initial_cond&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rhs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;sol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rhs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;C1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;initial_cond&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;fact_timecourse&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lambdify&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;At&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                           &lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;simplify&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;modules&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;numpy&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# We take advantage of SymPy again to obtain the gradient&lt;/span&gt;
+&lt;span class="c1"&gt;# of the function wrt the number of barbed ends&lt;/span&gt;
+&lt;span class="n"&gt;fact_grad&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lambdify&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;At&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_off&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;k_on&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                     &lt;span class="n"&gt;diff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sol&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Nb&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;simplify&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;modules&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;numpy&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;timesteps&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.01&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;simulation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;111&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;simulation&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Time&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;F-Actin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;What if we didn't actually know the number of barbed ends in solution, and wanted to estimate it on the basis of F-Actin time course data? That's very easy using SciPy and SymPy!&lt;/p&gt;
+&lt;p&gt;This is just a simple least squares minimization problem:&lt;/p&gt;
+&lt;p&gt;$$\underset{x}{\arg\min} \sum_i(F(x)_i - y_i)^2$$&lt;/p&gt;
+&lt;p&gt;Where $F(x)_i$ is our simulation of actin dynamics, $x$ is our unknown parameter (in this case, the number of barbed ends - we presume we know everything else) and $y_i$ is the experimental data.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fact_residuals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;    Returns the residuals between the simulation calculated&lt;/span&gt;
+&lt;span class="sd"&gt;    with nb == p[0] and the original simulation with the known&lt;/span&gt;
+&lt;span class="sd"&gt;    value of nb&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;residuals&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;residuals&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;fact_jac&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="sd"&gt;    Returns the jacobian: The gradient at every timestep&lt;/span&gt;
+&lt;span class="sd"&gt;    with respect to nb. Since we are only optimizing a&lt;/span&gt;
+&lt;span class="sd"&gt;    single parameter, this has an extra axis.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;fact_grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reshape&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;scipy.optimize&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;
+
+&lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fact_residuals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;simulation&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt; &lt;span class="n"&gt;full_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;col_deriv&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Dfun&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fact_jac&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# Returns: array([ 0.0001])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Working with Arbitrary Units&lt;/h2&gt;
+&lt;p&gt;But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary. In practice, actin polymerization is almost always measured using &lt;a href="https://en.wikipedia.org/wiki/Pyrene"&gt;pyrene&lt;/a&gt; actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.&lt;/p&gt;
+&lt;p&gt;Now, we can no longer directly minimize the difference between our simulation and the experimental data, since our simulation is in units of concentration, and our measurements are in arbitrary units. One option is to explicitly add a parameter to our model. We can simply define a new function, $G(x)$:&lt;/p&gt;
+&lt;p&gt;$$G(x) = x[0] \cdot f(x[1:])$$&lt;/p&gt;
+&lt;p&gt;which takes an extra parameter, and scales the simulation. This however adds a parameter to the model, and, in my experience, makes parameter estimation much slower.&lt;/p&gt;
+&lt;h2&gt;Implicit Scale Factors&lt;/h2&gt;
+&lt;p&gt;An alternative way is to write out the minimization like so (we are assuming &lt;a href="https://en.wikipedia.org/wiki/Homoscedasticity"&gt;homoscedasticity&lt;/a&gt; to simplify the expression and ignore the variance of each individual point):&lt;/p&gt;
+&lt;p&gt;$$\underset{x}{\arg\min} \sum_i (\beta F(x)_i - y_i)^2$$&lt;/p&gt;
+&lt;p&gt;At this point - we notice that, for a given set of parameters $x$, our loss function implicitly defines an optimal scaling factor $\beta$ - it's the scaling factor that minimizes the residuals, given a simulation $F(x)$ and data $y$.&lt;/p&gt;
+&lt;p&gt;To find the optimal scale factor, we derive our loss function with respect to $\beta$:&lt;/p&gt;
+&lt;p&gt;$$\frac{d}{d\beta} \sum_i (\beta F(x)_i - y_i)^2 = 0$$&lt;/p&gt;
+&lt;p&gt;and solve (the best reference I've found for this is &lt;a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf"&gt;Ryan Gutenkunst's PhD thesis&lt;/a&gt; and the corresponding implementation in &lt;a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568"&gt;SloppyCell&lt;/a&gt;):&lt;/p&gt;
+&lt;p&gt;$$\beta = \frac{\sum_i F(x)_i y_i}{\sum_i F(x)_i^2}$$&lt;/p&gt;
+&lt;h2&gt;Updating the Jacobian&lt;/h2&gt;
+&lt;p&gt;However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:&lt;/p&gt;
+&lt;p&gt;$$\frac{d}{dx}(\beta(x) F(x)) = \frac{d\beta(x)}{dx}F(x) + \frac{dF(x)}{dx}\beta(x)$$&lt;/p&gt;
+&lt;p&gt;$\frac{dF(x)}{dx}$ is the old Jacobian. Now we need to calculate $\frac{d\beta(x)}{dx}$. To obtain that, we derive the equation for $\beta$ with respect to $x$:&lt;/p&gt;
+&lt;p&gt;$$\frac{d\beta}{dx} = \frac{d}{dx} \frac{\sum_i \frac{dF(x)_i}{dx} y_i}{\sum_i F(x)_i^2}$$&lt;/p&gt;
+&lt;p&gt;Let's write a quick and dirty implementation of the different functions:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Calculates the optimal scale factor (B) between&lt;/span&gt;
+&lt;span class="sd"&gt;    simulated and experimental data.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;sim_dot_exp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;sim_dot_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;sim_dot_exp&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;sim_dot_sim&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_sf_grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sim_jac&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Calculates the gradient of the scale factor&lt;/span&gt;
+&lt;span class="sd"&gt;    (dB/dx) with respect to the parameters being&lt;/span&gt;
+&lt;span class="sd"&gt;    optimized.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;sim_dot_exp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;sim_dot_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;jac_dot_exp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim_jac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;jac_dot_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim_jac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;axis&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;sf_grad&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jac_dot_exp&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;sim_dot_sim&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+               &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim_dot_exp&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;jac_dot_sim&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sim_dot_sim&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;sf_grad&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;scaled_fact_residuals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Calculates the residuals between simulated data and&lt;/span&gt;
+&lt;span class="sd"&gt;    experimental data after scaling the simulations using&lt;/span&gt;
+&lt;span class="sd"&gt;    the scale factor.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;beta&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;residuals&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;residuals&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;scaled_fact_jac&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Calculates the jacobian of the simulation with&lt;/span&gt;
+&lt;span class="sd"&gt;    respect to the parameter being optimized including&lt;/span&gt;
+&lt;span class="sd"&gt;    the contribution of the scale factor:&lt;/span&gt;
+
+&lt;span class="sd"&gt;    (d/dx B(x)F(x) = dB(x)/dx*F(x) + dF(x)/dx*B(x))&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# We could write this using caching to avoid&lt;/span&gt;
+    &lt;span class="c1"&gt;# recalculating f(x) and B(x) every iteration.&lt;/span&gt;
+    &lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;beta&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;jac&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reshape&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;beta_grad&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;calculate_sf_grad&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;jac&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;beta_grad&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jac&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;beta&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let's test to see if the scale factor calculation works as we expect:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;nb&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.0001&lt;/span&gt;
+&lt;span class="n"&gt;new_sim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fact_timecourse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.8&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;11.6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;nb&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timesteps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ravel&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;scaled_measures&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;simulation&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mf"&gt;1.7&lt;/span&gt;
+&lt;span class="n"&gt;sf&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;calculate_sf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new_sim&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;scaled_measures&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# Output: 1.7&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, let's check to see if the optimization procedure works:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;init_guess&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;out&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;leastsq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scaled_fact_residuals&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;init_guess&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scaled_measures&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt;
+              &lt;span class="n"&gt;full_output&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;col_deriv&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;Dfun&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;scaled_fact_jac&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# Returns: array([ 0.0001])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;It does! We recover the correct number of barbed ends. Note that this result applies for more complex minimization functions where you have multiple scale factors, or where $F(x)$ is only available implicitly - such as when numerically integrating a set of differential equations. In practice, for any large optimization problem, calculating the scale factors will almost never be a significant slowdown: what will end up dominating the run time are either computing $F(x)$ and its Jacobian $\frac{dF(x)}{dx}$ or inverting the pseudo-Hessian inside the Levenberg-Marquardt algorithm.&lt;/p&gt;
+&lt;h2&gt;Numerical Considerations&lt;/h2&gt;
+&lt;p&gt;However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow. To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the &lt;a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation"&gt;MAP&lt;/a&gt; solution. Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently &lt;a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html"&gt;sloppy&lt;/a&gt;) and they make the estimation procedure more stable.&lt;/p&gt;</content><category term="Optimization"/><category term="Python"/><category term="ODE"/><category term="SymPy"/><category term="Optimization"/></entry><entry><title>Gavagai</title><link href="https://federicov.github.io/word-embeddings-and-dota2.html" rel="alternate"/><published>2016-04-22T00:00:00-07:00</published><updated>2016-04-22T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-22:/word-embeddings-and-dota2.html</id><summary type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
+&lt;a href="http://www.datdota.com/blog/?p=1323"&gt;evolution of the metagame across patches&lt;/a&gt;.
+This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
+&lt;a href="https://en.wikipedia.org/wiki/Natural_language_processing"&gt;NLP&lt;/a&gt; in a very novel way.&lt;/p&gt;
+&lt;h2&gt;Introduction:&lt;/h2&gt;
+&lt;p&gt;How would you teach someone what the word 'rabbit' means?  You …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Last time I talked about Dota2, I covered the
+&lt;a href="http://www.datdota.com/blog/?p=1323"&gt;evolution of the metagame across patches&lt;/a&gt;.
+This time, I'll focus on analyzing the way pros draft - but looking at it using tools from
+&lt;a href="https://en.wikipedia.org/wiki/Natural_language_processing"&gt;NLP&lt;/a&gt; in a very novel way.&lt;/p&gt;
+&lt;h2&gt;Introduction:&lt;/h2&gt;
+&lt;p&gt;How would you teach someone what the word 'rabbit' means?  You could go out in a
+field, and every time a rabbit shows up you could point to it and exclaim
+'rabbit'.  However, even this highly simplified vignette assumes that you are
+trying to explain the concept of rabbit to someone who has a mental model of
+the world very similar to yours.  Now, imagine that instead of teaching the
+meaning of words to a human who sees the world as you do, you are trying to
+teach them to a computer.  Where do you start?&lt;/p&gt;
+&lt;p&gt;This is where &lt;a href="https://en.wikipedia.org/wiki/Word_embedding"&gt;Word Vectors&lt;/a&gt;
+come in. The key assumption behind word vectors is that words which occur in
+similar contexts have similar meanings - and this is known as the
+&lt;a href="https://en.wikipedia.org/wiki/Distributional_semantics"&gt;Distributional Hypothesis&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the case of linguistics, this means that if you find the word 'negotiate' in
+similar contexts as the word 'bargain', their meaning is probably similar.  Using
+word vectors, it means that if you calculate the &lt;a href="https://en.wikipedia.org/wiki/Cosine_similarity"&gt;cosine similarity&lt;/a&gt;
+(a measure of how similar two vectors are) between the word vector for 'negotiate'
+and 'bargain' you'll get a value close to 1.  Another neat property of word
+vectors is that they allow us to reason by analogy: a common example is that
+(King - Man) ~= (Queen - Woman).  For an awesome example of the power of
+word vectors, check out &lt;a href="https://sense2vec.spacy.io/?natural_language_processing%7CNOUN"&gt;an analysis&lt;/a&gt;
+of every single reddit post done using &lt;a href="https://twitter.com/spacy_io"&gt;spacy&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;From Word Vectors to Hero Vectors:&lt;/h2&gt;
+&lt;p&gt;How can word vectors help us understand Dota2 teams?  Imagine that you treat every Dota2 team as a sentence, with heroes making up the words.  For example, this would be a valid sentence in Dota2ese:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Batrider  Disruptor   Leshrac Naga Siren  Weaver&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;and so would this:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Dragon Knight Weaver  Crystal Maiden  Windranger  Treant Protector&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Recall the Distributional Hypothesis that we discussed above.  Instead of trying to understand what words mean by looking at the sentences in which they occur, we want to understand what heroes are like by looking at the kinds of team they show up in.  Concretely, if we see that heroes like &lt;strong&gt;Witch Doctor&lt;/strong&gt; and &lt;strong&gt;Lion&lt;/strong&gt; tend to show up in similar teams, this indicates that they have similar roles.&lt;/p&gt;
+&lt;p&gt;We will use &lt;a href="http://www.datdota.com/"&gt;datdota&lt;/a&gt; as our database of drafts, and the excellent &lt;a href="https://radimrehurek.com/gensim/index.html"&gt;gensim library&lt;/a&gt; to learn
+our hero vectors.&lt;/p&gt;
+&lt;p&gt;When learning our hero vectors, we have to specify how many dimensions we want to use to represent our heroes.  In general, more dimensions means that we get higher quality representations, but we require more computing power and more data.&lt;/p&gt;
+&lt;p&gt;For example, after training on our dataset, this is what the hero vector for &lt;strong&gt;Shadowfiend&lt;/strong&gt; looks like.&lt;/p&gt;
+&lt;p&gt;[-0.06813218, -0.00902375,  0.10162564, -0.01908037,  0.03013835,&lt;br&gt;
+  0.16538762,  0.03104097,  0.02496031, -0.16785616,  0.3313826 ,&lt;br&gt;
+ -0.21904311, -0.07945664,  0.19140202,  0.12729862,  0.36308175,&lt;br&gt;
+  0.19962946,  0.13561839,  0.23637122, -0.32607114,  0.05647549,&lt;br&gt;
+  0.09655968, -0.21899879,  0.04926173,  0.12474103,  0.14504923,&lt;br&gt;
+  0.06281823,  0.14728694, -0.03583163, -0.00227163,  0.1205247 ,&lt;br&gt;
+  0.01127683,  0.01522848,  0.13806115,  0.0216765 ,  0.13671157,&lt;br&gt;
+ -0.1683237 ,  0.00408782,  0.10514087, -0.17610508,  0.04697264,&lt;br&gt;
+ -0.03406512, -0.14956233,  0.20201634,  0.00907436, -0.05804597,&lt;br&gt;
+ -0.00481437,  0.11493918, -0.07718568, -0.13443205, -0.01155808]&lt;/p&gt;
+&lt;p&gt;The hero &lt;strong&gt;Shadow Fiend&lt;/strong&gt; is now represented as a point in 50 dimensional space,
+but that's still not that useful: we turned a word we can understand into 50
+numbers that don't seem to mean anything.  However, I promise that we can do
+some really cool things: for example - let's look at the other heroes
+whose vectors are most similar to that &lt;strong&gt;Shadow Fiend&lt;/strong&gt;:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Queen of Pain&lt;/strong&gt;: 0.9340388774871826&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Storm Spirit&lt;/strong&gt;: 0.9170020818710327&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Viper&lt;/strong&gt;: 0.9082884788513184&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sniper&lt;/strong&gt;: 0.8958033919334412&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Zeus&lt;/strong&gt;: 0.8526902794837952&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And here it is in a more visual form - each row corresponds to the vector for a
+particular hero:&lt;/p&gt;
+&lt;p&gt;&lt;a href="url"&gt;&lt;img src="https://federicov.github.io/images/Top_5_SF.png" align="left" width="800" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Wow - those actually all make a lot of sense.  Let's try a tougher task now and
+see if we can use hero vectors to reason about analogies.  &lt;strong&gt;Lion&lt;/strong&gt;  is
+to &lt;strong&gt;Anti Mage&lt;/strong&gt; as &lt;strong&gt;Witch Doctor&lt;/strong&gt; is to ....:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Spectre&lt;/strong&gt;: 0.9638912677764893&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Phantom Lancer&lt;/strong&gt;: 0.9185065031051636&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Phantom Assassin&lt;/strong&gt;: 0.9039324522018433&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Morphling&lt;/strong&gt;: 0.858444333076477&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lifestealer&lt;/strong&gt;: 0.8570600748062134&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Again, pretty neat!  While these synergies won't exactly let you outdraft PPD,
+hero vectors can pick up on the notion of pairing a ranged support with a
+melee carry.&lt;/p&gt;
+&lt;h2&gt;A Global View:&lt;/h2&gt;
+&lt;p&gt;It's possible to plot the hero vectors of every single hero at the same time,
+but the results can be a bit &lt;a href="https://federicov.github.io/images/Hero_Clusters.png"&gt;overwhelming&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In that figure, every column corresponds to a hero vector, and we have sorted
+rows and columns in a dendogram.  Unless you are used to looking at those kinds
+of graphs all the time, it's not very obvious which heroes form groups and which
+ heroes are similar to each other.&lt;/p&gt;
+&lt;p&gt;Ignoring the hero vectors for a minute, we can cut the
+&lt;a href="https://federicov.github.io/images/Hero_Dendogram.png"&gt;dendogram&lt;/a&gt; (the tree-like structure at
+the top of the previous graph) and look at
+which heroes end up close to each other.&lt;/p&gt;
+&lt;p&gt;We see that we have recovered some pretty meaningful (although not flawless)
+groups.  We can notice an 'offlane-like' group with Doom, Nyx, Dark Seer,
+Bristleback and Centaur.  We have a hard carry group with Drow Ranger, Slark,
+Phantom Lancer and Lifestealer.  We have a 'strength support' group with
+Wraith King, Tusk and Abbadon.&lt;/p&gt;
+&lt;p&gt;There's one more way to visualize our groups.  We can project our 50 dimensional
+dataset in 2d using t-SNE](https://lvdmaaten.github.io/tsne/).  t-SNE is a very
+clever technique where we look for a lower dimensional representation that
+still maintains as much of the high level structure as possible.&lt;/p&gt;
+&lt;p&gt;After manipulating the data and plotting it in 2d, here is what we get:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://federicov.github.io/images/Heroes_TNSE.png"&gt;&lt;img src="https://federicov.github.io/images/Heroes_TNSE.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The hero colors come from the groups we identified above.  Again - notice that
+there are easily discrete clusters that are quite meaningful.&lt;/p&gt;
+&lt;h2&gt;What do the vectors mean?:&lt;/h2&gt;
+&lt;p&gt;What exactly do the numbers that we obtain for each hero mean though?  For
+example, what does it mean that that the first dimension of &lt;strong&gt;Shadow Fiend&lt;/strong&gt;
+has value -0.06813218?  Usually, we'd just say that it is a 'latent feature'
+and leave it at that, but in this case, we can do a little bit more.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="http://dota2.gamepedia.com/"&gt;dota2 gamepedia&lt;/a&gt; assigns a series of roles
+for each hero.  They are of course debatable, and heroes can often change from
+support to carry across different patch - but it's still a good starting point.
+&lt;a href="filename}/images/Hero_Roles.png"&gt;Here&lt;/a&gt; is a simple table of all the roles assigned to each hero.&lt;/p&gt;
+&lt;p&gt;Now, we have all the ingredients for the next step.  Recall that each hero is
+described by 50 numbers (from our embedding procedure) and that hero has
+certain roles (from the dota2 gamepedia).&lt;/p&gt;
+&lt;p&gt;What we want to do now is to see if there is any relationship between the
+embedding and a hero's role.  There's lots of ways to do this - but perhaps
+the easiest way is to use &lt;a href="https://en.wikipedia.org/wiki/Logistic_regression"&gt;logistic regression&lt;/a&gt;.&lt;br&gt;
+For the math nerds - to insure that we get a sparse set of basis, we will
+also use a strong L1 penalty (which, as a bonus, regularizes our predictions).&lt;/p&gt;
+&lt;p&gt;Here are the results of that:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://federicov.github.io/images/LR_Weights.png"&gt;&lt;img src="https://federicov.github.io/images/LR_Weights.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;What does that mean, in practice?  We see that the 46th vector is strongly
+associated with being a support, and the 38th vector is strongly associated
+with being a ranged hero.  Let's plot the 38th and 46th vector of all heroes:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://federicov.github.io/images/Weights_vs_Roles.png"&gt;&lt;img src="https://federicov.github.io/images/Weights_vs_Roles.png" align="left" width="750" &gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;As we can see - heroes that have higher values on axis 46, are a lot more
+likely to be support heroes.  Similarly, heroes that have higher values on axis
+38 are more likely to be ranged - you may notice that the two axis are somewhat
+correlated (but not perfectly so) - as support heroes are a lot more likely to
+be ranged.  Incidentally, this correctly identifies &lt;strong&gt;Undying&lt;/strong&gt;, &lt;strong&gt;Elder Titan&lt;/strong&gt;
+and &lt;strong&gt;Abbadon&lt;/strong&gt; as melee supports (high support, low ranged) but
+incorrectly identifies &lt;strong&gt;Drow Ranger&lt;/strong&gt; (and, to a certain extent, &lt;strong&gt;Clinkz&lt;/strong&gt;
+as melee heroes.&lt;/p&gt;
+&lt;h2&gt;Conclusion:&lt;/h2&gt;
+&lt;p&gt;When training those embeddings, we did not use any information about Dota2:
+as far as the computer is concerned, each draft is an arbitrary sequence of
+symbols without any meaning... yet, starting from that, we were able to recover
+ informative representations which have meaningful high level interpretation.&lt;br&gt;
+ We treated Dota2 drafts as a foreign language that we do not speak, and, by
+ looking at patterns in how those words are used, managed to figure out what
+ the words mean relative to each other.&lt;/p&gt;
+&lt;p&gt;Further, by connecting the features that we learned in an unsupervised way to
+class roles, we were even able to give an interpretation to our latent features.&lt;/p&gt;</content><category term="Machine Learning"/><category term="video games"/><category term="machine learning"/><category term="dota2"/></entry><entry><title>The peer review process of eLife</title><link href="https://federicov.github.io/peer-review-at-eLife.html" rel="alternate"/><published>2016-04-14T00:00:00-07:00</published><updated>2016-04-14T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2016-04-14:/peer-review-at-eLife.html</id><summary type="html">&lt;p&gt;Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
+we just published an analysis of the peer review process of eLife on
+F1000 &lt;a href="http://f1000research.com/articles/5-683/v1"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It was an interesting experience, and it was my first time leading a project from
+the start all the way to publication (and now …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy
+we just published an analysis of the peer review process of eLife on
+F1000 &lt;a href="http://f1000research.com/articles/5-683/v1"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It was an interesting experience, and it was my first time leading a project from
+the start all the way to publication (and now, post publication peer review, as
+it should be).&lt;/p&gt;
+&lt;p&gt;The idea to critically analyze peer review came after NIPS (one of the most
+prestigious machine learning conferences) decided to do a very brave experiment
+and publicly examine their own peer review process.  Briefly: for a subset of papers, NIPS
+assigned two completely independent teams of reviewers to review.  After, they
+examined the overlap in the agreement between the two sets of reviewers, and
+the results were pretty bleak.  For a longer summary, there's an excellent
+write up &lt;a href="http://blog.mrtz.org/2014/12/15/the-nips-experiment.html"&gt;here&lt;/a&gt;.  The
+key message is this: &lt;strong&gt;"about 57% of the papers accepted by the
+first committee were rejected by the second one and vice versa. In other words,
+most papers at NIPS would be rejected if one reran the conference review
+process (with a 95% confidence interval of 40-75%)."&lt;/strong&gt;  Publishing a paper at NIPS
+can completely change the arc of your career - so the idea that someone's future
+career is at the whims of chance is fairly discouraging.&lt;/p&gt;
+&lt;p&gt;Although the results were bleak, they were not surprising.  Scientists
+tend to be a fairly rational bunch &lt;sup&gt;[citation_needed]&lt;/sup&gt; but when it
+comes to getting papers published and grants accepted, they fall back on superstition
+and paranoia.&lt;/p&gt;
+&lt;p&gt;&lt;a href="www.smbc.com"&gt;&lt;img alt="img" src="http://www.smbc-comics.com/comics/20120324.gif"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I know this first hand: with collaborators, we currently have two papers under review in
+fairly selective journals, and we spent months worth of work in trying
+ to parry possible comments from reviewers/editors.  For example, we had
+ conversations like: "If we get X to review our paper, we need to make sure
+ that Y is done because that's their theory and they will instantly reject
+the paper if we don't discuss it".  Or "If our reviewer is a person who doesn't
+like mathematical modeling then we need to show the simpler simulations
+in the main text and the more complex ones in the supplementary."  A truly
+embarrassing amount of work is done not because the authors think it makes the
+paper stronger, but because scientists are utterly paranoid about what will
+happen during the peer review process.&lt;/p&gt;
+&lt;p&gt;There are two main reasons for this paranoia.  The first one is the
+disproportionate influence played by grants obtained/impact factor when evaluating
+scientists.  The current system really sucks, but this is an area where only
+people with actual power to change the incentive structure (professors on tenure
+committees, leaders of funding bodies, etc) can make a difference.  The second
+reason is that &lt;strong&gt;the peer review process is remarkably un-transparent and in the
+absence of real information people fall back on anecdotes and superstition&lt;/strong&gt;.  I
+thought that this was an area where I could actually give a small contribution.&lt;/p&gt;
+&lt;p&gt;With that in mind, after NIPS published their experiments, I reached out to the
+eLife editorial team (I had an excellent experience publishing a paper there
+previously, and they have a strong commitment to improving publishing) about
+doing a serious statistical analysis of their peer review process.  Their team
+(Mark Peterson, Peter Rodgers, and especially Andy Collins) was incredibly
+pleasant to work with, and really cared about improving scientific publishing.
+Unfortunately, we were unable to actually do randomized controlled experiments
+the way NIPS did.  eLife is growing very quickly (data in the paper!) and
+splitting up papers with dual review tracks would have been too taxing for
+their resources at this point.&lt;/p&gt;
+&lt;p&gt;What we ended up doing instead was looking at what factors influence how quickly
+a paper gets published, and what influences how often a paper gets cited.  More
+importantly, we make a &lt;a href="https://github.com/FedericoV/eLife_Editorial_Process/tree/master/data"&gt;very interesting dataset&lt;/a&gt;
+available for everyone to analyze however they want, and we have the
+&lt;a href="https://github.com/FedericoV/eLife_Editorial_Process"&gt;code&lt;/a&gt; to reproduce almost
+every step of our analysis.&lt;/p&gt;
+&lt;h2&gt;Further Steps:&lt;/h2&gt;
+&lt;p&gt;The data I published is a snapshot of the situation of eLife as of early 2016.
+Since all the scripts I used are online, it will be interesting to monitor the
+situation and see how things change in the future.  Further, F1000 makes it very
+easy to add new versions of a paper, so I am planning on trying to extend the
+work and examine other effects, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;http://www.nature.com/news/papers-with-shorter-titles-get-more-citations-1.18246&lt;/li&gt;
+&lt;li&gt;http://www.nature.com/news/rejection-improves-eventual-impact-of-manuscripts-1.11583&lt;/li&gt;
+&lt;li&gt;http://link.springer.com/article/10.1007/s11192-016-1936-z&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Science"/><category term="scientific publishing"/><category term="open science"/></entry><entry><title>Yet Another Instance of a Broken Publishing System at Work</title><link href="https://federicov.github.io/killing-animals-for-nothing.html" rel="alternate"/><published>2015-10-15T00:00:00-07:00</published><updated>2015-10-15T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2015-10-15:/killing-animals-for-nothing.html</id><summary type="html">&lt;h2&gt;Reproducibility in the Spotlight:&lt;/h2&gt;
+&lt;p&gt;Psychology is still reeling from the results of a &lt;a href="https://www.sciencemag.org/content/349/6251/aac4716.abstract"&gt;massive study of
+reproducibility&lt;/a&gt;
+which found that less than half of statistically significant findings recently
+published in the top psychology journals remain significant when independently
+reproduced.  If this is new to you, Jesse Singal wrote a great …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Reproducibility in the Spotlight:&lt;/h2&gt;
+&lt;p&gt;Psychology is still reeling from the results of a &lt;a href="https://www.sciencemag.org/content/349/6251/aac4716.abstract"&gt;massive study of
+reproducibility&lt;/a&gt;
+which found that less than half of statistically significant findings recently
+published in the top psychology journals remain significant when independently
+reproduced.  If this is new to you, Jesse Singal wrote a great summary about it &lt;a href="http://nymag.com/scienceofus/2015/08/many-psychology-research-findings-may-be-false.html"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Biology is not exactly doing that much better.  Ioannidis first highlighted
+shoddy research practices in biology with his aptly named paper
+&lt;a href="http://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020124"&gt;Why Most Published Research Findings Are False&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The latest entry in this saga is discussed in &lt;a href="http://www.nature.com/news/poorly-designed-animal-experiments-in-the-spotlight-1.18559"&gt;this&lt;/a&gt;
+excellent article from Nature.  In papers that rely on animal models, the
+results are too fragile and unreliable to be used as a basis for further
+research because the statistical design of the experiments is often
+critically flawed.  This is unfortunately not a huge surprise: scientists
+at Bayer had already warned that published data had become &lt;a href="http://www.nature.com/nrd/journal/v10/n9/full/nrd3439-c1.html"&gt;progressively less reliable&lt;/a&gt; as
+basis for drug research.&lt;/p&gt;
+&lt;p&gt;In &lt;a href="http://www.nature.com/news/2011/110928/full/477511a.html"&gt;a previous editorial&lt;/a&gt;,
+Malcolm Macleod points out that:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The most reliable animal studies are those that: use randomization to eliminate
+systematic differences between treatment groups; induce the condition under
+investigation without knowledge of whether or not the animal will get the drug of
+interest; and assess the outcome in a blinded fashion. Studies that do not
+report these measures are much more likely to overstate the efficacy of
+interventions.  &lt;strong&gt;Unfortunately, at best one in three publications follows
+these basic protections against bias&lt;/strong&gt;. This suggests that authors,
+reviewers and editors accord them little importance.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For those that aren't familiar with experimental design - these aren't hyper
+advanced techniques.  Those are all things which are taught in a 1st year graduate
+experimental design course and that every senior scientist should be very
+familiar with.&lt;/p&gt;
+&lt;h2&gt;Animal Models In Science:&lt;/h2&gt;
+&lt;p&gt;What makes this particularly frustrating is that in this case, the scientists
+aren't just wasting public money, but they are killing loads of animals for
+absolutely no public good.  Until computational models massively improve,
+research with animal models is absolutely necessary, especially in the later
+stages, when we wish to validate promising drug targets or test drug safety.&lt;/p&gt;
+&lt;p&gt;In theory, the use of animal models in research in the US is
+&lt;a href="https://grants.nih.gov/grants/olaw/references/phspol.htm"&gt;strictly regulated&lt;/a&gt;
+by the NIH.  In practice, while charges of animal cruelty are taken seriously,
+poor protocol design leading to a waste of model animals is very rarely
+sanctioned.&lt;/p&gt;
+&lt;h2&gt;You Always Get What You Measure:&lt;/h2&gt;
+&lt;p&gt;Why do really smart scientists make such stupid mistakes?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Arrogance&lt;/em&gt;: &lt;a href="http://retractionwatch.com/2014/05/30/braggadacio-information-control-and-fear-life-inside-a-brigham-stem-cell-lab-under-investigation/"&gt;Some oldschool PIs&lt;/a&gt; are so confident in their own theories that they see
+statistics not as a critical way to evaluate their data, but as a simple
+threshold (p &amp;lt; 0.05) they gotta cross to be able to publish.  This is thankfully
+not very common, but if you go to any bioinformatics conference and talk over drinks
+to some of the junior people there, you'll hear all sorts of horror stories about
+being the only bioinformatician in a group and having to somehow come up with a
+statistical test that gives p&amp;lt;0.05.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Misaligned Incentives&lt;/em&gt;: This is unfortunately very common.  The currency of
+scientific careers are publications in high impact journals, and the easiest way
+to publish in those journals is to produce splashy results.  Unfortunately,
+results are the one thing that scientists have no actual control over - if you
+execute a well designed experiment to test a reasonable hypothesis, the
+actual outcome is up to the Universe.  By dis-proportionally rewarding splashy
+results, we punish the scientists that actually do research properly, since they
+will have a much lower fraction of positive results.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The irony that Nature, one of the most prestigious scientific journals in the world,
+acknowledges that scientists push splashy but unreliable findings (like say,
+&lt;a href="http://www.nature.com/nature/journal/v505/n7485/full/nature12968.html"&gt;these&lt;/a&gt;)
+instead of solid but boring ones is not lost on me.  It reminds me of the time
+a Facebook executive complained &lt;a href="https://www.facebook.com/mhudack/posts/10152148792566194"&gt;that the Internet was drowning in shitty click-baity articles&lt;/a&gt;, when the
+product he was responsible for was the main driver of that behaviour.&lt;/p&gt;
+&lt;p&gt;It's important to add that the quest for high impact publications is not
+just motivated by a selfish desire for success.  Postdocs are facing a very
+difficult job market and are desperate to have a high impact paper before
+applying for tenure track positions.  PIs are under an &lt;a href="http://www.dcscience.net/2014/12/01/publish-and-perish-at-imperial-college-london-the-death-of-stefan-grimm/"&gt;immense amount of
+pressure&lt;/a&gt;
+by their institutions to obtain grants, and it's getting harder and harder.&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://nexus.od.nih.gov/all/wp-content/uploads/2014/03/FundingAwardSuccessRate_RPG.jpg " alt="NIH_Funding" style="width: 700px;"/&gt;&lt;/p&gt;
+&lt;p&gt;Further, missing grants doesn't just hurt the career of the PI.  Very few people
+in science have the luxury of fixed positions - even lab technicians and staff
+scientists are often funded by grants, and not getting a grant renewed can mean
+having to fire people people you've worked with for many years.&lt;/p&gt;</content><category term="Science"/><category term="scientific publishing"/><category term="incentives"/><category term="research"/></entry><entry><title>Why Scientists Don't Share Data and How to Fix it</title><link href="https://federicov.github.io/novelty-is-overrated.html" rel="alternate"/><published>2014-10-29T00:00:00-07:00</published><updated>2014-10-29T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-10-29:/novelty-is-overrated.html</id><summary type="html">&lt;h2&gt;Towards a Better Science&lt;/h2&gt;
+&lt;p&gt;Recently, there's been a highly encouraging push towards a more open science with a greater emphasis on &lt;a href="http://www.nature.com/nature/focus/reproducibility/"&gt;reproducibility&lt;/a&gt;, spurred by a few &lt;a href="http://retractionwatch.com/2014/09/11/potentially-groundbreaking-highly-provocative-nature-stap-cell-peer-reviews-published/"&gt;high profile retractions&lt;/a&gt; and a growing awareness of the &lt;a href="http://www.economist.com/news/briefing/21588057-scientists-think-science-self-correcting-alarming-degree-it-not-trouble"&gt;slippery nature&lt;/a&gt; of several scientific findings.&lt;/p&gt;
+&lt;p&gt;This slow shift has important implications.  While in theory …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Towards a Better Science&lt;/h2&gt;
+&lt;p&gt;Recently, there's been a highly encouraging push towards a more open science with a greater emphasis on &lt;a href="http://www.nature.com/nature/focus/reproducibility/"&gt;reproducibility&lt;/a&gt;, spurred by a few &lt;a href="http://retractionwatch.com/2014/09/11/potentially-groundbreaking-highly-provocative-nature-stap-cell-peer-reviews-published/"&gt;high profile retractions&lt;/a&gt; and a growing awareness of the &lt;a href="http://www.economist.com/news/briefing/21588057-scientists-think-science-self-correcting-alarming-degree-it-not-trouble"&gt;slippery nature&lt;/a&gt; of several scientific findings.&lt;/p&gt;
+&lt;p&gt;This slow shift has important implications.  While in theory journals encourage or require the sharing of published data to anyone who requests it, often this is very difficult or even unpleasant, requiring multiple requests to journal editors to compel the authors to share the raw data.  Why is this data sharing so controversial and complex?&lt;/p&gt;
+&lt;h2&gt;Incentives and Data Sharing&lt;/h2&gt;
+&lt;p&gt;Andrew Gellman wrote about this from the point of view of political science and statistics both on his blog&lt;a href="http://andrewgelman.com/2012/08/07/whats-stoppin-people-from-sharin-data-and-code/"&gt;1&lt;/a&gt; &lt;a href="http://themonkeycage.org/2012/08/03/things-that-arent-prisoners-dilemmas-part-2/"&gt;2&lt;/a&gt; and &lt;a href="http://www.stat.columbia.edu/~gelman/research/published/ChanceEthics1.pdf"&gt;here&lt;/a&gt;.  As he discusses - part of the problem is technical, and part of the problem is a matter of misaligned incentives.&lt;/p&gt;
+&lt;p&gt;The technical part of the problem is that sharing big data sets is very complex, and, until recently, getting financed to work on infrastructure was very difficult.  Time spent figuring out how to put a big data set online in a way that could be producitively mined has potentially very little return.  Thankfully, there's some effort on this front - with &lt;a href="http://ivory.idyll.org/blog/2014-moore-ddd-stmt-of-work.html"&gt;Titus Brown&lt;/a&gt; and the &lt;a href="http://www.moore.org/programs/science/data-driven-discovery"&gt;Moore Foundation&lt;/a&gt; stepping in to hopefully make this easier.&lt;/p&gt;
+&lt;p&gt;The other obstacle in the way of greater data sharing is a matter of incentives.  Putting raw data in a nice format, and annotating it properly takes a lot of time, that leads to very little tangible rewards.  PIs often build careers from the results of a long running study, and sharing all the data can put their competitive advantage at risk.  In biology - there's also an additional element at work, as many journals (the big three especially) overwhelmingly favour papers with new experiments over papers that obtain novel results from existing datasets.&lt;/p&gt;
+&lt;p&gt;This bias towards new experimental results is highly counter productive, and puts scientists in a terrible spot.  In the constant quest to maximize impact (a necessity in the current funding climate) scientists have to decide how to best spread out the results from a big study among the biggest possible number of papers, making sure that no paper clips the novelty of any of the other papers.  For an example of this, look at the collection of papers from the &lt;a href="http://www.genome.gov/encode/"&gt;Encode project&lt;/a&gt;, where an immense amount of planning went into figuring out how to maximize the number of first author papers from the study.&lt;/p&gt;
+&lt;h2&gt;What Makes a Paper New?&lt;/h2&gt;
+&lt;p&gt;This emphasis on associating new experiments with novelty is largely a hold over from a previous era - where thinking of the critical experiment and performing it were far more difficult than analyzing the resulting data.  With the new data sets trickling in from high throughput experiments, obtaining insight from data is often more challenging than obtaining it in the first place, and the publishing guidelines should adjust to this new reality.&lt;/p&gt;
+&lt;p&gt;Although this is a very complex topic, I'd like to offer a few simple recommendations that don't require seismic shifts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Judge papers by how novel and robust their insights are, not how novel the data is.&lt;/li&gt;
+&lt;li&gt;Shift away from the idea of 'first author' and 'last author'.  Part of what drives the need to produce multiple papers is that on large multi-year projects, you need to produce enough first author papers for all the postdocs and PhDs.  Especially on papers that require complex experiments + computational analysis, multiple people often contribute equally.&lt;/li&gt;
+&lt;li&gt;Finally, develop a better mechanism to reward people who make highly sophisticated datasets available online.  Something in between a citation and co-authorship.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;While I was putting the finishing touches on this blog, I was linked &lt;a href="http://www.plosmedicine.org/article/info%3Adoi%2F10.1371%2Fjournal.pmed.1001747"&gt;this&lt;/a&gt; excellent article by &lt;a href="https://med.stanford.edu/profiles/john-ioannidis"&gt;Ioannidis&lt;/a&gt; on how to make more published research true.  It's excellent, and everyone should read it, especially the part about the reward system.&lt;/p&gt;</content><category term="Science"/><category term="scientific publishing"/><category term="incentives"/></entry><entry><title>NumPy 1.10+ changes with openBLAS</title><link href="https://federicov.github.io/NumPy1.10+andopenblas.html" rel="alternate"/><published>2014-09-15T00:00:00-07:00</published><updated>2014-09-15T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-15:/NumPy1.10+andopenblas.html</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/xianyi/OpenBLAS"&gt;OpenBLAS&lt;/a&gt; is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained &lt;a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2"&gt;gotoblas&lt;/a&gt;.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).&lt;/p&gt;
+&lt;p&gt;Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://github.com/xianyi/OpenBLAS"&gt;OpenBLAS&lt;/a&gt; is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained &lt;a href="https://www.tacc.utexas.edu/tacc-projects/gotoblas2"&gt;gotoblas&lt;/a&gt;.  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).&lt;/p&gt;
+&lt;p&gt;Almost all scientific programming languages use BLAS under the hood to do the numerical heavy lifting for all linear algebra routines, and NumPy is no exception.  There are lots of &lt;a href="http://myvirtualbrain.blogspot.it/2013/01/compiling-and-installing-numpy-with.html"&gt;excellent&lt;/a&gt; &lt;a href="http://osdf.github.io/blog/numpyscipy-with-openblas-for-ubuntu-1204-second-try.html"&gt;guides&lt;/a&gt; to building OpenBLAS and linking it with NumPy.&lt;/p&gt;
+&lt;p&gt;However, since until recently, building NumPy with OpenBLAS required a fair bit of tinkering, all the guides suggest testing to see if your build process worked like &lt;a href="https://gist.github.com/osdf/3842524#file_test_numpy.py"&gt;so&lt;/a&gt;.  Since the NumPy 1.9 release though, all subsequent builds however changed so &lt;em&gt;numpy.core._dotblas&lt;/em&gt; is no longer built as a standalone file.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;From 1.10 the release notes:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The _dotblas module is no longer available.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you are smart enough to actually read through the release notes before building a package, I admire your discipline, and you've earned the right to feel smug for the rest of the day.  I, however, struggled like an idiot for 2 hours trying to figure out why _dotblas wasn't getting built.  Relying on a private API module to check for a succesful build wasn't a very good idea in the first place - but if you want to check if NumPy succesfully linked openblas, do this instead:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;numpy.distutils.system_info&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;blas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;libraries&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;openblas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;library_dirs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/opt/OpenBLAS/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;define_macros&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;HAVE_CBLAS&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;get_info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;lapack&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;libraries&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;openblas&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;library_dirs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/opt/OpenBLAS/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;language&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;f77&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Programming"/><category term="[Python"/><category term="openBLAS"/><category term="NumPy]"/></entry><entry><title>EuroSciPy 2014 Thoughts</title><link href="https://federicov.github.io/EuroSciPy2014.html" rel="alternate"/><published>2014-09-05T00:00:00-07:00</published><updated>2014-09-05T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-09-05:/EuroSciPy2014.html</id><summary type="html">&lt;p&gt;I just got back from Cambridge, where last week I attended &lt;a href="https://www.euroscipy.org/"&gt;EuroSciPy&lt;/a&gt;.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I just got back from Cambridge, where last week I attended &lt;a href="https://www.euroscipy.org/"&gt;EuroSciPy&lt;/a&gt;.  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other organizers try to imitate what works.&lt;/p&gt;
+&lt;h2&gt;Best Conference Practices:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;The organizers didn't attempt to pack too many talks every day.&lt;/strong&gt;  Most days, talks finished around 5:30 PM, leaving lots of time for people to hang out and get to know each other.  Conferences that last until 7PM, with evening sessions after dinner result in massive burnout by the end of the conference.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;The conference was very cheap.&lt;/strong&gt;  Due to generosity of the sponsors and the excellent organization, the academic price for the full registration (including tutorials) was 100 pounds for a 4 day conference.  Cambridge was also an excellent location - flying to Stanstead is easy, and the various colleges around town offered cheap accomodation during the off-school period.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;A very good mix of talks&lt;/strong&gt;.  There was a lot of spotlight for packages used by almost everyone in the scientific community (iPython, scikit-learn, etc) as well as some great talks on some incredibly impressive packages that I'd never heard about before (more on that later).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Everyone was so damn nice&lt;/strong&gt;.  Seriously - even though the community was quite small, as a relative outsider, it didn't feel cliqueish at all, and at the sprints and the social events everyone was very welcoming.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here are a few of the packages that caught my eye.&lt;/p&gt;
+&lt;h2&gt;New Packages:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/SciTools/biggus/"&gt;Biguss&lt;/a&gt;.  This is a generalization of numpy to handle data which is too big to fit into memory using delayed evaluation.  It's very similar in spirit to Blaze by Continuum, but it's less ambitious and more mature.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The optimization tools, and the HPC tools presented by Mike McKerns (https://github.com/uqfoundation).  Mystic looks very interesting (although the documentation is still a bit incomplete) but Dill (a better pickle that handles lots of objects that pickle cannot) and Pathos (a better multiprocessing) I will definitely incorporate into my workflow.  Mike did an excellent work of building tools that work very well together, but are worth using individually, which is a very difficult task that requires a lot of thought about API design and interoperability.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/firedrakeproject/firedrake"&gt;Firedrake&lt;/a&gt;.  This is an incredible tool for largescale PDE systems.  The talk by Florian Rathgeber showing off the Firedrake architecture, and how the tool was built on several layers to allow people from different backgrounds to contribute was great.  One issue with the technology that was presented is the team made a lot of effort into separating all the various layers, but they are interlocking enough that it's difficult to use them individually.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="http://julialang.org/"&gt;Julia&lt;/a&gt;.  The keynote by Steven Johnson was very impressive, and some of the things he implemented in there using metaprogramming to achieve greater than Fortran speed by inlining large polynomials seemed almost like black magic.  One of the biggest barriers that new languages face is the lack of a stable ecosystem, but &lt;a href="https://github.com/stevengj/PyCall.jl"&gt;PyCall&lt;/a&gt; (also by Steven Johnson) makes calling Python packages from Julia a breeze - and it does so without message passing across a Python interpreter (like RPy2 or matlab-bridge do), but through some really clever c-api hacks.  I blogged about this earlier (http://federicov.github.io/Blog/Julia-and-Scientific-Python.html):&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://pythonhosted.org/Sumatra/"&gt;Sumatra&lt;/a&gt;.  If you've ever written code to do numerical simulations which is rapidly in flux, you've probably used an unearthly combination of log files, subdirectories, and commit logs to keep track of which simulation was done with what parameters and what version of the code.  Sumatra wraps this all up in a very nice interface, and it takes very little modification to get it to work with an existing codebase.  I had already heard it mentioned on twitter, but the lightning talk showed how quick and easy to use it is, which definitely sold me on it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://github.com/sklearn-theano/sklearn-theano"&gt;Scikit-theano&lt;/a&gt;.  This is a nice package by Kyle Kastner to expose some complex estimators that are currently outside of the scope of the main scikit-learn project using a sklearn-like api, while using Theano under the hood for speed.  Anyone who is familiar with the sklearn API should be able to use it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</content><category term="misc"/><category term="SciPy"/><category term="Python"/><category term="open source"/></entry><entry><title>Weapons of Math Destruction</title><link href="https://federicov.github.io/deception-by-mathematics.html" rel="alternate"/><published>2014-07-29T00:00:00-07:00</published><updated>2014-07-29T00:00:00-07:00</updated><author><name>Federico Vaggi</name></author><id>tag:federicov.github.io,2014-07-29:/deception-by-mathematics.html</id><summary type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for …&lt;/em&gt;&lt;/p&gt;&lt;/blockquote&gt;</summary><content type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for better or for worse, to our pleasure, even though perhaps also to our bafflement, to wide branches of learning.&lt;/em&gt; - Eugene Wigner, The Unreasonable Effectiveness of Mathematics in the Physical Sciences&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Trust and its role in the Scientific Enteprise&lt;/h2&gt;
+&lt;p&gt;Although radical skepticism is a consistent philosophy, it's not really a practical way to live our life.  We are all at the mercy of experts.  For example, when talking to a doctor who is discussing a complicated diagnosis with us, we assume that what she is telling us makes sense, even if we lack the expertise to critically evaluate her claims.  We don't extend the benefit of the doubt to everyone - if a PR person makes a claim about a product, most people will react skeptically and will want to verify it themselves.  Trust is an incredibly important resource, and once a group is seen as routinely exaggerating, it's very hard to gain back a positive reputation.&lt;/p&gt;
+&lt;p&gt;I want to examine the role that trust plays in science.  Math has been incredibly important in physics for the past four centuries, and it's gradually gaining in importance in other domains.  Biology is one of the frontiers where math is expanding its influence, and it has led to the creation of entirely new disciplines such as bioinformatics, systems biology (my field), computational crystallography, biophysics, etc..&lt;/p&gt;
+&lt;h2&gt;Biology and Math&lt;/h2&gt;
+&lt;p&gt;Biologists are some of the most intelligent people that I know (and I'm not just saying that because my mother is one) but the typical biology curricula offers a smattering of statistics and very little advanced math.  This makes collaborations between mathematicians/physicists/computer scientists and biologists particularly challenging and, unlike families, every happy collaboration between theoreticians and experimentalists is different.&lt;/p&gt;
+&lt;p&gt;This means that when starting a new collaboration, biologists often have to spend a long time explaining the subtleties of their particular problem to theoreticians, and theoreticians have to honestly discuss the relative pros and cons of different modeling approaches, and both parties have to agree on the correct level of abstraction.  There are some common misunderstandings.  Physicists think that everything can be modeled as an Ising model (if there's a problem, just add a little perturbation).  Biologists think that the fancier the math, the more sophisticated and clever is the approach.&lt;/p&gt;
+&lt;h2&gt;Fancy Looking Bullshit&lt;/h2&gt;
+&lt;p&gt;Expanding on that last point, biologists often lack the necessary mathematical basis to evalulate complex mathematical formalisms, and tend to assume that their collaborators are acting in good faith.  This is usually a good thing - but unfortunately it leaves the door open for unscrupulous people to peddle fancy looking bullshit.  I've been the lone theoretical person in a room of biologists listening to scientific talks where the speaker kept throwing around terms like 'non-linear', 'chaos', 'networks'  indiscriminately - and when asked simple questions at the end of the talk, clearly showed that they had no idea of what they were talking about.  I've seen meetings where theoreticians started scribbling down fancy looking formulas on the board for no purpose whatsoever except impressing their audience.  I've seen fancy-looking 3d graphs that added absolutely no information but gave an unwarranted air of complexity to an otherwise boring seminar.&lt;/p&gt;
+&lt;p&gt;For a particularly glaring example of this (in a different field) - read &lt;a href="http://retractionwatch.com/2013/09/19/fredrickson-losada-positivity-ratio-paper-partially-withdrawn/"&gt;this&lt;/a&gt; and weep.  The only reason this came to light, is that a fantastic graduate student, &lt;a href="http://steamtraen.blogspot.fr/"&gt;Nick Brown&lt;/a&gt;, with the help of &lt;a href="http://www.physics.nyu.edu/sokal/"&gt;Alan Sokal&lt;/a&gt; (another hero of mine) actually wasn't impressed by the fancy looking mathematics  and tried to get to the bottom of the story.  Of course, the person responsible for the mathematics in that paper is an executive consultant that describes himself this way:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Formerly, as Director of the Center for Advanced Research (CFAR) in Ann Arbor, Michigan, he conducted studies on the interaction dynamics and productivity of business teams that led him to implement a unique, scientifically based, approach to develop high performance teams. His pioneering work on applications of nonlinear dynamics to team interaction processes has been published in a number of prestigious scientific journals, and he has made several other contributions that have earned him worldwide recognition:&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;That's someone that leveraged impressive looking mathematics to swindle not just scientists, but also human resource processionals, book editors, and multiple people that actually assumed that there must have been some substance behind the mathematics.  Every time something like this happens, it makes it much harder for honest and well meaning mathematicians to actually start a collaboration with an experimental collaborator.  Math has a very deep reservoir of good will, but it isn't infinite.&lt;/p&gt;
+&lt;p&gt;As theoreticians, it is our duty to be honest about what we do, and the limits of our models.  This means being upfront and admitting when there is insufficient data to do anything productive, and being willing to call out bullshit for what it is - professional courtesy only goes so far, and deceiving well meaning people with buzzwords camouflaged as math poisons the well for all of us.  For people cooperating with theoreticians, beware people who throw out technical buzzwords for no apparent reason.  Unfortunately, bullshit is quite difficult to 'sniff out' if you lack sufficient background, and several bullshit artists are quite polished in their presentations - in that case, just ask someone you trust to look at their previous papers, or invite them into a meeting together and watch the sparks fly.&lt;/p&gt;</content><category term="archive"/><category term="[social psychology"/><category term="Sokal"/><category term="Nick Brown"/><category term="mathematics]"/></entry></feed>

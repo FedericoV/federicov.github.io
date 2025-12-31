@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="https://federicov.github.io/theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/solid.css">
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/custom.css">
+
+
+
+  <link href="https://federicov.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Federico's Blog Atom">
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="Federico Vaggi" />
+<meta name="description" content="How to fit models with dimensionless data" />
+<meta name="keywords" content="Python, ODE, SymPy, Optimization">
+
+
+  <meta property="og:site_name" content="Federico's Blog"/>
+  <meta property="og:title" content="Fitting Models with Dimensionless Data"/>
+  <meta property="og:description" content="How to fit models with dimensionless data"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://federicov.github.io/Models-With-Scale-Factors.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-05-04 00:00:00-07:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="https://federicov.github.io/author/federico-vaggi.html">
+  <meta property="article:section" content="Optimization"/>
+  <meta property="article:tag" content="Python"/>
+  <meta property="article:tag" content="ODE"/>
+  <meta property="article:tag" content="SymPy"/>
+  <meta property="article:tag" content="Optimization"/>
+  <meta property="og:image" content="/images/profile.jpg">
+
+  <title>Federico's Blog &ndash; Fitting Models with Dimensionless Data</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="https://federicov.github.io/">
+      <img src="/images/profile.jpg" alt="Federico Vaggi" title="Federico Vaggi">
+    </a>
+
+    <h1>
+      <a href="https://federicov.github.io/">Federico Vaggi</a>
+    </h1>
+
+    <p>Machine Learning, Causal Inference, and whatever else I find interesting</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://federicov.github.io/pages/about.html#about">
+                About
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/FedericoV"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/f_vaggi"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-linkedin"
+           href="https://www.linkedin.com/in/federico-vaggi-ba72a654"
+           target="_blank">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="https://federicov.github.io/">Home</a>
+
+  <a href="/archives.html">Archives</a>
+  <a href="/categories.html">Categories</a>
+
+  <a href="https://federicov.github.io/feeds/all.atom.xml">Atom</a>
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="Models-With-Scale-Factors">Fitting Models with Dimensionless Data</h1>
+    <p>
+      Posted on Wed 04 May 2016 in <a href="https://federicov.github.io/category/optimization.html">Optimization</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <h2>Relative Measurements</h2>
+<p>When calibrating a model to data, it's common to only have access to relative measurements. For example, instead of having absolute protein levels in units of uM, your only measure of protein abundance is intensity of bands in <a href="http://en.wikipedia.org/wiki/Western_blot">western blots</a>. Other common examples are relative abundance measurements from mass spectrometry, counts from photodetectors, or RNA abundance from RNAseq, etc...</p>
+<p>For example, here is what a western blot (<strong>column A</strong>) looks like with its relative quantification (<strong>column B</strong>):</p>
+<p><img alt="Western blot example" src="https://openi.nlm.nih.gov/imgs/512/33/3815147/PMC3815147_pone.0079073.g004.png?keywords=sd"></p>
+<p>(taken from: https://openi.nlm.nih.gov/detailedresult.php?img=PMC3815147_pone.0079073.g004&amp;req=4).</p>
+<h2>Calibrating Models with Data in Arbitrary Units</h2>
+<p>How can we use this data (in arbitrary units) to calibrate a model where the quantities have specific physical meaning? In an ideal case, we can do additional experiments and build calibration curves to calculate the conversion factor between protein levels and the intensity of bands in western blots, but this is not always possible. Alternatively, we can make our models completely <a href="https://en.wikipedia.org/wiki/Nondimensionalization">dimensionless</a> by rescaling all quantities in our model by appropriately chosen constants.</p>
+<p>A third option is to use scaling factors. To do this, we assume that in the range in which we are interested, the amount of signal measured by our instrument is linearly proportional to the amount of protein/RNA. In practice, the relationship usually follows a saturation curve, which can be described by something like a <a href="https://en.wikipedia.org/wiki/Hill_equation_%28biochemistry%29">Hill function</a>. The Hill Function is probably my 2nd favorite case of a mathematical formula being invented by someone with the perfect name - the undisputed first is still the <a href="https://en.wikipedia.org/wiki/Poynting_vector">Poynting vector</a> which does exactly what the name suggests.</p>
+<h2>Linearizing Saturation Curves</h2>
+<p>Fortunately, a saturation curve with a large exponent can be approximated by a linear fit quite accurately, as long as we are careful to make sure our measurements are done in the correct range.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">autograd</span> <span class="kn">import</span> <span class="n">grad</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">hill</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard Hill function&quot;&quot;&quot;</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">Vmax</span><span class="o">*</span><span class="p">(</span><span class="n">L</span><span class="o">**</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">Km</span><span class="o">**</span><span class="n">n</span> <span class="o">+</span> <span class="n">L</span><span class="o">**</span><span class="n">n</span>
+    <span class="k">return</span> <span class="n">numerator</span><span class="o">/</span><span class="n">denominator</span>
+
+<span class="c1"># To calculate the gradient of the Hill function (with respect to L) we use autograd.</span>
+<span class="n">hill_grad</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">hill</span><span class="p">)</span>
+
+<span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">Km</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">Vmax</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">hill</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Evaluate the gradient at 0.5 wrt L</span>
+<span class="n">dv_dl</span> <span class="o">=</span> <span class="n">hill_grad</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Approximate the Hill function as a linear equation using a 1st order Taylor series:</span>
+<span class="n">v_approx</span> <span class="o">=</span> <span class="n">hill</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">Km</span><span class="p">,</span> <span class="n">Vmax</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">L</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">dv_dl</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Hill Function&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">v_approx</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;First Order Taylor Series&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Example Problem: Actin Polymerization</h2>
+<p>Let's say we want to model the <a href="https://en.wikipedia.org/wiki/Actin#Assembly_dynamics">polymerization of actin</a> from barbed ends <em>in-vitro</em>. This is described by a very simple differential equation:</p>
+<p>$$\frac{dFa(t)}{dt} = k_{on} \cdot N_b \cdot Ga(t) - k_{off} \cdot N_b$$</p>
+<p>where $Fa$ is the amount of filamentous (polymerized) actin, $Ga$ is the amount of globular (soluble) actin, $N_b$ is the amount of barbed ends (filaments from which actin can grow) and $k_{on}, k_{off}$ are the 1st and 0th order binding and unbinding parameters. If we are working in a system with excess ATP, and where the total amount of actin is conserved ($At = Fa + Ga$), this has an exact analytical solution, which we could solve using integrating factors - or, since we are lazy, just using SymPy.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">init_printing</span><span class="p">()</span>
+
+<span class="n">At</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;At Nb k_on k_off t&#39;</span><span class="p">,</span> <span class="n">positive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Fa</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;Fa&#39;</span><span class="p">)(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">Ga</span> <span class="o">=</span> <span class="n">At</span> <span class="o">-</span> <span class="n">Fa</span>
+
+<span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="n">k_on</span><span class="o">*</span><span class="n">Ga</span><span class="o">*</span><span class="n">Nb</span> <span class="o">-</span> <span class="n">k_off</span><span class="o">*</span><span class="n">Nb</span><span class="p">,</span> <span class="n">diff</span><span class="p">(</span><span class="n">Fa</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">dsolve</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+<span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+</code></pre></div>
+
+<p>This gives us the solution:</p>
+<p>$$Fa(t) = \frac{At \cdot k_{on} - k_{off} + e^{k_{on}(C_1 - N_b t)}}{k_{on}}$$</p>
+<p>This solution has an integration constant. Assume that $Fa(0) = 0$ (meaning, at time zero, all actin is in soluble form):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Solve for initial condition of 0 F-Actin at t=0</span>
+<span class="n">initial_cond</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;C1&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">initial_cond</span><span class="p">)</span>
+
+<span class="n">fact_timecourse</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
+                           <span class="n">sol</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+
+<span class="c1"># We take advantage of SymPy again to obtain the gradient</span>
+<span class="c1"># of the function wrt the number of barbed ends</span>
+<span class="n">fact_grad</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">([</span><span class="n">At</span><span class="p">,</span> <span class="n">k_off</span><span class="p">,</span> <span class="n">k_on</span><span class="p">,</span> <span class="n">Nb</span><span class="p">,</span> <span class="n">t</span><span class="p">],</span>
+                     <span class="n">diff</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">Nb</span><span class="p">)</span><span class="o">.</span><span class="n">simplify</span><span class="p">(),</span> <span class="n">modules</span><span class="o">=</span><span class="s1">&#39;numpy&#39;</span><span class="p">)</span>
+
+<span class="n">timesteps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="n">simulation</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">simulation</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;F-Actin&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>What if we didn't actually know the number of barbed ends in solution, and wanted to estimate it on the basis of F-Actin time course data? That's very easy using SciPy and SymPy!</p>
+<p>This is just a simple least squares minimization problem:</p>
+<p>$$\underset{x}{\arg\min} \sum_i(F(x)_i - y_i)^2$$</p>
+<p>Where $F(x)_i$ is our simulation of actin dynamics, $x$ is our unknown parameter (in this case, the number of barbed ends - we presume we know everything else) and $y_i$ is the experimental data.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the residuals between the simulation calculated</span>
+<span class="sd">    with nb == p[0] and the original simulation with the known</span>
+<span class="sd">    value of nb</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">new_sim</span> <span class="o">-</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">residuals</span>
+
+<span class="k">def</span> <span class="nf">fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the jacobian: The gradient at every timestep</span>
+<span class="sd">    with respect to nb. Since we are only optimizing a</span>
+<span class="sd">    single parameter, this has an extra axis.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">leastsq</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">fact_residuals</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">simulation</span><span class="p">,),</span> <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Dfun</span><span class="o">=</span><span class="n">fact_jac</span><span class="p">)</span>
+
+<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Returns: array([ 0.0001])</span>
+</code></pre></div>
+
+<h2>Working with Arbitrary Units</h2>
+<p>But, suppose that instead of having $y_i$ in units of concentration, we measure $y_i$ using a fluorescence assay and our units are arbitrary. In practice, actin polymerization is almost always measured using <a href="https://en.wikipedia.org/wiki/Pyrene">pyrene</a> actin, a specially labeled form of actin that becomes fluorescent when it polymerizes.</p>
+<p>Now, we can no longer directly minimize the difference between our simulation and the experimental data, since our simulation is in units of concentration, and our measurements are in arbitrary units. One option is to explicitly add a parameter to our model. We can simply define a new function, $G(x)$:</p>
+<p>$$G(x) = x[0] \cdot f(x[1:])$$</p>
+<p>which takes an extra parameter, and scales the simulation. This however adds a parameter to the model, and, in my experience, makes parameter estimation much slower.</p>
+<h2>Implicit Scale Factors</h2>
+<p>An alternative way is to write out the minimization like so (we are assuming <a href="https://en.wikipedia.org/wiki/Homoscedasticity">homoscedasticity</a> to simplify the expression and ignore the variance of each individual point):</p>
+<p>$$\underset{x}{\arg\min} \sum_i (\beta F(x)_i - y_i)^2$$</p>
+<p>At this point - we notice that, for a given set of parameters $x$, our loss function implicitly defines an optimal scaling factor $\beta$ - it's the scaling factor that minimizes the residuals, given a simulation $F(x)$ and data $y$.</p>
+<p>To find the optimal scale factor, we derive our loss function with respect to $\beta$:</p>
+<p>$$\frac{d}{d\beta} \sum_i (\beta F(x)_i - y_i)^2 = 0$$</p>
+<p>and solve (the best reference I've found for this is <a href="http://www.lassp.cornell.edu/sethna/pubPDF/GutenkunstPhD.pdf">Ryan Gutenkunst's PhD thesis</a> and the corresponding implementation in <a href="https://sourceforge.net/p/sloppycell/git/ci/master/tree/Model_mod.py#l568">SloppyCell</a>):</p>
+<p>$$\beta = \frac{\sum_i F(x)_i y_i}{\sum_i F(x)_i^2}$$</p>
+<h2>Updating the Jacobian</h2>
+<p>However, now when we calculate the Jacobian, we also have to consider the effect that varying the parameter will have on the scaling factor:</p>
+<p>$$\frac{d}{dx}(\beta(x) F(x)) = \frac{d\beta(x)}{dx}F(x) + \frac{dF(x)}{dx}\beta(x)$$</p>
+<p>$\frac{dF(x)}{dx}$ is the old Jacobian. Now we need to calculate $\frac{d\beta(x)}{dx}$. To obtain that, we derive the equation for $\beta$ with respect to $x$:</p>
+<p>$$\frac{d\beta}{dx} = \frac{d}{dx} \frac{\sum_i \frac{dF(x)_i}{dx} y_i}{\sum_i F(x)_i^2}$$</p>
+<p>Let's write a quick and dirty implementation of the different functions:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calculate_sf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the optimal scale factor (B) between</span>
+<span class="sd">    simulated and experimental data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sim_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span>
+
+<span class="k">def</span> <span class="nf">calculate_sf_grad</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim_jac</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the gradient of the scale factor</span>
+<span class="sd">    (dB/dx) with respect to the parameters being</span>
+<span class="sd">    optimized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sim_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">sim_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span> <span class="o">*</span> <span class="n">sim</span><span class="p">)</span>
+    <span class="n">jac_dot_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">jac_dot_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim_jac</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">sim</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">sf_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">jac_dot_exp</span> <span class="o">/</span> <span class="n">sim_dot_sim</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span>
+               <span class="p">(</span><span class="n">sim_dot_exp</span> <span class="o">*</span> <span class="n">jac_dot_sim</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sim_dot_sim</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sf_grad</span>
+
+<span class="k">def</span> <span class="nf">scaled_fact_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the residuals between simulated data and</span>
+<span class="sd">    experimental data after scaling the simulations using</span>
+<span class="sd">    the scale factor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">beta</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">-</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">residuals</span>
+
+<span class="k">def</span> <span class="nf">scaled_fact_jac</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the jacobian of the simulation with</span>
+<span class="sd">    respect to the parameter being optimized including</span>
+<span class="sd">    the contribution of the scale factor:</span>
+
+<span class="sd">    (d/dx B(x)F(x) = dB(x)/dx*F(x) + dF(x)/dx*B(x))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># We could write this using caching to avoid</span>
+    <span class="c1"># recalculating f(x) and B(x) every iteration.</span>
+    <span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="n">jac</span> <span class="o">=</span> <span class="n">fact_grad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">beta_grad</span> <span class="o">=</span> <span class="n">calculate_sf_grad</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">beta_grad</span><span class="o">*</span><span class="n">new_sim</span> <span class="o">+</span> <span class="p">(</span><span class="n">jac</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+
+<p>Let's test to see if the scale factor calculation works as we expect:</p>
+<div class="highlight"><pre><span></span><code><span class="n">nb</span> <span class="o">=</span> <span class="mf">0.0001</span>
+<span class="n">new_sim</span> <span class="o">=</span> <span class="n">fact_timecourse</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">11.6</span><span class="p">,</span> <span class="n">nb</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">scaled_measures</span> <span class="o">=</span> <span class="n">simulation</span> <span class="o">*</span> <span class="mf">1.7</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="n">calculate_sf</span><span class="p">(</span><span class="n">new_sim</span><span class="p">,</span> <span class="n">scaled_measures</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>  <span class="c1"># Output: 1.7</span>
+</code></pre></div>
+
+<p>Now, let's check to see if the optimization procedure works:</p>
+<div class="highlight"><pre><span></span><code><span class="n">init_guess</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">leastsq</span><span class="p">(</span><span class="n">scaled_fact_residuals</span><span class="p">,</span> <span class="n">init_guess</span><span class="p">,</span>
+              <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">scaled_measures</span><span class="p">,),</span>
+              <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">col_deriv</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">Dfun</span><span class="o">=</span><span class="n">scaled_fact_jac</span><span class="p">)</span>
+<span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Returns: array([ 0.0001])</span>
+</code></pre></div>
+
+<p>It does! We recover the correct number of barbed ends. Note that this result applies for more complex minimization functions where you have multiple scale factors, or where $F(x)$ is only available implicitly - such as when numerically integrating a set of differential equations. In practice, for any large optimization problem, calculating the scale factors will almost never be a significant slowdown: what will end up dominating the run time are either computing $F(x)$ and its Jacobian $\frac{dF(x)}{dx}$ or inverting the pseudo-Hessian inside the Levenberg-Marquardt algorithm.</p>
+<h2>Numerical Considerations</h2>
+<p>However, one problem (extensively discussed in Ryan's excellent PhD thesis) is that the presence of scale factors can cause numerical convergence issues - by pushing the parameters into regimes where numerical integration becomes very slow. To solve this, Ryan proposes some relatively weak Bayesian priors on the scale factors and the parameters - which then allows us to use the LM algorithm to find the <a href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation">MAP</a> solution. Priors then play a dual role: they allow us to include some prior information about the likely range of parameters (although this is very minor: parameters in systems biology models are inherently <a href="http://www.lassp.cornell.edu/sethna/Sloppy/WhatAreSloppyModels.html">sloppy</a>) and they make the estimation procedure more stable.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://federicov.github.io/tag/python.html">Python</a>
+      <a href="https://federicov.github.io/tag/ode.html">ODE</a>
+      <a href="https://federicov.github.io/tag/sympy.html">SymPy</a>
+      <a href="https://federicov.github.io/tag/optimization.html">Optimization</a>
+    </p>
+  </div>
+
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="https://federicov.github.io/theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="light"
+          type="text/javascript">
+  </script>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Federico's Blog ",
+  "url" : "https://federicov.github.io",
+  "image": "/images/profile.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>
