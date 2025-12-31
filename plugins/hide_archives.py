@@ -1,38 +1,27 @@
 from pelican import signals
 from pelican.generators import ArticlesGenerator
 
-def filter_index_articles(generator: ArticlesGenerator) -> None:
+def mark_archive_articles(generator: ArticlesGenerator) -> None:
     """
-    Filters articles from the main index (homepage) generation if they are located
-    in the 'content/archive' directory.
+    Marks articles located in 'content/archive' with a .is_archive flag.
     
-    This works by modifying the `generator.articles` list, which Pelican uses to 
-    create the paginated index pages. We remove the archived articles from this list.
-    
-    However, we do NOT touch `generator.all_articles`. This ensures that:
-    1. The "Archives" page still lists them.
-    2. The "Category" and "Tag" pages still include them.
+    This allows templates (like index.html) to filter them out without removing
+    them from the global build process (which would prevent them from being written
+    to disk or appearing in the Archives page).
     
     Args:
-        generator: The Pelican ArticlesGenerator object containing all processed articles.
+        generator: The Pelican ArticlesGenerator object.
     """
     
-    # We create a new list for the homepage articles
-    active_articles: list = []
-    
-    # Iterate through all processed articles
     for article in generator.articles:
         # Check if 'content/archive' is in the source path.
         if 'content/archive' in article.source_path:
-            continue
+            article.is_archive = True
         else:
-            active_articles.append(article)
-            
-    # Replace the generator's article list with our filtered list
-    generator.articles = active_articles
+            article.is_archive = False
 
 def register() -> None:
     """
     Connects our filter function to Pelican's 'article_generator_finalized' signal.
     """
-    signals.article_generator_finalized.connect(filter_index_articles)
+    signals.article_generator_finalized.connect(mark_archive_articles)
