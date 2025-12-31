@@ -13,8 +13,9 @@
 aside {
   background:
     linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-    url('https://federicov.github.io/images/blog_background_hawaii.jpg') center center / cover no-repeat !important;
+    url('images/blog_background_hawaii.jpg') center center / cover no-repeat !important;
   background-color: #333 !important;
+  min-height: 100vh; /* Ensure full height even on short pages */
 }
 
 /* Base Typography & Colors */
@@ -56,7 +57,7 @@ aside a:hover {
 /* Content Layout - "Let it breathe" */
 main, article, .content {
   max-width: 70ch; /* Optimal reading width */
-  margin-left: 0; /* Align left to match standard Flex theme, or auto for center */
+  margin-left: 0; /* Align left to match standard Flex theme */
 }
 
 /* Paragraph Spacing */
