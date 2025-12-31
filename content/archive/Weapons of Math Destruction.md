@@ -1,0 +1,32 @@
+Title: Weapons of Math Destruction
+Date: 2014-07-29
+Categories: Science
+Tags: [social psychology, Sokal, Nick Brown, mathematics]
+Slug: deception-by-mathematics
+
+
+>*The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for better or for worse, to our pleasure, even though perhaps also to our bafflement, to wide branches of learning.* - Eugene Wigner, The Unreasonable Effectiveness of Mathematics in the Physical Sciences
+
+Trust and its role in the Scientific Enteprise
+-----------------------------------------------
+Although radical skepticism is a consistent philosophy, it's not really a practical way to live our life.  We are all at the mercy of experts.  For example, when talking to a doctor who is discussing a complicated diagnosis with us, we assume that what she is telling us makes sense, even if we lack the expertise to critically evaluate her claims.  We don't extend the benefit of the doubt to everyone - if a PR person makes a claim about a product, most people will react skeptically and will want to verify it themselves.  Trust is an incredibly important resource, and once a group is seen as routinely exaggerating, it's very hard to gain back a positive reputation.
+
+I want to examine the role that trust plays in science.  Math has been incredibly important in physics for the past four centuries, and it's gradually gaining in importance in other domains.  Biology is one of the frontiers where math is expanding its influence, and it has led to the creation of entirely new disciplines such as bioinformatics, systems biology (my field), computational crystallography, biophysics, etc..
+
+Biology and Math
+----------------
+Biologists are some of the most intelligent people that I know (and I'm not just saying that because my mother is one) but the typical biology curricula offers a smattering of statistics and very little advanced math.  This makes collaborations between mathematicians/physicists/computer scientists and biologists particularly challenging and, unlike families, every happy collaboration between theoreticians and experimentalists is different.
+
+This means that when starting a new collaboration, biologists often have to spend a long time explaining the subtleties of their particular problem to theoreticians, and theoreticians have to honestly discuss the relative pros and cons of different modeling approaches, and both parties have to agree on the correct level of abstraction.  There are some common misunderstandings.  Physicists think that everything can be modeled as an Ising model (if there's a problem, just add a little perturbation).  Biologists think that the fancier the math, the more sophisticated and clever is the approach.
+
+Fancy Looking Bullshit
+----------------------
+Expanding on that last point, biologists often lack the necessary mathematical basis to evalulate complex mathematical formalisms, and tend to assume that their collaborators are acting in good faith.  This is usually a good thing - but unfortunately it leaves the door open for unscrupulous people to peddle fancy looking bullshit.  I've been the lone theoretical person in a room of biologists listening to scientific talks where the speaker kept throwing around terms like 'non-linear', 'chaos', 'networks'  indiscriminately - and when asked simple questions at the end of the talk, clearly showed that they had no idea of what they were talking about.  I've seen meetings where theoreticians started scribbling down fancy looking formulas on the board for no purpose whatsoever except impressing their audience.  I've seen fancy-looking 3d graphs that added absolutely no information but gave an unwarranted air of complexity to an otherwise boring seminar.
+
+For a particularly glaring example of this (in a different field) - read [this](http://retractionwatch.com/2013/09/19/fredrickson-losada-positivity-ratio-paper-partially-withdrawn/) and weep.  The only reason this came to light, is that a fantastic graduate student, [Nick Brown](http://steamtraen.blogspot.fr/), with the help of [Alan Sokal](http://www.physics.nyu.edu/sokal/) (another hero of mine) actually wasn't impressed by the fancy looking mathematics  and tried to get to the bottom of the story.  Of course, the person responsible for the mathematics in that paper is an executive consultant that describes himself this way:
+
+>*Formerly, as Director of the Center for Advanced Research (CFAR) in Ann Arbor, Michigan, he conducted studies on the interaction dynamics and productivity of business teams that led him to implement a unique, scientifically based, approach to develop high performance teams. His pioneering work on applications of nonlinear dynamics to team interaction processes has been published in a number of prestigious scientific journals, and he has made several other contributions that have earned him worldwide recognition:*
+
+That's someone that leveraged impressive looking mathematics to swindle not just scientists, but also human resource processionals, book editors, and multiple people that actually assumed that there must have been some substance behind the mathematics.  Every time something like this happens, it makes it much harder for honest and well meaning mathematicians to actually start a collaboration with an experimental collaborator.  Math has a very deep reservoir of good will, but it isn't infinite.
+
+As theoreticians, it is our duty to be honest about what we do, and the limits of our models.  This means being upfront and admitting when there is insufficient data to do anything productive, and being willing to call out bullshit for what it is - professional courtesy only goes so far, and deceiving well meaning people with buzzwords camouflaged as math poisons the well for all of us.  For people cooperating with theoreticians, beware people who throw out technical buzzwords for no apparent reason.  Unfortunately, bullshit is quite difficult to 'sniff out' if you lack sufficient background, and several bullshit artists are quite polished in their presentations - in that case, just ask someone you trust to look at their previous papers, or invite them into a meeting together and watch the sparks fly.
