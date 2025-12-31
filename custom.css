@@ -1,11 +1,12 @@
-/* Custom Blue-Green/Teal Theme */
+/* Custom Theme Overrides */
 
 :root {
   --teal: #0d7377;
-  --teal-light: #14a3a8;
+  --teal-light: #4db6ac; /* Brighter teal for dark mode */
   --teal-dark: #094c4e;
-  --slate: #2c3e50;
-  --slate-light: #34495e;
+  --bg-dark: #1a1a1a;
+  --text-main: #cfcfcf;
+  --text-header: #e0e0e0;
 }
 
 /* Sidebar with background image and dark overlay */
@@ -16,13 +17,31 @@ aside {
   background-color: #333 !important;
 }
 
+/* Base Typography & Colors */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 18px; /* Improved readability */
+  color: var(--text-main);
+  background-color: var(--bg-dark);
+}
+
+/* Headings - Serif for Editorial Feel */
+h1, h2, h3, h4, h5, h6, article h1, article h2 {
+  font-family: 'Merriweather', serif;
+  letter-spacing: -0.02em;
+  color: var(--text-header);
+}
+
 /* Links */
 a {
-  color: var(--teal) !important;
+  color: var(--teal-light) !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--teal-light) !important;
+  color: #80cbc4 !important; /* Even lighter teal on hover */
+  text-decoration: underline;
 }
 
 /* Sidebar links stay white */
@@ -34,33 +53,45 @@ aside a:hover {
   color: #e0e0e0 !important;
 }
 
-/* Tags and buttons */
+/* Content Layout - "Let it breathe" */
+main, article, .content {
+  max-width: 70ch; /* Optimal reading width */
+  margin-left: 0; /* Align left to match standard Flex theme, or auto for center */
+}
+
+/* Paragraph Spacing */
+p {
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* Code blocks */
+code {
+  background-color: #2d2d2d; /* Darker code background */
+  color: #f8f8f2;
+  border-radius: 3px;
+  padding: 2px 5px;
+  font-family: 'Source Code Pro', monospace; /* Fallback if not loaded, or system mono */
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--teal-light);
+  color: #b0b0b0;
+  padding-left: 1rem;
+}
+
+/* Tags */
 .post-info .tag {
   background-color: var(--teal) !important;
+  color: white !important;
 }
 
 .post-info .tag:hover {
   background-color: var(--teal-light) !important;
 }
 
-/* Category links */
+/* Category links in post info */
 .post-info a {
-  color: var(--teal) !important;
-}
-
-/* Code blocks - use monokai style which works well with teal */
-code {
-  background-color: #f4f4f4;
-  border-radius: 3px;
-  padding: 2px 5px;
-}
-
-/* Headings */
-article h1, article h2, article h3, article h4 {
-  color: var(--slate);
-}
-
-/* Blockquotes */
-blockquote {
-  border-left: 4px solid var(--teal);
+  color: var(--teal-light) !important;
 }
