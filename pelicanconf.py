@@ -30,6 +30,10 @@ PAGE_PATHS = ['pages']
 PAGE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
 ARTICLE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
 
+# Plugins
+PLUGIN_PATHS = ['plugins']
+PLUGINS = ['hide_archives']
+
 # Blogroll
 LINKS = ()
 
