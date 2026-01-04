@@ -1,3 +1,11 @@
+Title: Using semantic entropy to calibrate confidence
+Date: 2026-01-03
+Category: Machine Learning
+Tags: rlhf, uncertainty
+Slug: uncertainty-calibration-pt1
+
+
+
 # Semantic Entropy as a Training Signal: When It Works, When It Fails, and Why It Prevents Collapse
 
 I tried to train a language model to be calibrated using only unlabeled data. It failed.
