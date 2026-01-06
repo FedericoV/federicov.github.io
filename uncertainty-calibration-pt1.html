@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/stylesheet/style.min.css">
+
+    <link id="dark-theme-style" rel="stylesheet" type="text/css"
+          media="(prefers-color-scheme: dark)"
+    href="https://federicov.github.io/theme/stylesheet/dark-theme.min.css">
+
+    <link id="pygments-dark-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: dark)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+    <link id="pygments-light-theme" rel="stylesheet" type="text/css"
+              media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+          href="https://federicov.github.io/theme/pygments/monokai.min.css">
+
+
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/fontawesome.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/brands.css">
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/theme/font-awesome/css/solid.css">
+
+  <link rel="stylesheet" type="text/css" href="https://federicov.github.io/custom.css">
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+<meta name="author" content="Federico Vaggi" />
+<meta name="description" content="This post explores using semantic entropy as a training signal for calibrating confidence in language models. Here is what I found: Training on semantic entropy alone does not converge and leads to unstable behavior In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its …" />
+<meta name="keywords" content="rlhf, uncertainty">
+
+
+  <meta property="og:site_name" content="Federico's Blog"/>
+  <meta property="og:title" content="Entropic RL: Calibrating LLM Confidence with Semantic Entropy"/>
+  <meta property="og:description" content="This post explores using semantic entropy as a training signal for calibrating confidence in language models. Here is what I found: Training on semantic entropy alone does not converge and leads to unstable behavior In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its …"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:url" content="https://federicov.github.io/uncertainty-calibration-pt1.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2026-01-03 00:00:00-08:00"/>
+  <meta property="article:modified_time" content=""/>
+  <meta property="article:author" content="https://federicov.github.io/author/federico-vaggi.html">
+  <meta property="article:section" content="Machine Learning"/>
+  <meta property="article:tag" content="rlhf"/>
+  <meta property="article:tag" content="uncertainty"/>
+  <meta property="og:image" content="/images/profile.jpg">
+
+  <title>Federico's Blog &ndash; Entropic RL: Calibrating LLM Confidence with Semantic Entropy</title>
+
+
+</head>
+<body >
+
+<aside>
+  <div>
+    <a href="https://federicov.github.io/">
+      <img src="/images/profile.jpg" alt="Federico Vaggi" title="Federico Vaggi">
+    </a>
+
+    <h1>
+      <a href="https://federicov.github.io/">Federico Vaggi</a>
+    </h1>
+
+    <p>Machine Learning, Causal Inference, and whatever else I find interesting</p>
+
+
+    <nav>
+      <ul class="list">
+
+
+            <li>
+              <a target="_self"
+                 href="https://federicov.github.io/pages/about.html#about">
+                About
+              </a>
+            </li>
+
+      </ul>
+    </nav>
+
+    <ul class="social">
+      <li>
+        <a class="sc-github"
+           href="https://github.com/FedericoV"
+           target="_blank">
+          <i class="fa-brands fa-github"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-twitter"
+           href="https://twitter.com/f_vaggi"
+           target="_blank">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="sc-linkedin"
+           href="https://www.linkedin.com/in/federico-vaggi-ba72a654"
+           target="_blank">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</aside>
+  <main>
+
+<nav>
+  <a href="https://federicov.github.io/">Home</a>
+
+  <a href="/archives.html">Archives</a>
+  <a href="/categories.html">Categories</a>
+
+
+</nav>
+
+<article class="single">
+  <header>
+      
+    <h1 id="uncertainty-calibration-pt1">Entropic RL: Calibrating LLM Confidence with Semantic Entropy</h1>
+    <p>
+      Posted on Sat 03 January 2026 in <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>This post explores using semantic entropy as a training signal for calibrating confidence in language models.</p>
+<p>Here is what I found:</p>
+<ol>
+<li>Training on semantic entropy alone does not converge and leads to unstable behavior  </li>
+<li>In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its own  </li>
+<li>In a data-scarce regime, semantic entropy prevents catastrophic collapse under repeated training on limited labelled data</li>
+</ol>
+<p>Code available here: https://github.com/FedericoV/semantic-entropy</p>
+<hr>
+<h2>Why Calibration Matters</h2>
+<p>Large language models are increasingly used in scientific and technical workflows. In these settings, uncertainty calibration plays a critical role, since it determines how model outputs are incorporated into downstream decision-making procedures. While recent progress has focused on improving model capability through scale, data, reasoning, and tool use, calibration remains a distinct and often underdeveloped dimension.</p>
+<p>Experimental design depends on managing the explore exploit tradeoff. Confidence estimates influence whether a system commits to existing hypotheses or allocates resources toward uncertain but potentially informative directions.  In scientific workflows, calibration matters because experiments are expensive: gathering a single label might cost days of lab time or thousands of dollars in materials. As anyone who has worked seriously in science knows, asking questions is easy: answering them is the hard part. This asymmetry creates demand for training procedures that can extract signal from unlabeled questions while conserving labeled supervision.</p>
+<p>Large language models exhibit characteristic failures in this respect. Their outputs are often fluent and informative, yet their stated confidence correlates weakly with correctness on out of distribution or frontier problems. This has motivated recent work on inference time uncertainty estimation, including approaches based on self consistency and semantic entropy (Kuhn et al., 2023), which provide empirical proxies for uncertainty without additional supervision.</p>
+<p>A parallel line of work has explored uncertainty quantification in reward models for RLHF (Gleave et al., 2022; Lou et al., 2024; Banerjee et al., 2024), showing that variance-aware optimization improves alignment outcomes. The focus here is complementary: rather than quantifying uncertainty in the reward signal, I use behavioral consistency as a training signal for the policy's expressed confidence. The experiments described below investigate this possibility in a constrained setting. They were carried out in short intervals, often while holding a sleeping infant (reader, please be gentle towards all the errors I missed), but are motivated by a broader interest in making language models more effective components in scientific decision making pipelines.</p>
+<hr>
+<h2>Semantic Entropy as a Calibration Constraint</h2>
+<p>We can ask a language model the same question many times, and look at the distribution of answers it produces on each independent roll out.</p>
+<p>Given <span class="math">\(N\)</span> rollouts that produce answers falling into <span class="math">\(K\)</span> distinct clusters with counts <span class="math">\(n_1, n_2, \ldots, n_K\)</span>, stability is defined as one minus normalized entropy:</p>
+<div class="math">$$
+\text{Stability} = 1 - \frac{H}{H_{\max}}
+$$</div>
+<p>where</p>
+<div class="math">$$
+H = -\sum_{k=1}^{K} \frac{n_k}{N} \log \frac{n_k}{N}
+\quad \text{and} \quad
+H_{\max} = \log N
+$$</div>
+<p>Stability equals one when all rollouts agree and zero when all rollouts disagree. In this work, clustering was implemented using simple string-matching heuristics.</p>
+<h3>Entropic constraint on correctness</h3>
+<p>Stability is not a direct estimate of correctness, but it does impose a constraint on how likely the model can be correct.</p>
+<p>Let <span class="math">\(\pi_\theta(y \mid x)\)</span> denote the model's distribution over answers <span class="math">\(y\)</span> given question <span class="math">\(x\)</span>. Let <span class="math">\(y^*\)</span> be the correct answer, with probability of correctness</p>
+<div class="math">$$
+p_{\text{correct}} = \pi_\theta(y^* \mid x).
+$$</div>
+<p>Let</p>
+<div class="math">$$
+p_{\max} = \max_y \pi_\theta(y \mid x)
+$$</div>
+<p>be the probability assigned to the modal answer. By definition,</p>
+<div class="math">$$
+p_{\text{correct}} \le p_{\max}.
+$$</div>
+<p>The entropy of <span class="math">\(\pi_\theta\)</span> provides a loose upper bound on <span class="math">\(p_{\max}\)</span>. High entropy implies that probability mass is spread across many answers, which limits how large <span class="math">\(p_{\max}\)</span> can be. Consequently,</p>
+<div class="math">$$
+\text{Low Stability} \;\; \Rightarrow \;\; \text{Low } p_{\max} \;\; \Rightarrow \;\; \text{Low } p_{\text{correct}}.
+$$</div>
+<p>This implication is one-directional. High stability permits high correctness but does not guarantee it, since the modal answer need not be the correct one.</p>
+<p>This asymmetry explains why stability functions as a useful regularizer but fails as a standalone training objective. When stability is low, high confidence is inconsistent with the model's own distribution. When stability is high, correctness still depends on whether the modal answer aligns with ground truth.</p>
+<h3>Operationalizing calibration</h3>
+<p>This constraint can be incorporated into training by encouraging the model's stated confidence to match its observed stability.</p>
+<p>Let <span class="math">\(c \in [0,1]\)</span> denote the model's stated confidence and let <span class="math">\(y \in \{0,1\}\)</span> indicate correctness. With labeled data, calibration can be trained using the Brier score:</p>
+<div class="math">$$
+R_{\text{labeled}} = 1 - (y - c)^2.
+$$</div>
+<p>Without labels, correctness can be replaced by empirical stability <span class="math">\(s \in [0,1]\)</span> computed across rollouts:</p>
+<div class="math">$$
+R_{\text{unlabeled}} = 1 - (s - c)^2.
+$$</div>
+<p>The labeled term encourages the modal answer to align with the ground truth. The stability term constrains confidence to respect the entropic limits of the current policy. Together, they form a mixed objective in which stability acts as a regularizer rather than a substitute for supervision.</p>
+<p>Calibration is evaluated using the calibration gap,</p>
+<div class="math">$$
+\text{Calibration Gap} = \bar{c} - \text{Accuracy},
+$$</div>
+<p>where positive values indicate overconfidence. A perfectly calibrated model would have a gap of zero.</p>
+<hr>
+<h2>Why RL? The Moving Target Problem</h2>
+<p>A natural question is why we need Reinforcement Learning at all. Why not simply construct a dataset of questions, measure the model's accuracy on them <em>a priori</em>, and create a supervised dataset labeled with the appropriate confidence levels?</p>
+<p>The issue is that calibration is <strong>self-referential and dynamic</strong>. The "correct" confidence level depends on the model's <em>current</em> ability to answer the question, which is exactly what we are changing during training.</p>
+<p>In a static SFT regime, we would optimize against a fixed target <span class="math">\(c^*\)</span> determined by a snapshot of the model:</p>
+<div class="math">$$ \mathcal{L}_{\text{SFT}} = - \mathbb{E}_{(x, c^*) \sim \mathcal{D}} [ \log \pi_\theta(c^* | x) ] $$</div>
+<p>However, true calibration requires that the stated confidence <span class="math">\(c\)</span> tracks the model's actual reliability under its current policy <span class="math">\(\pi_\theta\)</span>:</p>
+<div class="math">$$ c \approx P(y \text{ is correct} | x, \pi_\theta) $$</div>
+<p>Because we are updating <span class="math">\(\theta\)</span>, the term on the right-hand side changes throughout training. If the model learns a new reasoning pattern that makes it more likely to answer correctly, its "ground truth" confidence <em>should</em> increase. If we locked it to a pre-computed <span class="math">\(c^*\)</span> from the beginning of training, we would be penalizing the model for becoming more capable (or more cautious). Note that this is true even if the model doesn't learn any new facts: the model becoming more aware of its ignorance is sufficient to invalidate any static labels.</p>
+<p>We cannot encode this dynamic relationship in a static dataset. We must sample from the current policy (<span class="math">\(y, c \sim \pi_\theta\)</span>), observe the actual correctness, and provide feedback via a proper scoring rule. This dependency on the current policy's performance makes it an inherently on-policy Reinforcement Learning problem.</p>
+<hr>
+<h2>Sanity Check: Stability Predicts Correctness</h2>
+<p>Before using stability as a training signal, it is necessary to verify that it correlates with correctness in the current setting.</p>
+<p>Using Qwen3-4B-Instruct on 150 TriviaQA questions with eight rollouts per question, I asked the model to try to answer every question, as well as its confidence.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Correlation with Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stability</td>
+<td>r = 0.48</td>
+</tr>
+<tr>
+<td>Stated Confidence</td>
+<td>r = 0.12</td>
+</tr>
+</tbody>
+</table>
+<p>Stability is substantially more predictive of correctness than the model's stated confidence. This result is consistent with prior work, but it establishes that the signal is present and usable in this setup.</p>
+<p><img alt="Stability vs confidence as predictors of accuracy" src="https://federicov.github.io/images/entropic_rl_pt1/fig1_correlation_comparison.svg"></p>
+<hr>
+<h2>The Trap of Pure Stability</h2>
+<p>I really wanted this to work without labels because lazy supervision is the dream, but alas...</p>
+<p>The calibration gap oscillates substantially across training, moving between overconfidence and underconfidence without settling. Without a ground truth anchor, the objective drifts. The model can satisfy the stability reward by becoming consistently wrong, remaining stable in its errors while maintaining high confidence. Stability alone is not a sufficient training signal. (See Figure 2a below.)</p>
+<hr>
+<h2>With Abundant Labels, Just Use Brier</h2>
+<p>I ran a controlled ablation on 5000 TriviaQA questions under three conditions:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Labels Used</th>
+<th>Eval Accuracy</th>
+<th>Calibration Gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100% Brier</td>
+<td>100%</td>
+<td>44.9%</td>
+<td>+5.2%</td>
+</tr>
+<tr>
+<td>50/50 Mixed</td>
+<td>50%</td>
+<td>42.3%</td>
+<td>+13.0%</td>
+</tr>
+<tr>
+<td>100% Stability</td>
+<td>0%</td>
+<td>40.6%</td>
+<td>+21.9%</td>
+</tr>
+</tbody>
+</table>
+<p>When labeled data is abundant and we are in a compute bound regime, pure Brier supervision achieves the best accuracy and calibration. Adding stability does not improve performance and slightly degrades it. In this regime, the correct conclusion is straightforward: if labels are available, they should be used directly.</p>
+<hr>
+<h2>The Sweet Spot: Stability as a Regularizer</h2>
+<p>The most informative behavior appears when labeled data is limited and models are trained for multiple epochs.</p>
+<p>I repeated the training on a reduced pool of 1600 questions:</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Data</th>
+<th>Reward</th>
+<th>Epochs</th>
+<th>Eval Accuracy</th>
+<th>Calibration Gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>1,600</td>
+<td>100% Brier</td>
+<td>1</td>
+<td>49.7%</td>
+<td>+30.0%</td>
+</tr>
+<tr>
+<td>B</td>
+<td>1,600</td>
+<td>100% Brier</td>
+<td>2</td>
+<td>31.5%</td>
+<td>+5.7%</td>
+</tr>
+<tr>
+<td>C</td>
+<td>1,600</td>
+<td>50% Brier, 50% Stability</td>
+<td>2</td>
+<td>43.6%</td>
+<td>+11.4%</td>
+</tr>
+</tbody>
+</table>
+<p>Run B exhibits catastrophic collapse. After a second epoch of training on limited data, accuracy drops by eighteen points. The model overfits the training set and loses general knowledge. Note that this is in spite of doing training with LORA rank of 1! A single pass over the data in the absence of further regularization is enough to cause overfitting.</p>
+<p>Run C does not collapse. With stability mixed into the objective, accuracy remains substantially higher. The only difference between the runs is the presence of the stability reward.</p>
+<p><img alt="Training dynamics under limited data. (a) Pure stability reward produces oscillatory behavior and fails to converge. (b) Adding stability as a regularizer to Brier supervision prevents catastrophic collapse under repeated training on limited data. Stability does not replace labels, but constrains training dynamics when labels are scarce." src="https://federicov.github.io/images/entropic_rl_pt1/fig2_combined_training_dynamics.svg"></p>
+<h3>Interpreting Apparent Calibration</h3>
+<p>Run B appears well calibrated according to the calibration gap metric, but this is misleading. The model becomes broadly underconfident while also becoming worse at the task.</p>
+<p>Run C maintains higher accuracy while expressing lower confidence where appropriate. In this regime, stability functions as a regularizer that constrains the ways in which the model can game the objective.</p>
+<p>This is the regime where the asymmetry described earlier becomes relevant. If labels are expensive and questions are cheap, you cannot simply collect more labeled data. But you can generate unlabeled questions at near-zero cost. Stability provides a way to extract training signal from those questions, allowing longer training without the collapse that pure supervision produces.</p>
+<hr>
+<h2>Behavioral Effects on Reasoning</h2>
+<p>Quantitative metrics do not fully capture how the model's behavior changes. To examine this, reasoning traces were compared before and after training on the same questions. The examples below are representative of patterns observed across the evaluation set.</p>
+<h3>Example 1: Mentioning Alternatives Without Committing</h3>
+<p><strong>Question:</strong> Who is the patron saint of dancers?</p>
+<p><strong>Baseline (85% confidence, wrong):</strong></p>
+<blockquote>
+<p>The patron saint of dancers is Saint Genevieve. She is traditionally associated with dancers, especially in France... But the most accurate answer specifically for dancers is Saint Genevieve.</p>
+</blockquote>
+<p><strong>Trained (60% confidence, wrong):</strong></p>
+<blockquote>
+<p>The patron saint of dancers is Saint Genevieve... However, it's worth noting that Saint Vitus is also sometimes associated with dancers, especially in the context of St. Vitus' Dance. But the most commonly accepted patron saint specifically of dancers is Saint Genevieve.</p>
+</blockquote>
+<p>The trained model gives the same wrong answer, but mentions the correct one (Saint Vitus) as an alternative. The confidence drops by 25 points. This is not an improvement in accuracy, but it is an improvement in epistemic honesty. The uncertainty is present in the reasoning, not only in the scalar confidence value.</p>
+<h3>Example 2: Refusing to Guess</h3>
+<p><strong>Question:</strong> Which Gilbert and Sullivan operetta is subtitled 'The Witch's Curse'?</p>
+<p><strong>Baseline (90% confidence, wrong):</strong></p>
+<blockquote>
+<p>Upon closer inspection, the operetta that is sometimes unofficially referred to as "The Witches Curse" is actually "The Sorcerer"... Therefore, despite the lack of an official subtitle, "The Sorcerer" is the operetta most commonly associated with that nickname.</p>
+</blockquote>
+<p><strong>Trained (70% confidence, abstains):</strong></p>
+<blockquote>
+<p>There is no Gilbert and Sullivan operetta officially subtitled "The Witches Curse." This may be a confusion with another work or a misattribution... Therefore, the correct answer is that no Gilbert and Sullivan operetta is officially subtitled "The Witches Curse."</p>
+</blockquote>
+<p>The baseline confabulates an answer with high confidence. The trained model recognizes that it cannot find a confident answer and says so, returning "None" with appropriately lower confidence. Both are wrong (the answer is Ruddigore), but the trained model's response is more useful. It signals uncertainty rather than false certainty.</p>
+<h3>Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Behavior</th>
+<th>Baseline</th>
+<th>Trained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confidence when correct</td>
+<td>95 to 98 percent</td>
+<td>80 to 90 percent</td>
+</tr>
+<tr>
+<td>Confidence when wrong</td>
+<td>85 to 95 percent</td>
+<td>60 to 70 percent</td>
+</tr>
+<tr>
+<td>Mentions alternatives</td>
+<td>Rare</td>
+<td>Common</td>
+</tr>
+<tr>
+<td>Abstains when uncertain</td>
+<td>Never</td>
+<td>Sometimes</td>
+</tr>
+</tbody>
+</table>
+<p>These patterns suggest that the regularization effect of stability is reflected in the model's reasoning style, not only in its reported confidence. The model does not simply learn to output lower numbers. It learns to hedge when uncertain, to mention alternatives it is not committing to, and occasionally to decline answering rather than confabulate.  Example 2 is especially informative because the observed behavior is not explicitly trained for. In our setup, abstention is treated as an incorrect answer and receives no special reward. Nevertheless, after training, it sometimes chooses to abstain rather than produce a confident but weakly supported answer.</p>
+<p>This suggests that the mixed objective is not just rescaling confidence values, but is altering the model's internal decision threshold for committing to an answer. When the model's posterior over answers is sufficiently diffuse, producing any specific answer would require overstating confidence. Under the stability regularized objective, abstention becomes the least inconsistent action, even though it is formally penalized as wrong.</p>
+<hr>
+<h2>Prompting as a Baseline</h2>
+<p>It is natural to ask whether similar effects can be achieved through prompting alone.</p>
+<p>An aggressive calibration prompt was tested that instructed the model to express uncertainty conservatively and avoid overconfidence.</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Calibration Gap</th>
+<th>Reduction from Baseline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untrained</td>
+<td>+48.5%</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Aggressive Prompting</td>
+<td>+35.1%</td>
+<td>27%</td>
+</tr>
+<tr>
+<td>RL Training</td>
+<td>+11.7%</td>
+<td>76%</td>
+</tr>
+</tbody>
+</table>
+<p>Prompting improves calibration, but the effect is substantially smaller than that achieved through training. The trained model remains calibrated even under greedy decoding.</p>
+<p><img alt="RL training vs prompting comparison" src="https://federicov.github.io/images/entropic_rl_pt1/fig8_rl_vs_prompting.svg"></p>
+<hr>
+<h2>Scope and Limitations</h2>
+<p>A few limitations!  This was a project I did to explore some ideas I find interesting, and to see how quickly I could iterate on a greenfield project using Gemini and Claude.</p>
+<p>The results above support a limited set of claims:</p>
+<ul>
+<li>The difference between pure Brier and mixed training under data scarcity is large enough to be meaningful  </li>
+<li>Stability prevents collapse when models are trained repeatedly on limited labeled data  </li>
+<li>Training time objectives outperform prompting for calibration  </li>
+</ul>
+<p>Several aspects remain open:</p>
+<ul>
+<li>The optimal mixing ratio was not exhaustively explored  </li>
+<li>Results are based on single runs per condition  </li>
+<li>Generalization to other models and datasets remains to be tested</li>
+<li>Dataset augmentation by asking the same question in multiple ways to elicit increased entropy  </li>
+<li>Curriculum learning: mixing proportions of labeled / unlabeled data as training continues</li>
+<li>Prompt optimization</li>
+<li>Exploring different kinds of reasoning models</li>
+<li>Testing different uncertainty types: for example, requiring the model to predict confidence intervals for "Fermi estimation" type problems.</li>
+</ul>
+<hr>
+<h2>Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stability predicts accuracy better than stated confidence</td>
+<td>The signal is present but unused</td>
+</tr>
+<tr>
+<td>Pure stability reward fails</td>
+<td>Ground truth anchoring is required</td>
+</tr>
+<tr>
+<td>Brier dominates with abundant data</td>
+<td>Labels should be used directly</td>
+</tr>
+<tr>
+<td>Stability prevents collapse under scarcity</td>
+<td>Acts as a regularizer</td>
+</tr>
+<tr>
+<td>Training outperforms prompting</td>
+<td>Calibration requires shaping behavior</td>
+</tr>
+</tbody>
+</table>
+<p>Semantic entropy is neither a universal solution nor a replacement for labeled supervision. Its value lies in constraining training dynamics when labeled data is limited and models are trained for multiple epochs. In this regime, it helps preserve general knowledge while improving the alignment between confidence and behavior.</p>
+<hr>
+<h2>References</h2>
+<ul>
+<li>Banerjee, S. et al. (2024). Towards Reliable Alignment: Uncertainty-aware RLHF. <em>arXiv preprint</em>.</li>
+<li>Gleave, A. et al. (2022). Uncertainty Estimation for Language Reward Models. <em>arXiv preprint</em>.</li>
+<li>Kuhn, L. et al. (2023). Semantic Uncertainty: Linguistic Invariances for Uncertainty Estimation in Natural Language Generation. <em>ICLR 2023</em>.</li>
+<li>Lou, R. et al. (2024). Uncertainty-aware Reward Model: Teaching Reward Models to Know What is Unknown. <em>arXiv preprint</em>.</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://federicov.github.io/tag/rlhf.html">rlhf</a>
+      <a href="https://federicov.github.io/tag/uncertainty.html">uncertainty</a>
+    </p>
+  </div>
+
+
+
+
+
+
+
+</article>
+
+<footer>
+<p>&copy;  </p>
+<p>
+Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme
+  <span class="footer-separator">|</span>
+  Switch to the <a href="javascript:void(0)" onclick="theme.switch(`dark`)">dark</a> | <a href="javascript:void(0)" onclick="theme.switch(`light`)">light</a> | <a href="javascript:void(0)" onclick="theme.switch(`browser`)">browser</a> theme
+  <script id="dark-theme-script"
+          src="https://federicov.github.io/theme/dark-theme/dark-theme.min.js"
+          data-enable-auto-detect-theme="True"
+          data-default-theme="light"
+          type="text/javascript">
+  </script>
+</p></footer>  </main>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Federico's Blog ",
+  "url" : "https://federicov.github.io",
+  "image": "/images/profile.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>
