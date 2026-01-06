@@ -198,7 +198,7 @@ This is the regime where the asymmetry described earlier becomes relevant. If la
 
 ## Behavioral Effects on Reasoning
 
-The numbers don't tell the whole story. Here's what the reasoning traces actually look like before and after training:
+The numbers don't tell the whole story. Here's what the reasoning traces actually look like before and after training. The examples below are representative of patterns observed across the evaluation set (shown here from a 30B MoE variant; 4B showed similar patterns).
 
 ### Example 1: Mentioning Alternatives Without Committing
 
