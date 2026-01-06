@@ -3,7 +3,7 @@ SITENAME = "Federico's Blog"
 SITETITLE = "Federico Vaggi"
 SITESUBTITLE = "Machine Learning, Causal Inference, and whatever else I find interesting"
 SITELOGO = '/images/profile.jpg'
-SITEURL = 'https://federicov.github.io/'
+SITEURL = ''
 
 PATH = 'content'
 TIMEZONE = 'America/Los_Angeles'
@@ -32,7 +32,7 @@ ARTICLE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
 
 # Plugins
 PLUGIN_PATHS = ['plugins']
-PLUGINS = ['hide_archives']
+PLUGINS = ['hide_archives', 'pelican.plugins.render_math']
 
 # Blogroll
 LINKS = ()
@@ -66,4 +66,4 @@ THEME_COLOR_AUTO_DETECT_BROWSER_PREFERENCE = True
 THEME_COLOR_ENABLE_USER_OVERRIDE = True
 
 # Uncomment following line if you want document-relative URLs when developing
-# RELATIVE_URLS = True
+RELATIVE_URLS = True

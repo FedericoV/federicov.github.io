@@ -41,6 +41,7 @@ dependencies = [
     { name = "ghp-import" },
     { name = "markdown" },
     { name = "pelican" },
+    { name = "pelican-render-math" },
     { name = "typogrify" },
 ]
 
@@ -49,6 +50,7 @@ requires-dist = [
     { name = "ghp-import", specifier = ">=2.1.0" },
     { name = "markdown", specifier = ">=3.10" },
     { name = "pelican", specifier = ">=4.11.0.post0" },
+    { name = "pelican-render-math", specifier = ">=1.0.5" },
     { name = "typogrify", specifier = ">=2.1.0" },
 ]
 
@@ -230,6 +232,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/cf/ab/a5e863de66054c561e111687b4c1f7cb2ad5f2d4805d2bb12863f0f637cd/pelican-4.11.0.post0.tar.gz", hash = "sha256:0d5e9c0cc9c6713ab6c25b2c4b64844f34d9be8c8c8cc7f42c3a8aa6b3bbbe33", size = 1547126, upload-time = "2025-10-30T10:21:34.396Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/30/c3/a6bf5a88ec27887d31c740117b72df4f7a66910552ae3f6ccadaba5ae934/pelican-4.11.0.post0-py3-none-any.whl", hash = "sha256:522a26598d3555a48b8392a582843f96bc9dafd5efe16b8f6a0b292441290620", size = 1351261, upload-time = "2025-10-30T10:21:29.688Z" },
+]
+
+[[package]]
+name = "pelican-render-math"
+version = "1.0.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pelican" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/39/ce/b7ca0f603d78811b944951ad2f83f28ad3018ef1b3653221deef81e068c5/pelican_render_math-1.0.5.tar.gz", hash = "sha256:dfb36fb5cb62f40ee05d747f47207ec15511f8d77635def8c22a00846cca742b", size = 29453, upload-time = "2025-10-22T09:13:58.185Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/51/0e/368abb67e18c4ce965ce88cf96aa67c6cb8be2f8e0b2ed1ec1f306be5dad/pelican_render_math-1.0.5-py3-none-any.whl", hash = "sha256:6383b798aba721ed033a67bbc71c8f555b72c7d35e22a32477c958286f719eca", size = 28788, upload-time = "2025-10-22T09:13:56.792Z" },
 ]
 
 [[package]]
