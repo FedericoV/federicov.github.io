@@ -51,7 +51,7 @@
 
 
   <meta property="og:site_name" content="Federico's Blog"/>
-  <meta property="og:title" content="Entropic RL: Calibrating LLM Confidence with Semantic Entropy"/>
+  <meta property="og:title" content="Semantic Entropy as a Regularizer for LLM Calibration"/>
   <meta property="og:description" content="This post explores using semantic entropy as a training signal for calibrating confidence in language models. Here is what I found: Training on semantic entropy alone does not converge and leads to unstable behavior In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its …"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:url" content="https://federicov.github.io/uncertainty-calibration-pt1.html"/>
@@ -64,7 +64,7 @@
   <meta property="article:tag" content="uncertainty"/>
   <meta property="og:image" content="/images/profile.jpg">
 
-  <title>Federico's Blog &ndash; Entropic RL: Calibrating LLM Confidence with Semantic Entropy</title>
+  <title>Federico's Blog &ndash; Semantic Entropy as a Regularizer for LLM Calibration</title>
 
 
 </head>
@@ -137,7 +137,7 @@
 <article class="single">
   <header>
       
-    <h1 id="uncertainty-calibration-pt1">Entropic RL: Calibrating LLM Confidence with Semantic Entropy</h1>
+    <h1 id="uncertainty-calibration-pt1">Semantic Entropy as a Regularizer for LLM Calibration</h1>
     <p>
       Posted on Sat 03 January 2026 in <a href="https://federicov.github.io/category/machine-learning.html">Machine Learning</a>
 
@@ -152,14 +152,15 @@
 <li>Training on semantic entropy alone does not converge and leads to unstable behavior  </li>
 <li>In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its own  </li>
 <li>In a data-scarce regime, semantic entropy prevents catastrophic collapse under repeated training on limited labelled data</li>
+<li>The model learns to say 'I don't know' - without ever being rewarded for it.</li>
 </ol>
 <p>Code available <a href="https://github.com/FedericoV/semantic-entropy">here</a></p>
 <hr>
 <h2>Why Calibration Matters</h2>
-<p>Large language models are increasingly used in scientific and technical workflows. In these settings, uncertainty calibration plays a critical role, since it determines how model outputs are incorporated into downstream decision-making procedures. While recent progress has focused on improving model capability through scale, data, reasoning, and tool use, calibration remains a distinct and often underdeveloped dimension.</p>
+<p>Large language models are increasingly used in scientific and technical workflows. In these settings, calibration matters because it determines how much you should trust what the model says. Most recent work focuses on making models smarter. Calibration is a different problem, and it's underexplored.</p>
 <p>Experimental design depends on managing the explore exploit tradeoff. Confidence estimates influence whether a system commits to existing hypotheses or allocates resources toward uncertain but potentially informative directions.  In scientific workflows, calibration matters because experiments are expensive: gathering a single label might cost days of lab time or thousands of dollars in materials. As anyone who has worked seriously in science knows, asking questions is easy: answering them is the hard part. This asymmetry creates demand for training procedures that can extract signal from unlabeled questions while conserving labeled supervision.</p>
-<p>Large language models exhibit characteristic failures in this respect. Their outputs are often fluent and informative, yet their stated confidence correlates weakly with correctness on out of distribution or frontier problems. This has motivated recent work on inference time uncertainty estimation, including approaches based on self consistency and semantic entropy (Kuhn et al., 2023), which provide empirical proxies for uncertainty without additional supervision.</p>
-<p>A parallel line of work has explored uncertainty quantification in reward models for RLHF (Gleave et al., 2022; Lou et al., 2024; Banerjee et al., 2024), showing that variance-aware optimization improves alignment outcomes. The focus here is complementary: rather than quantifying uncertainty in the reward signal, I use behavioral consistency as a training signal for the policy's expressed confidence. The experiments described below investigate this possibility in a constrained setting. They were carried out in short intervals, often while holding a sleeping infant (reader, please be gentle towards all the errors I missed), but are motivated by a broader interest in making language models more effective components in scientific decision making pipelines.</p>
+<p>Large language models exhibit characteristic failures in this respect. Their outputs are often fluent and informative, yet their stated confidence correlates weakly with correctness on out of distribution or frontier problems. This is why people have started working on inference-time uncertainty estimation, including approaches based on self consistency and semantic entropy (Kuhn et al., 2023), which provide empirical proxies for uncertainty without additional supervision.</p>
+<p>A parallel line of work has explored uncertainty quantification in reward models for RLHF (Gleave et al., 2022; Lou et al., 2024; Banerjee et al., 2024), showing that variance-aware optimization improves alignment outcomes. The focus here is complementary: rather than quantifying uncertainty in the reward signal, I use behavioral consistency as a training signal for the policy's expressed confidence. They experiments here were carried out in short intervals, often while holding a sleeping infant (reader, please be gentle towards all the errors I missed), but are motivated by a broader interest in making language models more effective components in scientific decision making pipelines.</p>
 <hr>
 <h2>Semantic Entropy as a Calibration Constraint</h2>
 <p>We can ask a language model the same question many times, and look at the distribution of answers it produces on each independent roll out.</p>
@@ -173,7 +174,7 @@ H = -\sum_{k=1}^{K} \frac{n_k}{N} \log \frac{n_k}{N}
 \quad \text{and} \quad
 H_{\max} = \log N
 $$</div>
-<p>Stability equals one when all rollouts agree and zero when all rollouts disagree. In this work, clustering was implemented using simple string-matching heuristics.</p>
+<p>Stability equals one when all rollouts agree and zero when all rollouts disagree. I implemented clustering with simple string-matching heuristic.</p>
 <h3>Entropic constraint on correctness</h3>
 <p>Stability is not a direct estimate of correctness, but it does impose a constraint on how likely the model can be correct.</p>
 <p>Let <span class="math">\(\pi_\theta(y \mid x)\)</span> denote the model's distribution over answers <span class="math">\(y\)</span> given question <span class="math">\(x\)</span>. Let <span class="math">\(y^*\)</span> be the correct answer, with probability of correctness</p>
@@ -222,7 +223,7 @@ $$</div>
 <p>We cannot encode this dynamic relationship in a static dataset. We must sample from the current policy (<span class="math">\(y, c \sim \pi_\theta\)</span>), observe the actual correctness, and provide feedback via a proper scoring rule. This dependency on the current policy's performance makes it an inherently on-policy Reinforcement Learning problem.</p>
 <hr>
 <h2>Sanity Check: Stability Predicts Correctness</h2>
-<p>Before using stability as a training signal, it is necessary to verify that it correlates with correctness in the current setting.</p>
+<p>Before using stability as a training signal, I checked that it actually predicts correctness here.</p>
 <p>Using Qwen3-4B-Instruct on 150 TriviaQA questions with eight rollouts per question, I asked the model to try to answer every question, as well as its confidence.</p>
 <table>
 <thead>
@@ -242,7 +243,7 @@ $$</div>
 </tr>
 </tbody>
 </table>
-<p>Stability is substantially more predictive of correctness than the model's stated confidence. This result is consistent with prior work, but it establishes that the signal is present and usable in this setup.</p>
+<p>Stability predicts correctness much better than the model's stated confidence.</p>
 <p><img alt="Stability vs confidence as predictors of accuracy" src="https://federicov.github.io/images/entropic_rl_pt1/fig1_correlation_comparison.svg"></p>
 <hr>
 <h2>The Trap of Pure Stability</h2>
@@ -333,7 +334,7 @@ $$</div>
 <p>This is the regime where the asymmetry described earlier becomes relevant. If labels are expensive and questions are cheap, you cannot simply collect more labeled data. But you can generate unlabeled questions at near-zero cost. Stability provides a way to extract training signal from those questions, allowing longer training without the collapse that pure supervision produces.</p>
 <hr>
 <h2>Behavioral Effects on Reasoning</h2>
-<p>Quantitative metrics do not fully capture how the model's behavior changes. To examine this, reasoning traces were compared before and after training on the same questions. The examples below are representative of patterns observed across the evaluation set.</p>
+<p>The numbers don't tell the whole story. Here's what the reasoning traces actually look like before and after training:</p>
 <h3>Example 1: Mentioning Alternatives Without Committing</h3>
 <p><strong>Question:</strong> Who is the patron saint of dancers?</p>
 <p><strong>Baseline (85% confidence, wrong):</strong></p>
@@ -388,12 +389,11 @@ $$</div>
 </tr>
 </tbody>
 </table>
-<p>These patterns suggest that the regularization effect of stability is reflected in the model's reasoning style, not only in its reported confidence. The model does not simply learn to output lower numbers. It learns to hedge when uncertain, to mention alternatives it is not committing to, and occasionally to decline answering rather than confabulate.  Example 2 is especially informative because the observed behavior is not explicitly trained for. In our setup, abstention is treated as an incorrect answer and receives no special reward. Nevertheless, after training, it sometimes chooses to abstain rather than produce a confident but weakly supported answer.</p>
+<p>The model doesn't just output lower number: it actually reasons differently. It learns to hedge when uncertain, to mention alternatives it is not committing to, and occasionally to decline answering rather than confabulate.</p>
 <p>This suggests that the mixed objective is not just rescaling confidence values, but is altering the model's internal decision threshold for committing to an answer. When the model's posterior over answers is sufficiently diffuse, producing any specific answer would require overstating confidence. Under the stability regularized objective, abstention becomes the least inconsistent action, even though it is formally penalized as wrong.</p>
 <hr>
 <h2>Prompting as a Baseline</h2>
-<p>It is natural to ask whether similar effects can be achieved through prompting alone.</p>
-<p>An aggressive calibration prompt was tested that instructed the model to express uncertainty conservatively and avoid overconfidence.</p>
+<p>Can you just prompt for this?  I tested an aggressive calibration prompt that told the model to express uncertainty conservatively and avoid overconfidence.</p>
 <table>
 <thead>
 <tr>
@@ -425,7 +425,7 @@ $$</div>
 <hr>
 <h2>Scope and Limitations</h2>
 <p>A few limitations!  This was a project I did to explore some ideas I find interesting, and to see how quickly I could iterate on a greenfield project using Gemini and Claude.</p>
-<p>The results above support a limited set of claims:</p>
+<p>Here's what I'm actually claiming:</p>
 <ul>
 <li>The difference between pure Brier and mixed training under data scarcity is large enough to be meaningful  </li>
 <li>Stability prevents collapse when models are trained repeatedly on limited labeled data  </li>
@@ -475,6 +475,7 @@ $$</div>
 </tbody>
 </table>
 <p>Semantic entropy is neither a universal solution nor a replacement for labeled supervision. Its value lies in constraining training dynamics when labeled data is limited and models are trained for multiple epochs. In this regime, it helps preserve general knowledge while improving the alignment between confidence and behavior.</p>
+<p>The finding I keep coming back to: the model learns to say "I don't know." We penalized that as wrong, and it learned to do it anyway. That's what I want from a model in a scientific workflow: not higher accuracy, but honest uncertainty.</p>
 <hr>
 <h2>References</h2>
 <ul>
