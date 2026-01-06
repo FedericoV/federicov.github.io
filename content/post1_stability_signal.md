@@ -12,7 +12,7 @@ Here is what I found:
 2. In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its own  
 3. In a data-scarce regime, semantic entropy prevents catastrophic collapse under repeated training on limited labelled data
 
-Code available here: https://github.com/FedericoV/semantic-entropy
+Code available [here](https://github.com/FedericoV/semantic-entropy)
 
 ---
 
