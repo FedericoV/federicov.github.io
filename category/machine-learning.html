@@ -138,11 +138,7 @@
     </p>
   </header>
   <div>
-      <div><p>This post explores using semantic entropy as a training signal for calibrating confidence in language models.</p>
-<p>Here is what I found:</p>
-<ol>
-<li>Training on semantic entropy alone does not converge and leads to unstable behavior  </li>
-<li>In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its …</li></ol></div>
+      <div><p>Using semantic entropy - the disagreement across repeated rollouts - as a training signal for LLM confidence. On its own it fails to converge, but as a regularizer alongside Brier score supervision it prevents calibration collapse in the data-scarce regime, and the model learns to say 'I don't know' without ever being rewarded for it.</p></div>
         <br>
         <a class="btn"
            href="https://federicov.github.io/uncertainty-calibration-pt1.html#uncertainty-calibration-pt1">

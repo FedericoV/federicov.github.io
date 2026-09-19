@@ -46,13 +46,13 @@
  
 
 <meta name="author" content="Federico Vaggi" />
-<meta name="description" content="This post explores using semantic entropy as a training signal for calibrating confidence in language models. Here is what I found: Training on semantic entropy alone does not converge and leads to unstable behavior In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its …" />
+<meta name="description" content="Using semantic entropy - the disagreement across repeated rollouts - as a training signal for LLM confidence. On its own it fails to converge, but as a regularizer alongside Brier score supervision it prevents calibration collapse in the data-scarce regime, and the model learns to say &#39;I don&#39;t know&#39; without ever being rewarded for it." />
 <meta name="keywords" content="rlhf, uncertainty">
 
 
   <meta property="og:site_name" content="Federico's Blog"/>
   <meta property="og:title" content="Semantic Entropy as a Regularizer for LLM Calibration"/>
-  <meta property="og:description" content="This post explores using semantic entropy as a training signal for calibrating confidence in language models. Here is what I found: Training on semantic entropy alone does not converge and leads to unstable behavior In a data abundant/compute scarce regime, standard Brier score supervision achieves strong calibration on its …"/>
+  <meta property="og:description" content="Using semantic entropy - the disagreement across repeated rollouts - as a training signal for LLM confidence. On its own it fails to converge, but as a regularizer alongside Brier score supervision it prevents calibration collapse in the data-scarce regime, and the model learns to say &#39;I don&#39;t know&#39; without ever being rewarded for it."/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:url" content="https://federicov.github.io/uncertainty-calibration-pt1.html"/>
   <meta property="og:type" content="article"/>
@@ -334,7 +334,7 @@ $$</div>
 <p>This is the regime where the asymmetry described earlier becomes relevant. If labels are expensive and questions are cheap, you cannot simply collect more labeled data. But you can generate unlabeled questions at near-zero cost. Stability provides a way to extract training signal from those questions, allowing longer training without the collapse that pure supervision produces.</p>
 <hr>
 <h2>Behavioral Effects on Reasoning</h2>
-<p>The numbers don't tell the whole story. Here's what the reasoning traces actually look like before and after training:</p>
+<p>The numbers don't tell the whole story. Here's what the reasoning traces actually look like before and after training. The examples below are representative of patterns observed across the evaluation set (shown here from a 30B MoE variant; 4B showed similar patterns).</p>
 <h3>Example 1: Mentioning Alternatives Without Committing</h3>
 <p><strong>Question:</strong> Who is the patron saint of dancers?</p>
 <p><strong>Baseline (85% confidence, wrong):</strong></p>

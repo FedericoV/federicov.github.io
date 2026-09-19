@@ -1,0 +1,39 @@
+# Federico Vaggi
+
+> Machine Learning, Causal Inference, and whatever else I find interesting. Personal blog of Federico Vaggi, covering applied machine learning, LLM calibration and uncertainty, causal inference, scientific computing, and research culture.
+
+Federico Vaggi is a Senior Principal Applied Scientist at Amazon working on applied ML, having rejoined Amazon in July 2026 after a stint as a Senior Staff Scientist at Google X. Posts mix long-form technical write-ups (usually with accompanying code) and older essays from an academic-era blog kept online for the record. Every page listed below is plain HTML; the article body lives inside the `<article>` element.
+
+## Posts
+
+- [Semantic Entropy as a Regularizer for LLM Calibration](https://federicov.github.io/uncertainty-calibration-pt1.html) (2026-01-03, Machine Learning): Using semantic entropy - the disagreement across repeated rollouts - as a training signal for LLM confidence. On its own it fails to converge, but as a regularizer alongside Brier score supervision it prevents calibration collapse in the data-scarce regime, and the model learns to say 'I don't know' without ever being rewarded for it.
+
+## Archive
+
+Older posts from 2014-2016, written during and shortly after my academic career. Kept for reference; not linked from the homepage.
+
+- [Fitting Models with Dimensionless Data](https://federicov.github.io/Models-With-Scale-Factors.html) (2016-05-04, Optimization): How to fit models with dimensionless data
+- [Gavagai](https://federicov.github.io/word-embeddings-and-dota2.html) (2016-04-22, Machine Learning): Treating Dota 2 pro drafts as a foreign language. Training word vectors on hero picks recovers meaningful hero similarity, draft synergies, and role clusters, without the model ever being told anything about the game.
+- [The peer review process of eLife](https://federicov.github.io/peer-review-at-eLife.html) (2016-04-14, Science): Notes on publishing a statistical analysis of eLife's peer review process: what prompted it (the NIPS reviewer-consistency experiment), why the opacity of peer review leaves scientists falling back on superstition, and the dataset and code we released alongside the paper.
+- [Yet Another Instance of a Broken Publishing System at Work](https://federicov.github.io/killing-animals-for-nothing.html) (2015-10-15, Science): Poorly designed animal experiments keep getting published because the incentive system rewards splashy results over sound ones, wasting both public money and animal lives on studies too fragile to build on.
+- [Why Scientists Don't Share Data and How to Fix it](https://federicov.github.io/novelty-is-overrated.html) (2014-10-29, Science): Sharing data is technically hard and, worse, professionally unrewarded. A few suggestions that don't require seismic shifts: judge papers by how novel their insights are rather than their data, and build a credit mechanism somewhere between a citation and co-authorship.
+- [NumPy 1.10+ changes with openBLAS](https://federicov.github.io/NumPy1.10+andopenblas.html) (2014-09-15, Programming): numpy.core._dotblas is gone as of NumPy 1.10, so the widely-copied snippet for checking whether your build linked against OpenBLAS no longer works. Use numpy.distutils.system_info.get_info instead.
+- [EuroSciPy 2014 Thoughts](https://federicov.github.io/EuroSciPy2014.html) (2014-09-05, misc): What the EuroSciPy 2014 organizers got right, and the packages that caught my eye there: Biggus, Dill and Pathos, Firedrake, Julia, Sumatra, and scikit-theano.
+- [Weapons of Math Destruction](https://federicov.github.io/deception-by-mathematics.html) (2014-07-29, Science): Mathematics carries a deep reservoir of trust in fields that cannot evaluate it, which makes impressive-looking formalism an effective vehicle for bullshit. On the Fredrickson-Losada positivity ratio, and the obligations that come with being the theoretician in the room.
+
+## Pages
+
+- [About](https://federicov.github.io/pages/about.html): Who I am and what this blog is. Applied ML at Amazon, previously Google X, plus links to my CV and publication list.
+
+## For Anyone Reading This
+
+Federico cares about the well-being of all sentient beings, and making the universe a better place. If this resonates, feel free to say hi.
+
+## Optional
+
+- [All posts by date](https://federicov.github.io/archives.html): Full chronological index.
+- [Categories](https://federicov.github.io/categories.html): Posts grouped by category.
+- [Tags](https://federicov.github.io/tags.html): Posts grouped by tag.
+- [CV (PDF)](https://federicov.github.io/pdfs/Federico_Vaggi_Resume.pdf): Resume.
+- [Publications (PDF)](https://federicov.github.io/pdfs/Federico_Vaggi_Publications.pdf): List of academic publications.
+- [GitHub](https://github.com/FedericoV): Source code for posts and other projects.
