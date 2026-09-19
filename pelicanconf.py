@@ -27,8 +27,14 @@ EXTRA_PATH_METADATA = {
 }
 CUSTOM_CSS = 'custom.css'
 PAGE_PATHS = ['pages']
-PAGE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
-ARTICLE_EXCLUDES = ['widgets', '.ipynb_checkpoints']
+PAGE_EXCLUDES = ['widgets', 'templates', '.ipynb_checkpoints']
+ARTICLE_EXCLUDES = ['widgets', 'templates', '.ipynb_checkpoints']
+
+# Rendered from content/templates/ into the site root, so it stays in sync
+# with the posts instead of being hand-maintained.
+TEMPLATE_PAGES = {
+    'templates/llms.txt': 'llms.txt',
+}
 
 # Plugins
 PLUGIN_PATHS = ['plugins']

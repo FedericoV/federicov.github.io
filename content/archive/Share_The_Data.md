@@ -3,6 +3,7 @@ Date: 2014-10-29
 Category: Science
 Tags: scientific publishing, incentives
 Slug: novelty-is-overrated
+Summary: Sharing data is technically hard and, worse, professionally unrewarded. A few suggestions that don't require seismic shifts: judge papers by how novel their insights are rather than their data, and build a credit mechanism somewhere between a citation and co-authorship.
 
 Towards a Better Science
 ------------------------

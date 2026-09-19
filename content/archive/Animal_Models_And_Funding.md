@@ -3,6 +3,7 @@ Date: 2015-10-15
 Category: Science
 Tags: scientific publishing, incentives, research
 Slug: killing-animals-for-nothing
+Summary: Poorly designed animal experiments keep getting published because the incentive system rewards splashy results over sound ones, wasting both public money and animal lives on studies too fragile to build on.
 
 Reproducibility in the Spotlight:
 ---------------------------------

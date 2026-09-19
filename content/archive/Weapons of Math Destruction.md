@@ -1,8 +1,9 @@
 Title: Weapons of Math Destruction
 Date: 2014-07-29
-Categories: Science
+Category: Science
 Tags: [social psychology, Sokal, Nick Brown, mathematics]
 Slug: deception-by-mathematics
+Summary: Mathematics carries a deep reservoir of trust in fields that cannot evaluate it, which makes impressive-looking formalism an effective vehicle for bullshit. On the Fredrickson-Losada positivity ratio, and the obligations that come with being the theoretician in the room.
 
 
 >*The miracle of the appropriateness of the language of mathematics for the formulation of the laws of physics is a wonderful gift which we neither understand nor deserve. We should be grateful for it and hope that it will remain valid in future research and that it will extend, for better or for worse, to our pleasure, even though perhaps also to our bafflement, to wide branches of learning.* - Eugene Wigner, The Unreasonable Effectiveness of Mathematics in the Physical Sciences

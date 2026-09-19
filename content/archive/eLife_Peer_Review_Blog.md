@@ -3,6 +3,7 @@ Date: 2016-04-14
 Category: Science
 Tags: scientific publishing, open science
 Slug: peer-review-at-eLife
+Summary: Notes on publishing a statistical analysis of eLife's peer review process: what prompted it (the NIPS reviewer-consistency experiment), why the opacity of peer review leaves scientists falling back on superstition, and the dataset and code we released alongside the paper.
 
 
 Together with my colleagues Marco Giordan, Andy Collins, and Attila Csikasz-Nagy

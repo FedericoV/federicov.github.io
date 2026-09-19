@@ -3,6 +3,7 @@ Date: 2026-01-03
 Category: Machine Learning  
 Tags: rlhf, uncertainty
 Slug: uncertainty-calibration-pt1
+Summary: Using semantic entropy - the disagreement across repeated rollouts - as a training signal for LLM confidence. On its own it fails to converge, but as a regularizer alongside Brier score supervision it prevents calibration collapse in the data-scarce regime, and the model learns to say 'I don't know' without ever being rewarded for it.
 
 This post explores using semantic entropy as a training signal for calibrating confidence in language models.
 

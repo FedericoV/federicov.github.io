@@ -3,6 +3,7 @@ Date: 2014-09-15
 Category: Programming
 Tags: [Python, openBLAS, NumPy]
 Slug: NumPy1.10+andopenblas
+Summary: numpy.core._dotblas is gone as of NumPy 1.10, so the widely-copied snippet for checking whether your build linked against OpenBLAS no longer works. Use numpy.distutils.system_info.get_info instead.
 
 [OpenBLAS](https://github.com/xianyi/OpenBLAS) is a terrific open source implementation of the BLAS libraries, forked from the no-longer maintained [gotoblas](https://www.tacc.utexas.edu/tacc-projects/gotoblas2).  It's free, fast, available under a fairly permissive license, and quite easy to compile (unlike ATLAS).
 

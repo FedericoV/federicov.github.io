@@ -3,6 +3,7 @@ Date: 2016-04-22
 Category: Machine Learning
 Tags: video games, machine learning, dota2
 Slug: word-embeddings-and-dota2
+Summary: Treating Dota 2 pro drafts as a foreign language. Training word vectors on hero picks recovers meaningful hero similarity, draft synergies, and role clusters, without the model ever being told anything about the game.
 
 
 Last time I talked about Dota2, I covered the

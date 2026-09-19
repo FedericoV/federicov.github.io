@@ -3,6 +3,7 @@ Date: 2014-09-05
 Category: misc
 Tags: SciPy, Python, open source
 Slug: EuroSciPy2014
+Summary: What the EuroSciPy 2014 organizers got right, and the packages that caught my eye there: Biggus, Dill and Pathos, Firedrake, Julia, Sumatra, and scikit-theano.
 
 
 I just got back from Cambridge, where last week I attended [EuroSciPy](https://www.euroscipy.org/).  It was by far one of the best conferences I've ever attended and, from my point of view, the organizers basically did everything right.  I wanted to draw some sort of best practices, in the hope that other organizers try to imitate what works.
