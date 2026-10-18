@@ -1,7 +1,7 @@
 {
  "asOf": "2026-10-17",
  "election": "2026-11-03",
- "title": "Seattle Judicial Ballot Guide, November 3, 2026",
+ "title": "Seattle Judicial Candidates: The Public Record (November 3, 2026)",
  "feeds": {
   "kingCountyGeneral": "2026-10-16T14:30:03Z",
   "statewideGeneral": "2026-10-17T00:10:58Z",
@@ -747,7 +747,7 @@
    "race": "sc3",
    "position": "Justice, Position 3 (6-year term)",
    "status": {
-    "t": "Challenger; currently a King County Superior Court judge",
+    "t": "No incumbent in this race; currently a King County Superior Court judge",
     "s": [
      "pam_state_56",
      "kc_sup_roster"
@@ -766,31 +766,28 @@
    },
    "path": {
     "type": {
-     "t": "Not found (checked 2026-10-17): how she reached the bench is not stated in the sources reviewed.",
+     "t": "Appointed",
      "s": [
-      "pam_state_56"
+      "abf_hawk"
      ]
     },
     "appointedBy": {
-     "t": "Not found (checked 2026-10-17)",
+     "t": "Governor Jay Inslee",
      "s": [
-      "pam_state_56"
-     ],
-     "notFound": true
+      "abf_hawk"
+     ]
     },
     "date": {
-     "t": "Not found (checked 2026-10-17)",
+     "t": "Appointment announced July 27, 2022",
      "s": [
-      "pam_state_56"
-     ],
-     "notFound": true
+      "abf_hawk"
+     ]
     },
     "predecessor": {
-     "t": "Not found (checked 2026-10-17)",
+     "t": "Judge Regina Cahan",
      "s": [
-      "pam_state_56"
-     ],
-     "notFound": true
+      "abf_hawk"
+     ]
     }
    },
    "background": [
@@ -930,6 +927,12 @@
      "retrieved": "2026-10-17"
     },
     {
+     "key": "abf_hawk",
+     "label": "American Bar Foundation, \"Jaime Hawk ... appointed by Governor Jay Inslee to King County Superior Court\" (Aug. 1, 2022)",
+     "url": "https://americanbarfoundation.org/jaime-hawk-washington-fellow-appointed-by-governor-jay-inslee-to-king-county-superior-court",
+     "retrieved": "2026-10-17"
+    },
+    {
      "key": "kcba",
      "label": "King County Bar Association, Rating of Candidates in 2026 Election (page says last updated Aug. 4, 2026)",
      "url": "https://www.kcba.org/?pg=Rating-of-Candidates-in-2026-Election",
@@ -971,14 +974,15 @@
   {
    "id": "stevens",
    "name": "David Stevens",
-   "court": "Superior Court (running for Supreme Court)",
+   "court": "Mason County Superior Court (running for Supreme Court)",
    "level": "supreme",
    "race": "sc3",
    "position": "Justice, Position 3 (6-year term)",
    "status": {
-    "t": "Challenger; currently a Superior Court judge (county not stated in his statement)",
+    "t": "No incumbent in this race; currently a Mason County Superior Court judge",
     "s": [
-     "pam_state_56"
+     "pam_state_56",
+     "range_sc"
     ]
    },
    "contested": true,
@@ -1000,17 +1004,16 @@
      ]
     },
     "appointedBy": {
-     "t": "Not applicable (per his statement)",
+     "t": "Not applicable (elected)",
      "s": [
       "pam_state_56"
      ]
     },
     "date": {
-     "t": "Not found (checked 2026-10-17)",
+     "t": "Elected to the Mason County Superior Court in November 2023",
      "s": [
-      "pam_state_56"
-     ],
-     "notFound": true
+      "range_sc"
+     ]
     },
     "predecessor": {
      "t": "Not found (checked 2026-10-17)",
@@ -1108,7 +1111,7 @@
     "lean": "gop"
    },
    "glance": {
-    "role": "Superior Court judge",
+    "role": "Mason County Superior Court judge",
     "incumbent": false,
     "primaryPct": 35.2,
     "primaryScope": "statewide",
@@ -1119,6 +1122,12 @@
      "key": "pam_state_56",
      "label": "2026 Voters' Pamphlet, Edition 04 (King - Seattle), p. 56 (candidate-written statement; not fact-checked by the state)",
      "url": "https://www.sos.wa.gov/sites/default/files/2026-10/Voters%20Pamphlet%202026%20-%20Edition%2004%C2%A0-%20King%20-%20Seattle.pdf#page=56",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "range_sc",
+     "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
+     "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
      "retrieved": "2026-10-17"
     },
     {
@@ -1152,12 +1161,6 @@
      "retrieved": "2026-10-17"
     },
     {
-     "key": "range_sc",
-     "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
-     "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
-     "retrieved": "2026-10-17"
-    },
-    {
      "key": "cw_stevens",
      "label": "Campaign website: David Stevens",
      "url": "https://www.judgestevensforwa.com/",
@@ -1180,7 +1183,7 @@
    "race": "sc4",
    "position": "Justice, Position 4 (6-year term)",
    "status": {
-    "t": "Challenger; currently a Court of Appeals judge (Division I per courts.wa.gov opinion listings)",
+    "t": "No incumbent in this race; currently a Court of Appeals judge (Division I per courts.wa.gov opinion listings)",
     "s": [
      "pam_state_57",
      "op_list_2026c"
@@ -1284,7 +1287,7 @@
    },
    "opinions": {
     "counts": {
-     "t": "Published opinions listed at courts.wa.gov with him named as author: 6 (2025) and 8 (2026 through Oct. 15). Counts are a lower bound; see methodology.",
+     "t": "Published opinions listed at courts.wa.gov with him named as author: 7 (2025) and 8 (2026 through Oct. 15). Counts include opinions first filed unpublished and later ordered published; see methodology.",
      "s": [
       "op_list_2025c",
       "op_list_2026c"
@@ -1454,7 +1457,7 @@
    "race": "sc4",
    "position": "Justice, Position 4 (6-year term)",
    "status": {
-    "t": "Challenger; currently a King County Superior Court judge",
+    "t": "No incumbent in this race; currently a King County Superior Court judge",
     "s": [
      "pam_state_57",
      "kc_sup_roster"
@@ -1472,17 +1475,16 @@
    },
    "path": {
     "type": {
-     "t": "Superior Court judge since 2013 (per his statement). Method of reaching the bench: Not found (checked 2026-10-17).",
+     "t": "Elected (court biography: \"Elected to the King County Superior Court bench in 2013\")",
      "s": [
-      "pam_state_57"
+      "kc_bio_odonnell"
      ]
     },
     "appointedBy": {
-     "t": "Not found (checked 2026-10-17)",
+     "t": "Not applicable (elected)",
      "s": [
-      "pam_state_57"
-     ],
-     "notFound": true
+      "kc_bio_odonnell"
+     ]
     },
     "date": {
      "t": "On the King County Superior Court since 2013",
@@ -1587,14 +1589,19 @@
     "notFound": true
    },
    "party": {
-    "dem": [],
-    "gop": [
+    "dem": [
      {
-      "org": "Washington State Republican Party (support reported by press; O'Donnell calls the race nonpartisan and declined to disavow it)",
-      "src": "mnw_odonnell"
+      "org": "Legislative District Democrats (per his campaign site, which does not name the districts)",
+      "src": "cw_odonnell"
      }
     ],
-    "lean": "gop"
+    "gop": [
+     {
+      "org": "Washington State Republican Party (recommended; O'Donnell says his support crosses the political spectrum)",
+      "src": "centersquare_odonnell"
+     }
+    ],
+    "lean": "both"
    },
    "glance": {
     "role": "King County Superior Court judge",
@@ -1623,6 +1630,12 @@
      "retrieved": "2026-10-17"
     },
     {
+     "key": "kc_bio_odonnell",
+     "label": "King County Superior Court, Judge Sean P. O'Donnell biography",
+     "url": "https://kingcounty.gov/en/court/superior-court/about-superior-court/judges-staff/judges/odonnell",
+     "retrieved": "2026-10-17"
+    },
+    {
      "key": "kcba",
      "label": "King County Bar Association, Rating of Candidates in 2026 Election (page says last updated Aug. 4, 2026)",
      "url": "https://www.kcba.org/?pg=Rating-of-Candidates-in-2026-Election",
@@ -1641,15 +1654,15 @@
      "retrieved": "2026-10-17"
     },
     {
-     "key": "mnw_odonnell",
-     "label": "MyNorthwest, \"King County judge fires back after opponent demands he disavow GOP support\" (Sept. 15, 2026)",
-     "url": "https://mynorthwest.com/john-curley/king-county-judge-fires-back/4276341",
-     "retrieved": "2026-10-17"
-    },
-    {
      "key": "cw_odonnell",
      "label": "Campaign website: Sean O'Donnell",
      "url": "https://www.odonnellforjustice.com/",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "centersquare_odonnell",
+     "label": "The Center Square, \"Washington judges defend Supreme Court candidate amid partisan politics dispute\" (Sept. 2026)",
+     "url": "https://www.thecentersquare.com/washington/article_d1e1801b-c41f-42e9-800a-b87aa82676dd.html",
      "retrieved": "2026-10-17"
     }
    ],
@@ -2223,7 +2236,7 @@
    },
    "opinions": {
     "counts": {
-     "t": "Published opinions authored (courts.wa.gov lists): 7 (2025) and 3 (2026 through Oct. 15). Counts are a lower bound; see methodology.",
+     "t": "Published opinions authored (courts.wa.gov lists): 7 (2025) and 3 (2026 through Oct. 15). Counts include opinions first filed unpublished and later ordered published; see methodology.",
      "s": [
       "op_list_2025s",
       "op_list_2026s"
@@ -2679,7 +2692,7 @@
    },
    "opinions": {
     "counts": {
-     "t": "Published opinions listed at courts.wa.gov with him named as author: 4 (2025) and 6 (2026 through Oct. 15). Counts are a lower bound; see methodology.",
+     "t": "Published opinions listed at courts.wa.gov with him named as author: 4 (2025) and 8 (2026 through Oct. 15). Counts include opinions first filed unpublished and later ordered published; see methodology.",
      "s": [
       "op_list_2025c",
       "op_list_2026c"
@@ -2904,7 +2917,7 @@
    },
    "opinions": {
     "counts": {
-     "t": "Published opinions listed at courts.wa.gov with him named as author: 7 (2025) and 3 (2026 through Oct. 15). Counts are a lower bound; see methodology.",
+     "t": "Published opinions listed at courts.wa.gov with him named as author: 8 (2025) and 3 (2026 through Oct. 15). Counts include opinions first filed unpublished and later ordered published; see methodology.",
      "s": [
       "op_list_2025c",
       "op_list_2026c"
@@ -5287,7 +5300,7 @@
    "race": "sm5",
    "position": "Judge, Position 5",
    "status": {
-    "t": "Challenger; pro tem judge, not a sitting judge",
+    "t": "No incumbent in this race; pro tem judge, not a sitting judge",
     "s": [
      "pam_loc_44",
      "smc_roster"
@@ -5298,7 +5311,7 @@
     "rothstein"
    ],
    "primaryResult": {
-    "t": "Primary (official, King County): 27.9% (53,988 votes). A third candidate, Lindsay Calkins, was on the primary ballot and later withdrew (KCBA).",
+    "t": "Primary (official, King County): 27.9% (53,988 votes). A third candidate, Lindsay Calkins, was also on the primary ballot; KCBA lists her as having withdrawn from the election.",
     "s": [
      "res_kc_prim",
      "kcba"
@@ -5493,7 +5506,7 @@
    "race": "sm5",
    "position": "Judge, Position 5",
    "status": {
-    "t": "Challenger; public defender and pro tem judge, not a sitting judge",
+    "t": "No incumbent in this race; public defender and pro tem judge, not a sitting judge",
     "s": [
      "pam_loc_44",
      "smc_roster"
@@ -5504,7 +5517,7 @@
     "newsom"
    ],
    "primaryResult": {
-    "t": "Primary (official, King County): 54.6% (105,878 votes). A third candidate, Lindsay Calkins, was on the primary ballot and later withdrew (KCBA).",
+    "t": "Primary (official, King County): 54.6% (105,878 votes). A third candidate, Lindsay Calkins, was also on the primary ballot; KCBA lists her as having withdrawn from the election.",
     "s": [
      "res_kc_prim",
      "kcba"
@@ -5705,7 +5718,7 @@
   {
    "id": "kcsc",
    "title": "King County Superior Court: no race on your ballot",
-   "text": "No King County Superior Court position appears in the Secretary of State's list of ballot items for the 2026 primary or general election (checked 2026-10-17). That is expected under state law: the Secretary of State's judicial elections guidance says that \"an uncontested Superior Court race in a county with a population of 100,000 or more is not printed on the ballot; instead, the candidate is issued a certificate of election following the last day for candidates to withdraw\" (WA Const. Art. IV § 29). So any Superior Court judge who drew no opponent this year was elected without appearing on the ballot, and voters have no Superior Court choice to make. Judges recently appointed to King County Superior Court, per the Governor's list, include Kent Liu (June 4, 2025), Daniel York (Jan. 13, 2026), Tenaya Scheinman (Apr. 15, 2026) and Jessica Murphy Manca (June 8, 2026). Which of their seats were up this year was not confirmed, so this guide does not include cards for them.",
+   "text": "No King County Superior Court position appears in the Secretary of State's list of ballot items for the 2026 primary or general election (checked 2026-10-17). That is expected under state law: the Secretary of State's judicial elections guidance says that \"an uncontested Superior Court race in a county with a population of 100,000 or more is not printed on the ballot; instead, the candidate is issued a certificate of election following the last day for candidates to withdraw\" (WA Const. Art. IV § 29). So any Superior Court judge who drew no opponent this year was elected without appearing on the ballot, and voters have no Superior Court choice to make. Judges recently appointed to King County Superior Court, per the Governor's list, include Kent Liu (June 4, 2025), Daniel York (Jan. 13, 2026), Tenaya Scheinman (Apr. 15, 2026) and Jessica Murphy Manca (June 8, 2026). Which of their seats were up this year was not confirmed, so this page does not include cards for them.",
    "src": [
     "sos_judicial",
     "res_kc_gen",
@@ -5763,6 +5776,24 @@
    "key": "res_kc_prim",
    "label": "WA Secretary of State results system, King County 2026 Primary, official results",
    "url": "https://results.votewa.gov/results/public/api/elections/king-county-wa/20260804/ballot-items",
+   "retrieved": "2026-10-17"
+  },
+  {
+   "key": "abf_hawk",
+   "label": "American Bar Foundation, \"Jaime Hawk ... appointed by Governor Jay Inslee to King County Superior Court\" (Aug. 1, 2022)",
+   "url": "https://americanbarfoundation.org/jaime-hawk-washington-fellow-appointed-by-governor-jay-inslee-to-king-county-superior-court",
+   "retrieved": "2026-10-17"
+  },
+  {
+   "key": "kc_bio_odonnell",
+   "label": "King County Superior Court, Judge Sean P. O'Donnell biography",
+   "url": "https://kingcounty.gov/en/court/superior-court/about-superior-court/judges-staff/judges/odonnell",
+   "retrieved": "2026-10-17"
+  },
+  {
+   "key": "centersquare_odonnell",
+   "label": "The Center Square, \"Washington judges defend Supreme Court candidate amid partisan politics dispute\" (Sept. 2026)",
+   "url": "https://www.thecentersquare.com/washington/article_d1e1801b-c41f-42e9-800a-b87aa82676dd.html",
    "retrieved": "2026-10-17"
   },
   {
@@ -6195,12 +6226,6 @@
    "key": "range_sc",
    "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
    "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
-   "retrieved": "2026-10-17"
-  },
-  {
-   "key": "mnw_odonnell",
-   "label": "MyNorthwest, \"King County judge fires back after opponent demands he disavow GOP support\" (Sept. 15, 2026)",
-   "url": "https://mynorthwest.com/john-curley/king-county-judge-fires-back/4276341",
    "retrieved": "2026-10-17"
   }
  ]
