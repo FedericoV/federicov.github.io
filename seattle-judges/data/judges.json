@@ -425,6 +425,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Incumbent justice",
+    "incumbent": true,
+    "primaryPct": 52.9,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_55",
@@ -496,6 +513,12 @@
      "key": "op_hauk",
      "label": "Slip opinion: In re Marriage of Hauk and Wuesthoff, No. 104074-1 (Aug. 6, 2026)",
      "url": "https://www.courts.wa.gov/opinions/pdf/1040741.pdf",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -641,6 +664,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [
+     {
+      "org": "Washington State Republican Party (recommended)",
+      "src": "range_sc"
+     }
+    ],
+    "lean": "gop"
+   },
+   "glance": {
+    "role": "Challenger; not currently a judge",
+    "incumbent": false,
+    "primaryPct": 29.4,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_55",
@@ -676,6 +716,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "range_sc",
+     "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
+     "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
      "retrieved": "2026-10-17"
     },
     {
@@ -841,6 +887,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "King County Superior Court judge",
+    "incumbent": false,
+    "primaryPct": 33.3,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_56",
@@ -882,6 +945,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -1028,6 +1097,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [
+     {
+      "org": "Washington State Republican Party (recommended)",
+      "src": "range_sc"
+     }
+    ],
+    "lean": "gop"
+   },
+   "glance": {
+    "role": "Superior Court judge",
+    "incumbent": false,
+    "primaryPct": 35.2,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_56",
@@ -1063,6 +1149,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "range_sc",
+     "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
+     "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
      "retrieved": "2026-10-17"
     },
     {
@@ -1261,6 +1353,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Court of Appeals judge",
+    "incumbent": false,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_57",
@@ -1320,6 +1429,12 @@
      "key": "op_rush",
      "label": "Slip opinion: Rush v. State, No. 87477-2-I (July 27, 2026)",
      "url": "https://www.courts.wa.gov/opinions/pdf/874772.pdf",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -1471,6 +1586,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [
+     {
+      "org": "Washington State Republican Party (support reported by press; O'Donnell calls the race nonpartisan and declined to disavow it)",
+      "src": "mnw_odonnell"
+     }
+    ],
+    "lean": "gop"
+   },
+   "glance": {
+    "role": "King County Superior Court judge",
+    "incumbent": false,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": "Exceptionally Well Qualified"
+   },
    "sources": [
     {
      "key": "pam_state_57",
@@ -1506,6 +1638,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "mnw_odonnell",
+     "label": "MyNorthwest, \"King County judge fires back after opponent demands he disavow GOP support\" (Sept. 15, 2026)",
+     "url": "https://mynorthwest.com/john-curley/king-county-judge-fires-back/4276341",
      "retrieved": "2026-10-17"
     },
     {
@@ -1661,6 +1799,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Incumbent justice",
+    "incumbent": true,
+    "primaryPct": 35.8,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_58",
@@ -1726,6 +1881,12 @@
      "key": "op_baker",
      "label": "Slip opinion: Baker v. Seattle Children's Hospital, No. 104590-5 (Oct. 8, 2026)",
      "url": "https://www.courts.wa.gov/opinions/pdf/1045905.pdf",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -1881,6 +2042,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [
+     {
+      "org": "Washington State Republican Party (recommended)",
+      "src": "range_sc"
+     }
+    ],
+    "lean": "gop"
+   },
+   "glance": {
+    "role": "Retired trial judge",
+    "incumbent": false,
+    "primaryPct": 32.2,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_58",
@@ -1916,6 +2094,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "range_sc",
+     "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
+     "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
      "retrieved": "2026-10-17"
     },
     {
@@ -2093,6 +2277,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Incumbent; Chief Justice",
+    "incumbent": true,
+    "primaryPct": 54.4,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_59",
@@ -2164,6 +2365,12 @@
      "key": "op_bennett",
      "label": "Slip opinion: State v. Bennett, No. 103469-5 (Jan. 15, 2026)",
      "url": "https://www.courts.wa.gov/opinions/pdf/1034695.pdf",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -2303,6 +2510,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [
+     {
+      "org": "Washington State Republican Party (recommended)",
+      "src": "range_sc"
+     }
+    ],
+    "lean": "gop"
+   },
+   "glance": {
+    "role": "Challenger; private attorney",
+    "incumbent": false,
+    "primaryPct": 27.1,
+    "primaryScope": "statewide",
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_59",
@@ -2338,6 +2562,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "range_sc",
+     "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
+     "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
      "retrieved": "2026-10-17"
     },
     {
@@ -2497,6 +2727,18 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -2711,6 +2953,18 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_state_61",
@@ -2922,6 +3176,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_loc_36",
@@ -2957,6 +3228,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -3102,6 +3379,23 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [
+     {
+      "org": "32nd, 34th, 36th, 37th and 46th Legislative District Democrats (per her statement)",
+      "src": "pam_loc_36"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Challenger; pro tem judge",
+    "incumbent": false,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -3270,6 +3564,18 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_loc_37",
@@ -3437,6 +3743,18 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_loc_37",
@@ -3602,6 +3920,18 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -3777,6 +4107,18 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_loc_38",
@@ -3939,6 +4281,18 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -4123,6 +4477,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Not currently a judge",
+    "incumbent": false,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_loc_42",
@@ -4158,6 +4529,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -4283,6 +4660,18 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -4452,6 +4841,18 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -4628,6 +5029,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Not currently a judge",
+    "incumbent": false,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
+   },
    "sources": [
     {
      "key": "pam_loc_45",
@@ -4663,6 +5081,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -4796,6 +5220,18 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [],
+    "gop": [],
+    "lean": "none"
+   },
+   "glance": {
+    "role": "Incumbent",
+    "incumbent": true,
+    "primaryPct": null,
+    "primaryScope": null,
+    "kcba": null
    },
    "sources": [
     {
@@ -4979,6 +5415,23 @@
      "wsba"
     ],
     "notFound": true
+   },
+   "party": {
+    "dem": [
+     {
+      "org": "32nd Legislative District Democrats (per his statement)",
+      "src": "pam_loc_44"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Pro tem judge",
+    "incumbent": false,
+    "primaryPct": 27.9,
+    "primaryScope": "King County",
+    "kcba": null
    },
    "sources": [
     {
@@ -5172,6 +5625,23 @@
     ],
     "notFound": true
    },
+   "party": {
+    "dem": [
+     {
+      "org": "King County Democrats",
+      "src": "kcdems"
+     }
+    ],
+    "gop": [],
+    "lean": "dem"
+   },
+   "glance": {
+    "role": "Public defender and pro tem judge",
+    "incumbent": false,
+    "primaryPct": 54.6,
+    "primaryScope": "King County",
+    "kcba": "Well Qualified"
+   },
    "sources": [
     {
      "key": "pam_loc_44",
@@ -5207,6 +5677,12 @@
      "key": "wsba",
      "label": "WSBA Legal Directory (profile and public discipline history; could not be searched automatically)",
      "url": "https://www.mywsba.org/PersonifyEbusiness/Default.aspx?TabID=1536",
+     "retrieved": "2026-10-17"
+    },
+    {
+     "key": "kcdems",
+     "label": "King County Democrats, 2026 Endorsements",
+     "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
      "retrieved": "2026-10-17"
     },
     {
@@ -5707,6 +6183,24 @@
    "key": "cw_vaddadi",
    "label": "Campaign website: Pooja Vaddadi",
    "url": "https://electjudgevaddadi.com",
+   "retrieved": "2026-10-17"
+  },
+  {
+   "key": "kcdems",
+   "label": "King County Democrats, 2026 Endorsements",
+   "url": "https://www.kcdems.org/our-party/e/2026-endorsements/",
+   "retrieved": "2026-10-17"
+  },
+  {
+   "key": "range_sc",
+   "label": "Range Media, \"Majority of seats on WA Supreme Court are up for election this year\" (July 22, 2026)",
+   "url": "https://www.rangemedia.co/wa-state-supreme-court-election-2026/",
+   "retrieved": "2026-10-17"
+  },
+  {
+   "key": "mnw_odonnell",
+   "label": "MyNorthwest, \"King County judge fires back after opponent demands he disavow GOP support\" (Sept. 15, 2026)",
+   "url": "https://mynorthwest.com/john-curley/king-county-judge-fires-back/4276341",
    "retrieved": "2026-10-17"
   }
  ]
